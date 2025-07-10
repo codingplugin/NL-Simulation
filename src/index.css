@@ -1,0 +1,253 @@
+body {
+  background: #f5f7fa;
+  font-family: 'Segoe UI', 'Roboto', Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+.container {
+  background: #fff;
+  width: 100vw;
+  min-width: 0;
+  margin: 0;
+  border-radius: 0;
+  box-shadow: none;
+  padding: 32px 2vw 24px 2vw;
+  overflow-x: visible;
+  box-sizing: border-box;
+}
+
+h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 28px;
+  letter-spacing: -1px;
+}
+
+label {
+  font-size: 1rem;
+  font-weight: 500;
+  margin-right: 12px;
+}
+
+select, input[type="number"] {
+  font-size: 1rem;
+  padding: 4px 8px;
+  border-radius: 6px;
+  border: 1px solid #cfd8dc;
+  margin-left: 4px;
+  margin-right: 8px;
+  background: #f8fafc;
+  transition: border 0.2s;
+}
+
+select:focus, input[type="number"]:focus {
+  outline: none;
+  border: 1.5px solid #1976d2;
+}
+
+button {
+  font-size: 0.95rem;
+  font-weight: 500;
+  padding: 4px 12px;
+  border-radius: 5px;
+  border: none;
+  background: #1976d2;
+  color: #fff;
+  cursor: pointer;
+  box-shadow: 0 1px 2px 0 rgba(25, 118, 210, 0.08);
+  margin-right: 8px;
+  margin-bottom: 4px;
+  transition: background 0.2s, box-shadow 0.2s;
+}
+
+button:hover, button:focus {
+  background: #1251a3;
+  box-shadow: 0 2px 8px 0 rgba(25, 118, 210, 0.10);
+}
+
+@media (max-width: 1100px) {
+  .container {
+    width: 100vw;
+    padding: 12px 2vw 12px 2vw;
+  }
+  .sim-figures > div {
+    max-width: 99vw;
+    min-width: 220px;
+  }
+  /* Make figures smaller and stack vertically */
+  .sim-figures {
+    flex-direction: column !important;
+    gap: 20px !important;
+    align-items: center !important;
+  }
+  .sim-figures > div {
+    min-width: 280px !important;
+    max-width: 350px !important;
+  }
+}
+
+@media (max-width: 900px) {
+  .container {
+    width: 100vw;
+    padding: 8px 0 8px 0;
+  }
+  .legend {
+    flex-direction: column;
+    gap: 10px;
+  }
+  .sim-figures {
+    flex-direction: column;
+    gap: 18px;
+    max-width: 100vw;
+  }
+  /* Even smaller figures on mobile */
+  .sim-figures > div {
+    min-width: 240px !important;
+    max-width: 300px !important;
+  }
+}
+
+@media (max-width: 700px) {
+  .sim-figures {
+    flex-direction: column !important;
+    gap: 18px !important;
+    align-items: center !important;
+    width: 100vw !important;
+    max-width: 100vw !important;
+  }
+  .sim-figures > div {
+    min-width: 180px !important;
+    max-width: 98vw !important;
+    width: 98vw !important;
+    box-sizing: border-box !important;
+    padding: 8px 2vw 8px 2vw !important;
+  }
+  /* Settings panels side by side, smaller */
+  .mobile-settings-row {
+    display: flex !important;
+    flex-direction: row !important;
+    gap: 10px !important;
+    justify-content: center !important;
+    align-items: flex-start !important;
+    width: 100vw !important;
+    margin-bottom: 12px !important;
+  }
+  .mobile-settings-panel {
+    min-width: 120px !important;
+    max-width: 180px !important;
+    flex: 1 1 120px !important;
+    padding: 10px 6px !important;
+    font-size: 0.95rem !important;
+  }
+  .legend {
+    flex-direction: column !important;
+    gap: 10px !important;
+    font-size: 14px !important;
+    max-width: 100vw !important;
+    width: 100vw !important;
+    margin: 16px auto 0 auto !important;
+  }
+  h1 {
+    font-size: 1.2rem !important;
+  }
+}
+
+.legend {
+  margin: 24px auto 0 auto;
+  max-width: 900px;
+  display: flex;
+  gap: 24px;
+  font-size: 15px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+/* Card for metrics */
+.metrics-card {
+  margin: 0 0 0 0;
+  max-width: 340px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-align: center;
+  background: #f5f5f5;
+  border-radius: 10px;
+  padding: 3px 8px;
+  border: 1px solid #e0e0e0;
+  box-shadow: 0 1px 4px 0 rgba(0,0,0,0.04);
+  word-break: break-word;
+  overflow-x: visible;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+/* Figure containers */
+.sim-figures {
+  display: flex;
+  gap: 32px;
+  justify-content: center;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  width: 100%;
+  box-sizing: border-box;
+  max-width: 100vw;
+}
+
+.sim-figures > div {
+  background: #f9f9f9;
+  border-radius: 12px;
+  box-shadow: 0 1px 4px 0 rgba(0,0,0,0.04);
+  padding: 12px 12px 8px 12px;
+  margin-bottom: 8px;
+  max-width: 480px;
+  min-width: 270px;
+  min-height: 520px;
+  box-sizing: border-box;
+  overflow-x: visible;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.sim-figures-title {
+  margin-bottom: 8px;
+  text-align: center;
+  font-weight: 600;
+  font-size: 1.08rem;
+  word-break: break-word;
+  max-width: 100%;
+}
+
+.settings-panel {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 12px;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+  margin-bottom: 10px;
+  max-width: 100vw;
+  box-sizing: border-box;
+}
+
+.settings-panel label, .settings-panel span, .settings-panel button {
+  max-width: 100%;
+  word-break: break-word;
+}
+
+.settings-panel button {
+  margin-left: 4px;
+}
+
+.settings-panel span[style*="margin-left: 24px"] {
+  margin-left: 10px !important;
+}
+
+::-webkit-scrollbar {
+  height: 0.5em;
+  background: transparent;
+} 

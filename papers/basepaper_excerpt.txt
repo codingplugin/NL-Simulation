@@ -1,0 +1,394 @@
+Vol.:(0123456789)Multimedia Tools and Applications (2024) 83:70793–70814
+https://doi.org/10.1007/s11042-024-18331-8
+1 3
+Seagull optimization algorithm for node localization 
+in wireless sensor networks
+Yogendra Mohan1,2  · Rajesh Kumar Yadav2 · Manisha Manjul3
+Received: 29 November 2022 / Revised: 4 January 2024 / Accepted: 19 January 2024 /  
+Published online: 5 February 2024 
+© The Author(s), under exclusive licence to Springer Science+Business Media, LLC, part of Springer Nature 2024
+Abstract
+Numerous applications of wireless sensor networks (WSNs) highly depend on the node 
+location, such as maritime rescue, agriculture, and hazardous environments. GPS-enabled 
+sensors are not cost-effective or energy efficient. Henceforth, the precise location of sen-
+sor nodes significantly impacts the performance of WSNs. Finding the position of a target 
+node (an unknown node) is known as node localization. Gaussian noise and RSSI are cost-
+effective approaches for estimating the location of a target node. In this paper, the Seagull 
+optimization algorithm and its enhanced versions are applied to increase the NL accuracy 
+of localized nodes. To enhance the accuracy and improve the randomness of the seagull 
+optimization algorithm (SOA)., levy flight and a chaotic map are employed in this work 
+to enhance the seagull optimization algorithm Furthermore, the chaotic map-based SOA 
+(C-SOA) and the Levy flight-based SOA (LF-SOA) are used for node location in WSNs. 
+The performance evaluation and result comparison of SOA, C-SOA, and LF-SOA show 
+that LF-SOA is better than C-SOA and SOA.
+Keywords Node localization (NL) · Seagull optimization algorithm (SOA) · Chaotic map · 
+Levy flight
+1 Introduction
+Wireless sensor nodes are tiny, low-power gadgets with an antenna, an integrated CPU, and 
+a radio that runs on batteries. To monitor and record important data or events, WSNs [20] 
+are made up of numerous sensor nodes outfitted with specialized transducers and radio 
+communications equipment. WSNs have piqued the interest of all researchers due to their 
+application-oriented approach, which identifies the particular services provided by every 
+ * Yogendra Mohan 
+ yogendra.mohan@gmail.com; ymo@nerist.ac.in
+1 Department of Computer Science and Engineering, North Eastern Regional Institute of Science 
+and Technology Nirjuli, Itanagar 791109, Arunachal Pradesh, India
+2 Department of Computer Science and Engineering, Delhi Technological University, 
+New Delhi 110 042, India
+3 Computer Science and Application, G.B. Pant DSEU Okhala-1 Campus, New Delhi 110077, India
+70794 Multimedia Tools and Applications (2024) 83:70793–70814
+1 3
+application. Henceforth, WSNs are becoming progressively popular in terms of applica-
+tions, services, and choice. Since these sensor networks have begun to become a part of our 
+daily lives, such as smart homes, cities, agriculture, transportation, etc. With all these ben-
+efits, WSNs have a lot of limitations, like the adoption of new technologies like cloud, fog 
+with the emerging applications, and computational and communication resources of sensor 
+nodes. Moreover, WSNs face many challenges, like robust routing, securing devices, and 
+tracking device location (node localization). Among all these, node localizations (NL) are 
+one of the prior and demanding challenges. The sensors can be deployed on earth, under -
+ground, or underwater. It is difficult to localize the sensors deployed.
+The precise localization of sensor nodes substantially impacts the functioning of 
+WSNs. The process of determining the exact locations of the sensor nodes in WSNs is 
+known as positioning or NL [26– 28]. Despite being a standard positioning technology, 
+GPS has a high energy consumption [30, 31], making it unsuitable for NL in WSNs. 
+Numerous variables impact the accuracy of NL, and they are the network design, the den-
+sity of anchor nodes, and the measuring area’s geometric shape. To improve the accuracy 
+of NL, a meta-heuristic optimization algorithm is modified and used. The simulation is 
+carried out for sensor networks of different sizes, ranging from 25 to 150 TNs and 15 to 
+90 ANs, and the distance between ANs and TN is calculated using the RSSI and Gaussian 
+mixture model.
+In localization, meta-heuristic optimization algorithms [1, 7–9, 41, 42, 46–48] are gain-
+ing popularity. Seagull lives in colonies; the seagull’s migration patterns and attacking 
+behaviors inspire the seagull optimization scheme. The migration and attacking behavior of 
+the seagull are mathematically modeled with the exploration and exploitation phase. Vari-
+ous research work has accounted for that exploration is essential for addressing optimiza-
+tion issues. The migration and attacking behavior of seagull birds are modeled to estimate 
+the target nodes. In the exploration phase, Seagulls move and change their position and 
+find the best position. In the exploitation phase, seagulls attack the prey. The existing SOA 
+algorithm is based on a random number. Although SOA has a global exploration potential, 
+it has drawbacks such as late convergence and a tendency to get stuck in local optima. 
+That is why SOA is modified using a chaotic map and levy flight. The comparative per -
+formance analysis among the SOA, C-SOA, and LF-SOA is performed, and according to 
+experimental findings, it is confirmed that the LF-SOA significantly outperforms the SOA 
+and C-SOA in terms of NL accuracy and NL time.
+The following are the major contributions of the current article:
+• The existing SOA algorithms are modified using a chaotic map and levy flight schemes. 
+The modified meta-heuristic algorithms, namely C-SOA and LF-SOA, have been used 
+for NL optimization.
+• In C-SOA, ten different chaotic maps have been chosen for the performance test. Out of 
+these, the logistic map was found to be best suitable for exploration.
+• In LF-SOA, exploration power is provided by the levy-flight distribution.
+• Comparative analysis among SOA, C-SOA, and LF-SOA is performed.
+The novelty of this paper is to enhance the accuracy of the NL optimization, SOA 
+hybridized using levy-flight and chaotic map to emphasize on scalability and robust-
+ness to node failures. There are several advantages of using chaotic maps and levy-
+flight for NL optimization as follows. Scalability: In large-scale WSNs, NL using 
+chaotic maps is useful. The network adapts to changes in size and density while 
+retaining precise localization thanks to their help in organizing and coordinating 
+70795 Multimedia Tools and Applications (2024) 83:70793–70814 
+1 3
+nodes effectively. Robustness to Node Failures: Chaotic maps offer resilience to node 
+failures. Chaotic maps can aid other nodes in swiftly adjusting to the changing net-
+work architecture and allowing localization to continue without major interruptions 
+when a node fails or departs the network.
+The remaining parts of the manuscript are divided into the following sections: 
+Sect.  2 is the related work of different meta-heuristic optimization algorithms dealing 
+with NL. Section  3 briefly introduces the chaotic map, levy flight, and SOA. Section  4 
+covers the proposed C-SOA and LF-SOA. Section  5 analyzes the NL simulation results 
+of SOA, C-SOA, and LF-SOA. Section  6 presents the conclusion and future research 
+work.
+2  Related work
+This section reviews the literature work based on node localization for WSNs. Yaming 
+et al. [24] have proposed a scheme that is found suitable for environments where an offline 
+calibration phase for the path-loss component is not feasible. The RSSI technique esti-
+mates the distance between the anchor node (AN) and the target node (TN). The simulation 
+results demonstrate that the suggested technique has a better NL accuracy than existing 
+methods. The limitation of the proposed scheme is the same value of the path-loss expo-
+nent is taken for the different measurements, which may affect the node localization accu-
+racy. Ziwen et al. [5] have proposed a Multi-objective PSO for the NL. The localization 
+accuracy and average node localization error are improved, while the convergence rate is 
+improved. The performance parameters are convergence rate, node localization accuracy, 
+and average node localization error.
+Sankalp et al. [4] have proposed a Butterfly Optimization Algorithm (BFOA) for NL. 
+BFOA is compared with PSO and FFA. The performance of BFOA is better than PSO and 
+FFOA. The trilateration method is used for distance computation between AN and TN, 
+but the value of the environment constant and Path loss component is not mentioned. The 
+performance parameters are the mean of NL, mean of NL error, and mean of computation 
+time. Mihoubi et al. [19] have proposed an RSSI-based Bat optimization algorithm (BOA), 
+and the result obtained shows that the Bat algorithm is more efficient than PSO and DE. 
+RSSI scheme is used for distance estimation between AN and TN, but the value of envi-
+ronment constant and Path loss component is not mentioned. The performance parameters 
+are mean NL error and mean NL time. The simulation result showed that the accuracy 
+and convergence rate of the Bat algorithm is better than PSO and DE. Rajakumar et al. 
+[3] proposed a GWO simulation algorithm. An improved DV-Hop method is proposed to 
+resolve the problems with the DV-Hop algorithm for NL. The performance parameters NL 
+accuracy, computation time, and minimum localization error are compared with PSO and 
+GWO. The convergence rate and NL accuracy are high compared to the PSO and MBA, 
+and NL error is low. Tu Li et  al. [11] have proposed a DV-HOP-based PSO algorithm. 
+The chaotic map is hybridized to enhance the NL accuracy and minimize the computation 
+delay. So many chaotic maps are available, and a sine chaotic map is chosen for simula-
+tions. It is not mentioned why only a sine map is chosen for it. The performance parameters 
+are NL and NL Error.
+Huthaifa et al. [2] have proposed an SSO algorithm for NL. Mean NL error, NL compu-
+tation time, and the total number of nodes localized are the performance parameters of the 
+proposed scheme. The NL accuracy is improved when the AN density increases concerning 
+70796 Multimedia Tools and Applications (2024) 83:70793–70814
+1 3
+the number of TNs. The computation time for all localization methods is observed to grow 
+as the number of TNs and ANs increases, although the SSOA has the fastest computation 
+time compared to PSO, BOA, FFA, and GWO. The performance of SSOA is better than 
+BOA, FA, PSO, and GWO for all the performance parameters. Ju Liu et al. [37] have pro-
+posed a hybrid MCB-PSO algorithm for NL. The WSN environment is 3-dimensional. The 
+anchor and target nodes are mobile. The convergence rate is improved. The main drawback 
+of the MCB method is the random generation of node placements in an anchor box, and 
+there needs to be a searching direction, which results in low localization efficiency and 
+high computation time. The performance parameters are NL error and computation time. 
+Ling Song et al. [36] have proposed the Monte Carlo NL algorithm, which is hybridized 
+with QUasi-Affine TRansformation Evolutionary (QUATRE) optimization. The advan-
+tage of the proposed algorithm is that only 30 anchor nodes are deployed for the localiza-
+tion of 320 target nodes, and the enhanced QUATRE optimization-based Monte Carlo NL 
+scheme offers increased positioning accuracy and convergence rate. Although the proposed 
+algorithm requires some hardware, it is cost-effective. Yeasir et al. [35] have proposed a 
+GWO-based compressive sensing (CS-GWO) algorithm. An energy-efficient bio-inspired 
+NL algorithm and clustering algorithms are implemented in Unnamed Aerial Vehicles net-
+works. The limitation of the proposed scheme is all sensor nodes are GPS-enabled, which 
+consumes more power. The performance parameters are Node Localization, Mean Node 
+Localization error, and clustering.
+Chuku et  al. [25] have proposed utilizing outlier identification techniques to mitigate 
+the impact of such disproportionately inaccurate distance estimates in RSSI-based location 
+estimation. Three distinct node localization methods are proposed to reduce node locali-
+zation mistakes in shadowed environments that employ outlier identification. NL error is 
+reduced in the proposed scheme. The distance between the AN and TN is estimated using 
+the RSSI of the RF signal, but the environment constant and path loss component value are 
+essential to the accuracy of node localization. The environment constant value lies between 
+2 and 5, and the fixed value of path loss exponent 2.3 is chosen without any calibration, 
+which may affect the NL accuracy. Pudi et al. [12] have designed a Group Teaching Opti-
+mization Algorithm (GTOA) for indoor NL. Comparative results of the GTOA are better 
+than the PSO, krill herd algorithm (KHA), GWO, cuckoo search optimization (CSO), and 
+firefly algorithm (FFA). The performance parameters are NL and NL Error. The KHA, 
+PSO, CSO, GWO, and FFA-based NL algorithms have higher NL errors of 0.36, 0.57, 
+0.38, 0.53, and 0.51, respectively. The GTOA scheme for NL has achieved a reduced 
+NL error of 0.16. Cheng et  al. [18] have proposed a DV-Hop-based Modified Archime-
+des optimization Algorithm (MAOA) for NL. The convergence speed is analyzed using 
+7uni-modal and six multi-modal functions. NL of MAOA converges more quickly than 
+DE and BOA. NL error is smaller than BOA and DE. Rani et al. [13] have put out an NL 
+topology for maritime search and rescue use. RSSI-based SSA is proposed, and the RSSI 
+algorithm is used to compute the distance between the AN and TN. The value of the envi-
+ronment constant and path loss component is essential to the accuracy of node localization, 
+and both values chosen for distance computation are not mentioned. SSA has 10% less NL 
+error than BOA and PSO. The performance parameters are NL accuracy, localized nodes, 
+NL errors, and computation time. Mohar et al. [40] have modified two Bat optimization 
+algorithms (BOA) to localize the sensor nodes and overcome the drawbacks of the original 
+BOA. Regarding NL error and computation time, NL based on BOA performs better than 
+existing optimization techniques. The original BOA is modified, and the first variant of 
+BOA is used to improve the global search strategy, and the second variant of BOA is used 
+to improve the local search strategy. The performance of the proposed variants of BOA 
+70797 Multimedia Tools and Applications (2024) 83:70793–70814 
+1 3
+is compared with the original BOA, PSO, GWO, BFOA, SSOA, and FOA. Muhammad 
+Faheem et al. [43] proposed a scheme based on Industry 4.0 which is cost-effective and 
+provides high-quality electricity. To ensure the quality of service (QoS) standards in the 
+smart grid, efficient monitoring, and real-time management of unexpected changes in the 
+power generating and distribution operations are crucial. Muhammad Faheem et al. [44] 
+proposed a scheme based on Industry 4.0 and a huge data set derived from commercial 
+Cyber-Physical Systems (CPS) with Internet of Things (IoT) support. A total of 450 sen-
+sors and 100 optical sensors are deployed to capture data from the real-time environment. 
+The plan plays an essential role in improving system service performance to increase effi-
+ciency while improving customer experience. Muhammad Faheem et  al. [45] presented 
+an innovative method for data collection leveraging the smart grid’s Internet of software-
+defined mobile sinks and WSNs. simulation is performed using EstiNet9.0. The developed 
+system performs better than competing methods and accomplishes its specified objectives 
+for events-driven applications in the SG. Packet delivery ratio, delay, throughput, and 
+residual energy are the performance parameters. Similar kind of research work [46–52] is 
+also caried out by the researchers to improve the performance of the proposed system.
+Conclusion drawn from the related works  Table  1 shows the summery of the related 
+work . The accuracy of NL may significantly impact the performance of a WSN. The accu-
+racy of the NL still needs to improve due to the path loss component and environment 
+constant, which are not calibrated and whose values were chosen based on some assump-
+tions. Authors have proposed numerous node-positing methods and meta-heuristic optimi-
+zation schemes for accurate target node location. Appropriate path loss components and an 
+environment constant are needed to enhance node localization. To further enhance NL, the 
+meta-heuristic algorithm can be modified.
+3  Background
+In this section, the description of NL, SOA, chaotic maps, and levy flight problem is 
+explained. As shown in Fig.  1, NL schemes can be broadly categorized into centralized and 
+distrusted NL. Range-free and range-based are the distributed NL schemes [33–35, 39]. 
+The range-based NL(RBNL) accuracy is low compared to range-free NL(RFNL) schemes. 
+The position of the target nodes is estimated by RFNL using information about the net-
+work topology and connectivity to surrounding nodes. Range-based schemes perform the 
+NL using either distance or angle. The combination of distance and angle can be used for 
+NL, too. The Received Signal Strength Indicator (RSSI) [21–23] is the most widely used 
+technique for estimating node position using node distance. Other location-aware strategies 
+include Triangulation, Angle of Arrival (AoA), Time Difference of Arrival (TDoA), Time 
+of Arrival (ToA), and Maximum Likelihood (ML) [32, 38].
+3.1  Notation
+Table 2 presents some abbreviation used in this work.
+70798 Multimedia Tools and Applications (2024) 83:70793–70814
+1 3Table 1  Summery of the related work
+Ref. & Year Methodology/Algorithm Research Gap Performance Parameter
+[12] 2021 GTOA The optimization algorithm is mentioned only and the algorithm used for 
+distance estimation between an anchor and target node is not mentionedNL, NL Error
+[25] 2021 RSSI The RSSI method is used for distance estimation but the environment 
+constant and path loss component value is essential to the accuracy of node 
+localization and the constant value chosen lies between 2 to 5
+The fixed value of path loss exponent 2.3 is chosen which may affect the NL 
+accuracyAverage NL errors and computation time
+[35] 2021 CS-GWO All nodes are GPS enabled which consumes more power and cost-effective 
+approachNL, Mean NL error,
+[36] 2021 QUATRE Required some hardware and not cost-effective NL accuracy, NL error
+[37] 2020 MCB, PSO There is a defect in MCB algorithms. Because all the candidate positions are 
+generated randomly in an anchor box, no searching direction exists, which 
+makes the time cost quite high and localization efficiency low. It may not 
+be suitable for high mobility requirementsNL error, NL computation time
+[2] 2019 SSA The NL is primarily needed and method used for NL is not mentioned NL accuracy, computation time and mean NL error
+[3] 2019 DV-HOP, PSO So many chaotic maps are available and a sine chaotic map is chosen for 
+simulations and it is not mentioned why only a sine map is chosen for itNL and NL Error
+[18] 2022 MAOA, DV-Hop This paper only discussed the application of node localization based on the 
+two-dimensional plane in WSNsExecution Time, Average NL error
+[19] 2018 RSSI and Bat Algorithm RSSI scheme is used for distance estimation between anchor node and target 
+node but the value of environment constant and Path loss component value 
+is not mentionedMean NL error, mean NL time
+[3] 2017 GOA The method used for NL is not mentioned mean NL error, computation time, and NL
+[4] 2017 BFOA The trilateration method is used for distance computation but the value of 
+environment constant and Path loss component value is not mentionedMean NL, mean NL error and mean computation time
+[1] 2016 WOA Covered only single objective function and multi-objective function is not 
+dissuadedAverage cost function and standard deviation
+70799 Multimedia Tools and Applications (2024) 83:70793–70814 
+1 3
+Node Localization(NL)
+Source/Trarg et NL (Centralized )
+Single Target  
+Loc.(STL)Multi Target  
+Loc.(M TL)
+STL WB SNMTL 
+WBSNNode Self Localization  (Distributed )
+Range Based Loc
+TOAT DOA
+RSSI AoARange Free Loc.
+Gradient DV-Hop  
+Multi-
+HopPIT
+Centroid
+Fig. 1  NL Taxonomy
+Table 2  Description of 
+abbreviationAbbreviation Description
+A Variable representing motion behaviour
+ANLA Average node localization accuracy
+ANLE Average node localization error
+ANLT Average node localization computation time
+B Random number
+C(t) New position of the search agent
+D(t) Distance covered by the Best-fit search agent
+dest(i) Estimated distance between TN & AN
+dact(i) Actual distance between TN & AN
+itrMax Total Number of Iteration
+fc Frequency constant
+M(t) Position of the search agent at time t
+NLE Node localization error
+pbest(t) Position of the best search agent at time t
+u Correlation constant
+v Correlation constant
+/u1D6FC Step size
+β Chaotic index
+r Radius
+rd Random Number between 0 to 1
+/u1D703 Random angle between [0, 2π]
+/u1D706 Levy exponent
+70800 Multimedia Tools and Applications (2024) 83:70793–70814
+1 3
+3.2  SOA
+The SOA is a meta-heuristic algorithm shown in Algorithm 1.
+The mathematical model of SOA [29] mainly depends on exploration and exploitation. 
+The exploration phase is accomplished with three conditions. Collision avoidance, move-
+ments toward the best neighbor’s direction, and being close to the best search agent. To 
+avoid collisions with other seagulls, variable A is employed to estimate the new position of 
+the search agent(seagull) as follows:
+where C(t) is the new position of the search agent and P(t) is the current position of the 
+other search agent that does not collide with another search agent at iteration t.
+A represents the motion behavior of the search agent in each search space. A  is a 
+variable that represents the motion behavior of the search agent in each search space. 
+The behavior of variable A  is controlled using the frequency constant(fc). The value of 
+fc is 2.
+where tis the iteration from 0 to itrMax, and the value of A decreases from fc to 0.
+Then search agent moves in the direction of the best solution.(1) C(t)=A∗P(t);
+(2) A=fc−t∗/parenleft.s3fc
+itrMax/parenright.s3
+(3) M(t)=B−Pbest(t)−P(t)
+70801 Multimedia Tools and Applications (2024) 83:70793–70814 
+1 3
+where M(t) is the position of the search agent P(t) towards the best search agent pbest(t) . B 
+is a random number that balances the local and global search agents.
+where the random number (rd) lies between 0 to 1.
+Now search agent moves in the direction of the best search agent.
+where D(t) represents the best-fit search agent.
+The search agents can change the speed and angle for attacking the prey. While 
+attacking the prey, the search agent moves in a spiral shape. The motion behavior of the 
+agent 3-D planes is as follows:
+where the radius spiral is r and /u1D703  is a random angle between [0, 2π].
+The correlation constants are u and v of the spiral shape, and e is the base of the 
+natural logarithm. The attack position of the search agent is constantly updated.
+where P(t) saves the best solution and updates the position of other search agents.
+3.3  Chaotic maps
+The meaning of chaos [6 , 10, 14–17] is defined by properties of deterministic, nonlinear, 
+semi-stochastic, and sensitive dependence. For best results, choosing the initial values 
+carefully is crucial because chaotic maps are very sensitive to changes in the initial con-
+ditions. Chaos is the randomness of straightforward deterministic dynamic systems in 
+mathematics, and chaotic systems can be thought of as sources of randomness. Chaos 
+employs chaotic variables rather than random variables. Ergodicity and non-repetition 
+are other valuable properties that enhance the search process. Chaotic can avoid reach-
+ing local maxima. Although the meta-heuristic optimization algorithm is robust, effi-
+cient, flexible, and very popular in the research community, it has a slow convergence 
+speed. To improve the performance of the optimization scheme, the logistic chaotic map 
+shown in Fig.  2 is found to be more suitable out of the 10 chaotic maps shown in Table  3. (4) B=2∗A2−rd
+(5) D(t)=M(t)+C(t)
+(6) (x,y,z)=/parenleft.s1r∗cos/u1D703,r∗ sin/u1D703 ,r∗/u1D703wherer =u∗e/u1D703v/parenright.s1
+(7) P(t)=D(t)∗x∗y∗z+pbest(t)
+Fig. 2  Logistic map of the cha-
+otic function
+
+70802 Multimedia Tools and Applications (2024) 83:70793–70814
+1 3
+Randomness is the basic property of the meta-hubristic optimization algorithms, which 
+is modified using a chaotic map to improve the performance of the algorithm. A total 
+200 iterations are performed for the generation of the random number between 0 to 1.
+3.4  Levy flight
+Levy flight is just a random walk with step lengths that adhere to the levy distribution, a 
+probability distribution with a heavy tail depicted in Fig.  3. Levy distribution is a series 
+of small steps. When a walk is said to have a dimension more than once, the directions 
+in which the steps are taken are isotropic. Lévy-flight can improve population diversity to 
+speed up the convergence and reduce the local optimum. Better exploitation and explora-
+tion balance is made possible with the help of this strategy. A seagull follows the levy flight 
+distribution. The levy flight can suddenly take a more extended step size.
+(8) pt+1
+i=pt
+ia⊗levy(𝜆)Table 3  List of chaotic maps
+Sr.NO Name Chaotic map Constant Range
+1 Tent mapxi+1=/braceleft.s3
+𝜇xi,forxi<0.5
+𝜇(1−x)i,forxi≥0.5/u1D707=2 (0,1)
+2 Logistic map xi+1=/u1D707
+4xi/parenleft.s11−xi/parenright.s10≤/u1D707≤4 (0,1)
+3 Sine map xi+1=/u1D707
+4sin/u1D70Bxi0<𝜇≤4 (0,1)
+4 Kent mapxi+1=/braceleft.s3xi
+m,0<xi<m
+1−xi,m<xi<10 < m < 1 (0,1)
+5 Circle map xi+1=xi+/u1D707−/u1D70F
+2/u1D70Bsin2/u1D70Bximod 1 /u1D707=0.5,/u1D70F=0.2 (0,1)
+6 Cubic map xi+1=cxi/parenleft.s11−x2
+i/parenright.s1C = 2.59 (0,1)
+7 Singer map xi+1=/u1D707(7.86 xi−23.31 x2
+i+28.75 x3
+i−13.3 x4
+i)0.9≤/u1D707≤1.08 (0,1)
+8 Gauss map
+xi+1=/braceleft.s4
+1,ifxi=0
+1
+ximod 1otherwise/u1D707=6 (0,1)
+9 Square map xi+1=/parenleft.s11−/u1D707x2
+i/parenright.s1/u1D707=2
+10 Sinusoidal map xi+1=/u1D6FCx2
+isin/u1D70Bxi/u1D6FC=2.3 (0,1)
+Fig. 3  Randomness of levy flight
+

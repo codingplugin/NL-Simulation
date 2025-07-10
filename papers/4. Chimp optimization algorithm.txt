@@ -1,0 +1,1564 @@
+Expert Systems With Applications  149 (2020) 113338 
+Contents  lists available  at ScienceDirect  
+Expert  Systems  With  Applications  
+journal  homepage:  www.elsevier.com/locate/eswa  
+Chimp  optimization  algorithm  
+M. Khishe  a , M.R. Mosavi  b , ∗
+a Department  of Electrical  Engineering,  Imam Khomeini  Marine Science University,  Nowshahr,  Iran 
+b Department  of Electrical  Engineering,  Iran University  of Science and Technology,  Narmak, Tehran 16846-13114,  Iran 
+a r t i c l e i n f o 
+Article history: 
+Received  11 April 2019 
+Revised 11 January 2020 
+Accepted  24 February  2020 
+Available  online 29 February  2020 
+Keywords:  
+Chimp 
+Mathematical  model 
+Metaheuristic  
+Optimization  a b s t r a c t 
+This paper proposes  a novel metaheuristic  algorithm  called Chimp Optimization  Algorithm  (ChOA) in- 
+spired by the individual  intelligence  and sexual motivation  of chimps in their group hunting,  which is 
+different  from the other social predators.  ChOA is designed  to further alleviate  the two problems  of slow 
+convergence  speed and trapping  in local optima in solving high-dimensional  problems.  In this paper, a 
+mathematical  model of diverse intelligence  and sexual motivation  of chimps is proposed.  In this regard, 
+four types of chimps entitled  attacker,  barrier, chaser, and driver are employed  for simulating  the diverse 
+intelligence.  Moreover,  four main steps of hunting,  i.e. driving,  chasing,  blocking,  and attacking,  are im- 
+plemented.  The proposed  ChOA algorithm  is evaluated  in 3 main phases. First, a set of 30 mathematical  
+benchmark  functions  is utilized  to investigate  various characteristics  of ChOA. Secondly,  ChOA was tested 
+by 13 high-dimensional  test problems.  Finally, 10 real-world  optimization  problems  were used to evaluate  
+the performance  of ChOA. The results are compared  to several newly proposed  meta-heuristic  algorithms  
+in terms of convergence  speed, the probability  of getting stuck in local minimums,  and exploration,  ex- 
+ploitation.  Also, statistical  tests were employed  to investigate  the signiﬁcance  of the results. The results 
+indicate  that the ChOA outperforms  the other benchmark  optimization  algorithms.  
+©2 0 2 0 Elsevier  Ltd. All rights reserved.  
+1. Introduction  
+Metaheuristic  Optimization  Algorithms  (MOAs)  have become  
+very popular  in engineering  applications.  As the complicacy  of 
+problems  increases,  the need for new MOAs becomes  obvious  more 
+than before.  The reasons  for this demand,  can be summarized  
+into ﬁve major motivations:  (i) simple concepts  and structure,  
+which assists scientists  to learn MOAs quickly  and apply them to 
+their problems;  (ii) derivation-free  mechanisms:  this makes MOAs 
+highly suitable  for real-world  engineering  problems  with costly or 
+unknown  gradient  information;  (iii) local optima  avoidance:  they 
+have greater  abilities  to avoid local minima  compared  to conven-  
+tional optimization  algorithms;  (iv) ﬂexibility,  which refers to the 
+pertinence  of MOAs to different  problems  without  any speciﬁc  
+changes  in their structure  (they assume  problems  as black boxes);  
+(v) relatively  simple and entirely  effective  hardware  implementa-  
+tion, the majority  of MOAs have parallel  structures,  therefore,  hard- 
+ware implementation  and parallel  computing  (e.g. via Filed Pro- 
+grammable  Gate Array (FPGA))  can strongly  increase  their perfor-  
+mances.  
+∗Corresponding  author. 
+E-mail addresses:  m_khishe@alumni.iust.ac.ir  (M. Khishe), m_mosavi@iust.ac.ir  
+(M.R. Mosavi). Nature-inspired  MOAs solve optimization  problems  by imitating  
+physical  or biological  phenomena.  They can be divided  into four 
+major categories:  physics-based,  evolution-based,  swarm-based,  
+and human-based  methods.  Evolutionary  Algorithms  (EAs) are usu- 
+ally inspired  by the concepts  of natural  evolution.  The search pro- 
+cess initiates  with a stochastically  generated  population  which is 
+evolved  over following  generations.  The prominent  feature  of EAs 
+is that the best individuals  are always merged  together  to create 
+the subsequent  generation  of individuals.  This let the population  
+be optimized  over the course of generations.  The most popular  
+EA is Genetic  Algorithms  (GA) ( Holland,  1992 ) that simulates  the 
+Darwinian  evolution  concepts.  Some other popular  EAs are Dif- 
+ferential  Evolution  (DE) ( Storn & Price, 1997 ), Evolution  Strategy  
+(ES) ( Beyer & Schwefel,  2002 ), and Biogeography-Based  Optimizer  
+(BBO) ( Khishe,  Mosavi,  & Kaveh, 2017 ; Kaveh et al., 2019). 
+Physics-based  methods  mimic the physical  concepts  in the 
+world so that a stochastic  set of search agents communi-  
+cate and move entire search space pursuant  physical  concepts.  
+Some of the most popular  methods  are Simulated  Annealing  
+(SA) ( Kirkpatrick,  Gelatt, & Vecchi,  1983 ), Big-Bang  Big-Crunch  
+(BBBC)  ( Erol & Eksin, 2006 ), Gravitational  Search Algorithm  (GSA) 
+( Rashedi,  Nezamabadi-Pour,  & Saryazdi,  2009 ), Chaotic  Fractal Walk 
+Trainer  ( Khishe,  Mosavi,  & Moridi,  2018 ), and Adaptive  Best-mass  
+Gravitational  Search Algorithm  ( Mosavi,  Khishe,  Parvizi,  Naseri,  & 
+Ayat, 2019 ). 
+https://doi.org/10.1016/j.eswa.2020.113338  
+0957-4174/© 2020 Elsevier Ltd. All rights reserved.  
+
+2 M. Khishe and M.R. Mosavi / Expert Systems With Applications  149 (2020) 113338 
+Fig. 1. Two different  plot of relationship  between  body size and brain size in various mammals.  
+Fig. 2. Phylogeny  of super-family  Hominoid.  
+The third group of MOAs includes  algorithms  inspired  by 
+human  behaviours  in the literature.  Some of the most popu- 
+lar techniques  are Tabu (Taboo)  Search (TS) ( Osman,  1993 ), Im- 
+perialist  Competitive  Algorithm  (ICA) ( Atashpaz-Gargari  & Lucas, 
+2007 ), Teaching  Learning  Based Optimization  (TLBO) ( Rao, Savsani,  
+& Vakharia,  2011 ), Interior  Search Algorithm  (ISA) ( Ravakhah,  
+Khishe,  Aghababaee,  & Hashemzadeh,  2017 ), Innovative  Gunner  
+(AIG) ( Pijarski  & Kacejko,  2019 ). 
+The forth group of MOAs includes  Swarm  Intelligence-based  Al- 
+gorithms  (SIAs) that originates  from natural  behaviour  of animals  
+in their herds, ﬂock, colonies,  and schools.  The most popular  algo- 
+rithm, in this category,  is Particle  Swarm  Optimization  (PSO) ( Han, 
+Lu, Hou, & Qiao, 2016 ). Two other popular  swarm-based  algorithms  
+are Ant Colony  Optimization  (ACO) ( Dorigo,  Birattari,  & Stutzle,  
+2006 ) and Artiﬁcial  Bee Colony  (ABC) ( Basturk  & Karaboga,  2006 ). 
+Fig. 3. Human and chimp DNA. 
+Other recently  proposed  SIAs are Cuckoo  Search (CS) ( Yang & 
+Deb, 2009 ), Bat-inspired  Algorithm  (BA) ( Yang, 2010 ), Fireﬂy Algo- 
+rithm (FA) ( Yang, 2010 ), Krill Herd (KH) ( Gandomi  & Alavi, 2012 ), 
+Grey Wolf Optimizer  (GWO) ( Emary,  Zawbaa,  & Grosan,  2017 ), 
+GWO with Levy ´Flight ( Heidari  & Pahlavani,  2017 ), chaotic  GWO 
+( Heidari  & Abbaspour,  2017 ), evolutionary  population  dynamics  
+
+M. Khishe and M.R. Mosavi / Expert Systems With Applications  149 (2020) 113338 3 
+Fig. 4. The ﬁrst phase of hunting process (exploration).  
+Fig. 5. The second phase of hunting process (exploitation).  
+and Grasshopper  Optimization  Approaches  (GOA) ( Mafarja  et al., 
+2017 ), binary Salp Swarm  Algorithm  (BSSA) with crossover  scheme  
+( Farisa et al., 2018 ), hybrid GOA and MLP ( Heidari,  Farisa, Aljarah,  
+& Mirjalili,  2019 ), hybrid binary Ant Lion Optimizer  (ALO) with 
+rough set and approximate  entropy  ( Mafarja  & Mirjalili,  2019 ), hy- 
+brid MLP and Salp Swarm  Algorithm  (MLP-SSA)  ( Khishe & Moham-  
+madi, 2019 ), improved  Monarch  Butterﬂy  Optimization  (MBO) al- 
+gorithm  ( Sun, Chen, Xu, & Tian, 2019 ), Improved  Whale Trainer  
+(IWT) ( Khishe & Mosavi,  2019 ), and hybrid Dragonﬂy  Optimization  
+Algorithm  and MLP (DOA-MLP)  ( Khishe & Saffari,  2019 ). 
+This category  of MOAs started  to be interesting  since PSO 
+was proven  to be very competitive  with EAs, human-based,  and 
+physical-based  methods.  Totally,  SIAs have some advantages  over 
+other MOAs that are listed below:  Fig. 6. Mathematical  models of dynamic  coeﬃcients  (f) related to independent  
+groups for (a) ChOA1 and (b) ChOA2. 
+Table 1 
+The dynamic  coeﬃcient  of f vector. 
+Groups ChOA1 ChOA2 
+Group1 1.95 −2 t 1/4 / T 1/3 2.5 −( 2log (t)/ log (T)) 
+Group2 1.95 −2 t 1/3 / T 1/4 ( −2 t 3 /T 3 ) + 2 . 5 
+Group3 ( −3 t 3 /T 3 ) + 1 . 5 0.5 + 2exp[ −( 4 t/T) 2 ] 
+Group4 ( −2 t 3 /T 3 ) + 1 . 5 2 . 5 + 2 (t/T) 2 −2 ( 2 t/T) 
+•SIAs memorize  search space information  over the course of it- 
+eration  while EAs discard  any information  of the prior genera-  
+tions. 
+•SIAs almost use memory  to keep the best solution  acquired  so 
+far. 
+•SIAs generally  have fewer parameters  to adjust compare  to 
+other MOAs. 
+•SIAs have fewer operators  compared  to EAs (crossover,  muta- 
+tion, immigration,  and so on). 
+•SIAs are easier to implement  than the other MOA groups.  
+In spite of the demand  for more function  evaluation,  the lit- 
+erature  shows that SIAs are highly appropriate  for solving  real 
+
+4 M. Khishe and M.R. Mosavi / Expert Systems With Applications  149 (2020) 113338 
+Fig. 7. Two and three-dimensional  position vectors and their possible next loca- 
+tions. 
+Fig. 8. Position updating  in ChOA. world engineering  problems  since they are able to elude local min- 
+ima, exploring  the search space more complete,  and exploiting  the 
+global optimum  more reliable  than any other MOAs. In addition,  
+the No Free Lunch (NFL) theorem  shows that all the MOAs execute  
+equally  on all optimization  problems  ( Wolpert  & Macready,  1997 ). 
+Hence, there are still problems  that have not been solved,  or they 
+can be resolved  better by new MOAs. The main motivations  of this 
+article are these two reasons,  in which a novel SIAs is proposed  
+and compared  to the current  well-known  MOAs in the literature.  
+In spite of the considerable  number  of recently  proposed  publi- 
+cations  in this ﬁeld, there are yet other intelligent  swarming  be- 
+haviours  in nature that have not obtained  merit attention.  One 
+of the amazing  swarming  behaviours  in nature is the Intelligent  
+Group Haunting  (IGH) of chimps.  Since there is no research  in the 
+literature  to simulate  the IGH of chimps,  this article aims to ﬁrst 
+discover  the main characteristics  of chimps’  IGH. An MOA is then 
+proposed  based on the modelled  IGH called Chimp Optimization  
+Algorithm  (ChOA).  In addition  to NFL theorem  underpinning  work 
+motivation,  the main reasons  for choosing  chimps  from among  nu- 
+merous  swarming  behaviour  are individual  intelligence  and sexual 
+motivation.  These two vary from the other hunters  in nature.  
+Irrespective  of the differences  between  the MOAs, a common  
+characteristic  is the division  of the search producer  into two 
+phases:  exploration  and exploitation.  The exploration  phase refers 
+to the producer  of investigating  the search space as widely as pos- 
+sible. A MOA needs to have random  operators  to stochastically  and 
+globally  discover  the search space in order to reinforce  this phase. 
+Nevertheless,  exploitation  refers to the local search ability around  
+the promising  areas gained in the exploration  phase. Having  strong 
+operators  within these two phases or ﬁnding  a proper balance  
+between  them is considered  a challenging  point in the literature  
+( Mirjalili,  2015 , 2016 ). 
+The main differences  between  the social behaviour  of chimps  
+and any other ﬂocking  behaviours  are: 
+1) Individuals’  Diversity:  In a group of chimps,  individuals  are not 
+basically  quite similar  in terms of ability and intelligence,  but 
+they all perform  their tasks as members  of a hunting  group. 
+Each individual’s  ability can be useful in a special  phase of the 
+hunting  event. Therefore,  a chimp according  to his special  abil- 
+ity takes responsibility  for a part of hunt ( Stanford,  1996 ). In 
+this article, a mathematical  model of diverse  chimps  called in- 
+dependent  chimps  is proposed.  In other words, various  models  
+with diverse  curvatures,  slopes, and interception  points are uti- 
+lized to give chimps  different  behaviours  as in natural  hunting  
+duties. Independent  chimps  can improve  the exploration  phase 
+by discovering  the searching  space more thoroughly.  
+2) Sexual Motivation:  As well as nutritional  advantages  of group 
+hunting,  it has also been proved  that chimps’  hunting  is af- 
+fected by the probable  social beneﬁts  of obtaining  meat (Stan- 
+ford et al., 1994). Acquiring  meat provides  an opportunity  to 
+trade it in return for social favours,  e.g. sex and grooming.  This 
+incentive  in the ﬁnal stage causes chimps  to forget their re- 
+sponsibilities  in hunting  process.  Therefore,  they try to obtain 
+meat chaotically.  This unconditional  behaviour  in ﬁnal stage 
+lead to improve  exploitation  phase and convergence  rate. 
+To sum up, the main contribution  of the paper can be catego-  
+rized as follow:  
+/squaresolidStage 1: According  to the comprehensive  background  study 
+in literature,  MOAs are categorized  into four main groups  
+as physics-based,  evolution-based,  swarm-based,  and human-  
+based. The result of this stage was choosing  a swarm-based  al- 
+gorithm  based on their ability and our target. 
+/squaresolidStage 2: A comprehensive  study has been done to choose  a spe- 
+cial creature  that has not been previously  modelled  and also 
+
+M. Khishe and M.R. Mosavi / Expert Systems With Applications  149 (2020) 113338 5 
+Fig. 9. Position updating  mechanism  of chimps and effects of |a| on it. 
+Fig. 10. The chaotic maps used in the article. 
+Table 2 
+Chaotic maps. 
+No Name Chaotic map Range 
+1 Quadratic  x i + 1 = x 2 
+i −c , c = 1 (0,1) 
+2 Gauss/mouse  x i +1 = { 1 x i = 0 
+1 
+mod ( x i , 1) otherwise  (0,1) 
+3 Logistic x i + 1 = αx i (1 −x i ), α= 4 (0,1) 
+4 Singer x i +1 = μ(7 . 86 x i −23 . 31 x 2 
+i + 28 . 75 x 3 
+i −13 . 302875 x 4 
+i ) , μ= 1 . 07 (0,1) 
+5 Bernoulli  x i + 1 = 2 x i ( mod 1) (0,1) 
+6 Tent x i +1 = { x i 
+0 . 7 x i < 0 . 7 
+10 
+3 (1 −x i ) 0 . 7 ≤x i (0,1) 
+having special  intelligent  behaviour.  So, the result of this stage 
+was choosing  chimp and it’s Intelligent  Group Haunting  (IGH). 
+/squaresolidStage 3: Discovering  and modelling  the main characteristics  of 
+Intelligent  Group Haunting  (IGH) of chimps  (i.e.: diverse  intelli- 
+gence and sexual motivation)  
+/squaresolidStage 4: The implementation  of four main steps of hunting  as 
+(driving,  chasing,  blocking,  and attacking)  /squaresolidStage 5: Evaluation  of the proposed  ChOA algorithm  by 30 
+mathematical  benchmark  functions,  13 high-dimensional  test 
+problems,  and 10 real-world  optimization  problems.  
+The rest of the paper is structured  as follows.  Section  2 de- 
+scribes  the chimp optimization  algorithm  developed  in the arti- 
+cle. Optimization  problems  and their experimental  results are pre- 
+
+6 M. Khishe and M.R. Mosavi / Expert Systems With Applications  149 (2020) 113338 
+Table 3 
+Unimodal  benchmark  function.  
+Function  Dim Range f min 
+F 1 (x ) = /summationtext n 
+i =1 x 2 
+i 30, 100 [ −100, 100] 0 
+F 2 (x ) = /summationtext n 
+i =1 | x i | + /producttext n 
+i =1 | x i | 30, 100 [ −10, 10] 0 
+F 3 (x ) = /summationtext n 
+i =1 ( /summationtext i 
+j−1 x j ) 2 30, 100 [ −100, 100] 0 
+F 4 ( x ) = max i {| x i |,1 ≤i ≤n } 30, 100 [ −100, 100] 0 
+F 5 (x ) = /summationtext n −1 
+i =1 [100 ( x i +1 −x 2 
+i ) 2 + ( x i −1) 2 ] 30, 100 [ −30, 30] 0 
+F 6 (x ) = /summationtext n 
+i =1 ([ x i + 0 . 5]) 2 30, 100 [ −100, 100] 0 
+F 7 (x ) = /summationtext n 
+i =1 ix 4 
+i + random [0 , 1) 30, 100 [ −1.28, 1.28] 0 
+Fig. 11. Presents the pseudo-code  of ChOA. 
+sented and discussed  in Sections  3. Finally,  Section  4 concludes  the 
+work and suggests  directions  for further  research.  
+2. Chimp  optimization  algorithm  
+This section  presents  and discusses  the inspiration  of ChOA 
+method.  Afterwards,  it provides  the mathematical  model of the 
+proposed  algorithm.  
+2.1. Inspiration  
+Chimps  (sometimes  called Chimpanzees)  are one of two merely  
+African  species  of great ape. They are as much as the closest to 
+the humans’  living relatives.  As shown in Fig. 1 , the chimps,  as 
+well as the dolphins,  have the most similar  Brain to Body Ratio 
+(BBR) to humans.  As discussed  in Roth and Dicke (2005) mammals  
+with relatively  larger BBR are mostly assumed  to be smarter.  The 
+chimp and the human  DNA are so similar  because  they are de- 
+scended  from a single ancestor  species  (Hominoid)  that lived seven 
+or eight million  years ago. Fig. 2 indicates  the phylogeny  of super- 
+family Hominoid  ( Israﬁl, Zehr, Mootnick,  Ruvolo,  & Steiper,  2011 ). As shown in Fig. 3 , these two species  share a 98.8% of their DNAs 
+( Tomkins  & Bergman,  2012 ). 
+The chimp’s  colony is a ﬁssion-fusion  society.  This kind of soci- 
+ety is one in which the combination  or size of the colony changes  
+as time passes and members  move throughout  the environment.  
+For chimps  that live in ﬁssion-fusion  colonies,  group composition  
+is a dynamic  property  ( Couzin  & Laidre, 2009 ). Considering  these 
+issues, the independent  group concept  is proposed.  In this tech- 
+nique, each group of the chimps  independently  attempts  to dis- 
+cover the search space with its own strategy.  In each group, chimps  
+are not quite similar  in terms of ability and intelligence,  but they 
+are all doing their duties as a member  of the colony.  The ability of 
+each individual  can be useful in a particular  situation.  
+In a chimp colony,  there are four types of chimps  entitled  
+driver, barrier,  chaser,  and attackers.  They all have different  abil- 
+ities, but these diversities  are necessary  for a successful  hunt. 
+Drivers  follow the prey without  attempting  to catch up with it. 
+Barriers  place themselves  in a tree to build a dam across the pro- 
+gression  of the prey. Chasers  move rapidly  after the prey to catch 
+up with it. Finally,  attackers  prognosticate  the breakout  route of 
+the prey to inﬂiction  it (the prey) back towards  the chasers  or 
+down into the lower canopy.  These steps of hunting  process  are 
+shown in Fig. 4 . Attackers  are thought  to need much more cog- 
+nitive endeavour  in prognosticating  the subsequent  movements  of 
+the prey, and they are thus remunerated  with a larger piece of 
+meat after a successful  hunt. This important  role (attacking)  corre- 
+lates positively  with the age, smartness,  and physical  ability. More- 
+over, chimps  can change  duties during the same hunt or keep their 
+same duty during the entire process  ( Boesch,  2002 ). 
+It has been proven  that chimps  hunt to obtain meat for trad- 
+ing in social favours  such as coalitionary  support,  sex or grooming  
+( Stanford  et al., 1996 ). So, by opening  up a new realm of privileges,  
+smartness  may have an indirect  effect on hunting.  To the best of 
+our knowledge,  in addition  to humans,  this social incentives  has 
+been proposed  only for chimps.  Hence, it would represent  a criti- 
+cal difference  between  chimps  and other social predators  that de- 
+pend on cognitive  ability. This social incentive  (sexual  motivation)  
+causes the chimps  to act chaotically  in the ﬁnal stage of hunting  
+process  so that all chimps  abandon  their special  duties and they 
+try to get meat, frantically.  Generally  speaking,  the hunting  pro- 
+cess of chimps  is divided  into two main phases:  Exploration  which 
+consists  of driving,  blocking  and chasing  the prey and Exploitation  
+which consists  of attacking  the prey. These two phases are shown 
+in Figs. 4 and 5 , respectively.  Then, all of these concepts  of ChOA 
+are mathematically  formulated  in the following  section.  
+2.2. Mathematical  model and algorithm  
+In this section,  mathematical  models  of independent  group, 
+driving,  blocking,  chasing  and attacking  are presented.  Correspond-  
+ing ChOA algorithm  is then speciﬁed.  
+2.2.1. Driving  and chasing  the prey 
+As mentioned  above, the prey is hunted  during the explo- 
+ration and exploitation  phases.  To mathematically  model driving  
+and chasing  the prey, Eqs. (1) and ( 2 ) are proposed.  
+d = /vextendsingle/vextendsinglec . x prey (t) −m . x chimp (t) /vextendsingle/vextendsingle (1) 
+x chimp (t + 1) = x prey (t) −a . d (2) 
+Where t indicates  the number  of current  iteration,  a, m , and c 
+are the coeﬃcient  vectors,  X prey is the vector of prey position  and 
+X chimp is the position  vector of a chimp. a, m , and c vectors  are 
+calculated  by the Eqs. (3) –( 5 ), respectively.  
+a = 2 . f . r 1 −f (3) 
+
+M. Khishe and M.R. Mosavi / Expert Systems With Applications  149 (2020) 113338 7 
+Fig. 12. Convergence  curve of algorithms  on the unimodal  test functions.  
+
+8 M. Khishe and M.R. Mosavi / Expert Systems With Applications  149 (2020) 113338 
+Fig. 12. Continued  
+c = 2 . r 2 (4) 
+m = Chaotic  _ value (5) 
+In which, f is reduced  non-linearly  from 2.5 to 0 through  
+the iteration  process  (in both exploitation  and exploration  phase).  
+Where r 1 and r 2 are the random  vectors  in the range of [0,1]. Fi- 
+nally, m is a chaotic  vector calculated  based on various  chaotic  
+map so that this vector represents  the effect of the sexual moti- 
+vation of chimps  in the hunting  process.  A full description  of this 
+vector will be described  in detail in the following  subsections.  In 
+the conventional  population-based  optimization  algorithm,  all par- 
+ticles have similar  behaviour  in local and global searches  so that the individuals  can be considered  as a single group with one com- 
+mon search strategy.  However,  theoretically,  in every population-  
+based optimization  algorithm,  different  independent  groups  that 
+have a common  goal can be used to have a direct and ran- 
+dom search result at the same time. In the following,  indepen-  
+dent groups  of chimp using different  strategies  to update  f will 
+be modelled  mathematically.  Updating  the independent  groups  can 
+be implemented  by any continuous  function.  These functions  must 
+be chosen  in such a way that during each iteration  f is reduced  
+( Mirjalili,  Lewis, & Sadiq, 2014 ). 
+These four independent  groups  use their own patterns  to search 
+the problem  space locally and globally.  Also among  various  strate- 
+gies which have been tested, two different  versions  of ChOA with 
+
+M. Khishe and M.R. Mosavi / Expert Systems With Applications  149 (2020) 113338 9 
+Fig. 13. Convergence  curve of algorithms  on the multimodal  test functions.  
+
+10 M. Khishe and M.R. Mosavi / Expert Systems With Applications  149 (2020) 113338 
+Fig. 13. Continued  
+various  independent  groups  called ChOA1 and ChOA2 are selected  
+to have the best performance  in the benchmark  optimization  prob- 
+lems. The dynamic  coeﬃcients  of f have been proposed  in Table 
+1 and Fig. 6 . In this table, T represents  the maximum  number  of 
+iterations,  and t indicates  the current  iteration.  These dynamic  co- 
+eﬃcients  have been chosen  with various  curves and slopes so that 
+each independent  group has speciﬁc  searching  behaviour  for the 
+sake of improving  the performance  of ChOA. 
+Some points may be considered  to understand  how indepen-  
+dent groups  are effective  in ChOA: 
+•Independent  groups  have different  strategies  to update  f , so 
+chimps  could explore  the search space with different  capabil-  
+ity. 
+•Diverse  and dynamic  strategies  of f cause balancing  between  
+global and local search.  
+•Independent  groups  contain  non-linear  strategies  such as loga- 
+rithmic  and exponential  functions  for f , so ChOA could be ef- 
+fective in solving  complex  optimization  problems.  
+•ChOA with independent  groups  could be adaptable  in solving  a 
+wider range of optimization  problems.  
+To understand  the effects of Eqs. (1) and ( 2 ), a two-dimensional  
+representation  of the position  vector and a number  of possible  
+neighbours  are shown in Fig. 7 a. As can be observed,  a chimp in 
+position  ( x,y ) can change  its position  with respect  to prey’s ( x ∗, 
+y ∗)location.  Various  locations  around  the most suitable  agent can 
+be taken considering  its current  location  and changing  and setting  
+the values of a and c vectors.  For instance  the location  of ( x ∗−x, 
+y ∗) is obtained  by setting  a = (1,0), m = (1,1) and c = (1,1). Up- 
+dated possible  locations  of a chimp in a three-dimensional  space 
+are indicated  in Fig. 7 b. It should be noted that the chimps  are allowed  to access any position  between  the points shown in Fig. 
+7 through  the random  vectors  r 1 and r 2 . So, any chimp can ran- 
+domly change  its location  within the space surrounding  the prey 
+using Eqs. (1) and ( 2 ). 
+This concept  can be generalized  to an n-dimensional  search 
+space. As mentioned  in the previous  section,  the chimps  also attack 
+the prey with the chaotic  strategy.  This method  is mathematically  
+formulated  in the following  section.  
+2.2.2. Attacking  method  (exploitation  phase) 
+To mathematically  model attacking  behaviour  of chimps,  two 
+approaches  are designed  as follows:  The chimps  are capable  of ex- 
+ploring  the prey’s location  (by driving,  blocking  and chasing)  and 
+then encircling  it. The hunting  process  is usually  conducted  by at- 
+tacker chimps.  Driver, barrier  and chaser chimps  are occasionally  
+participate  in the hunting  process.  Unfortunately  in an abstract  
+search space there is no information  about the optimum  location  
+(prey). In order to mathematically  simulate  the behaviour  of the 
+chimps,  it is assumed  that the ﬁrst attacker  (best solution  avail- 
+able), driver, barrier  and chaser are better informed  about the lo- 
+cation of potential  prey. So, four of the best solutions  yet obtained  
+is stored and other chimps  are forced to update  their positions  ac- 
+cording  to the best chimps  locations.  This relationship  is expressed  
+by the Eqs. (6) –( 8 ). 
+d Attacker = | c 1 x Attac ker −m 1 x | , d Bar r ier = | c 2 x Bar r ier −m 2 x | , 
+d Chaser = | c 3 x Chaser −m 3 x | , d Dri v er = | c 4 x Dri v er −m 4 x | . (6) 
+x 1 = x Attac ker −a 1 ( d Attac ker ) , x 2 = x Bar r ier −a 2 ( d Bar r ier ) , 
+x 3 = x Chaser −a 3 ( d Chaser ) , x 4 = x Dri v er −a 4 ( d Dri v er ) . (7) 
+x (t + 1) = x 1 + x 2 + x 3 + x 4 
+4 (8) 
+
+M. Khishe and M.R. Mosavi / Expert Systems With Applications  149 (2020) 113338 11 
+Fig. 14. Convergence  curve of algorithms  on the ﬁxed-dimension  multimodal  benchmark  functions.  
+
+12 M. Khishe and M.R. Mosavi / Expert Systems With Applications  149 (2020) 113338 
+Fig. 14. Continued  
+
+M. Khishe and M.R. Mosavi / Expert Systems With Applications  149 (2020) 113338 13 
+Fig. 14. Continued  
+Table 4 
+Multimodal  benchmark  function.  
+Function  Range Dim f min 
+F 8 (x ) = /summationtext n 
+i =1 −x i sin ( /radicalbig 
+| x i | ) [ −500, 500] 30,100 -418.9829  ×Dim 
+F 9 (x ) = /summationtext n 
+i =1 [ x 2 
+i −10 cos (2 πx i ) + 10] [ −5.12, 5.12] 30,100 0 
+F 10 (x ) = −20 exp ( −0 . 2 /radicalbig 
+1 
+n /summationtext n 
+i =1 x 2 
+i ) 
+−exp ( 1 
+n /summationtext n 
+i =1 cos (2 πx i ) ) + 20 + e [ −32, 32] 30,100 0 
+F 11 (x ) = 1 
+40 0 0 /summationtext n 
+i =1 x 2 
+i −/producttext n 
+i =1 cos ( x i √ 
+i ) + 1 [ −600, 600] 30,100 0 
+F 12 (x ) = π
+n { 10 sin (πy 1 ) + /summationtext n −1 
+i =1 ( y i −1) 2 [1 + 10 si n 2 (πy i +1 )] 
++( y n −1) 2 
+} 
++ /summationtext n 
+i =1 u ( x i , 10 , 100 , 4) [ −50, 50] 30,100 0 
+y i = 1 + x i +1 
+4 
+u ( x i , a, k, m ) = { k ( x i −a ) m x i > a 
+0 −a < x i < a 
+k (−x i −a ) m x i < −a 
+F 13 (x ) = 0 . 1 { si n 2 (3 πx 1 ) + /summationtext n 
+i =1 ( x i −1) 2 [1 + si n 2 (3 πx i + 1)] 
++ ( x n −1) 2 [1 + si n 2 (2 πx n )] } 
++ /summationtext n 
+i =1 u ( x i , 5 , 100 , 4) [ −50, 50] 30,100 0 
+Table 5 
+Fixed-dimension  multimodal  benchmark  function.  
+Function  Range Dim f min 
+F 14 (x ) = ( 1 
+500 + /summationtext 25 
+j=1 1 
+j+ /summationtext 2 
+i =1 ( x i −a ij ) 6 ) −1 [ −65, 65] 2 1 
+F 15 (x ) = /summationtext 11 
+i =1 [ a i −x 1 (b 2 
+i + b i x 2 ) 
+b 2 
+i + b i x 3 + x 4 ] 2 
+[ −5, 5] 4 0.00030 
+F 16 (x ) = 4 x 2 
+1 −2 . 1 x 4 
+1 + 1 
+3 x 6 
+1 + x 1 x 2 −4 x 2 
+2 + 4 x 4 
+2 [ −5, 5] 2 −1.0316 
+F 17 (x ) = ( x 2 −5 . 1 
+4 π2 x 2 
+1 + 5 
+πx 1 −6 ) 2 + 10( 1 −1 
+8 π) cos x 1 + 10 [ −5, 5] 2 0.398 
+F 18 (x ) = [1 + ( x 1 + x 2 + 1) 2 (19 −14 x 1 + 3 x 2 
+1 −14 x 2 + 6 x 1 x 2 + 3 x 2 
+2 )] 
+×[30 + (2 x 1 −3 x 2 ) 2 ×(18 −32 x 1 + 12 x 2 
+1 + 48 x 2 −36 x 1 x 2 + 27 x 2 
+2 )] [ −2, 2] 2 3 
+F 19 (x ) = −/summationtext 4 
+i =1 c i exp (−/summationtext 3 
+j=1 a ij ( x j −p ij ) 2 ) [1, 3] 3 −3.86 
+F 20 (x ) = −/summationtext 4 
+i =1 c i exp (−/summationtext 6 
+j=1 a ij ( x j −p ij ) 2 ) [0, 1] 6 −3.32 
+F 21 (x ) = −/summationtext 5 
+i =1 [(X −a i ) (X −a i ) T + c i ] −1 [0, 10] 4 −10.1532 
+F 22 (x ) = −/summationtext 7 
+i =1 [(X −a i ) (X −a i ) T + c i ] −1 [0, 10] 4 −10.4028 
+F 23 (x ) = −/summationtext 10 
+i =1 [(X −a i ) (X −a i ) T + c i ] −1 [0, 10] 4 −10.5363 
+
+14 M. Khishe and M.R. Mosavi / Expert Systems With Applications  149 (2020) 113338 
+Table 6 
+The rotated and shifted benchmark  functions.  
+Function  Range Dim f min 
+F 24 (x ) = sin ( x 1 ) e [ (1 −cos ( x 2 )) 2 ] 
++ cos ( x 2 ) e [ (1 −sin ( x 1 )) 2 ] + ( x 1 −x 2 ) 2 [ −2 π, 2 π] 4 -106.764537  
+F 25 (x ) = 0 . 5 + sin 2 [ √ 
+x 1 2 + x 2 2 ] −0 . 5 
+[1+0 . 001( x 1 2 + x 2 2 )] 2 [ −100, 100] 40 0.5 
+F 26 (x ) = m −1 /summationtext 
+i =1 ( 0 . 5 + sin 2 [ √ 
+x 2 
+1 + x 2 
+2 ] −0 . 5 
+[ 1+0 . 001(x 2 
+1 + x 2 
+2 ) ] 2 ) [ −100, 100] 40 0.5 
+F 27 (x ) = −4 | sin ( x 1 ) cos ( x 2 ) e | cos ((x 2 
+1 + x 2 
+2 ) / 200 | | [ −10, 10] 10 −10.8723 
+F 28 (x ) = −0 . 0 0 01 [ | sin ( x 1 ) sin ( x 2 ) e | 100 −[ (x 2 
+1 + x 2 
+2 ) 0 . 5 ] /π| | + 1 ] 0 . 1 [ −10, 10] 20 0.1 
+F 29 (x ) = −exp [ −| cos ( x 1 ) cos ( x 2 ) e | 1 −[ (x 2 
+1 + x 2 
+2 ) 0 . 5 ] /π| −1 
+| ] [ −11, 11] 30 −0.96354 
+F 30 (x ) = m −1 /summationtext 
+i =1 ( −( x i +1 + 47) sin ( /radicalbig 
+| x i +1 + x i / 2 + 47 | ) + sin ( /radicalbig 
+| x i −x i +1 + 47 | )(−x i ) ) [ −512, 512] 30 959.64 
+Table 7 
+The naming style for ChOAs. 
+Chaotic map Updating  Strategies  
+Quadratic  Gauss/Mouse  Logistic Singer Bernoulli  Tent 
+Type 1 (ChOA1)  ChOA11 ChOA12 ChOA13 ChOA14 ChOA15 ChOA16 
+Type 2 (ChOA2)  ChOA21 ChOA22 ChOA23 ChOA24 ChOA25 ChOA26 
+Table 8 
+Parameters  and initial values of the benchmark  algorithm.  
+Algorithm  Parameter  Value 
+ChOA f Table I 
+r 1, r 2 Random 
+m Chaotic 
+Number of Chimps 50 
+Maximum  number of iterations  250 
+BBO Habitat modiﬁcation  probability  1 
+Immigration  probability  bounds per gene [0,1] 
+Step size for numerical  integration  of probabilities  1 
+Max immigration  (I) and Max emigration  (E) 1 
+Mutation  probability  0.005 
+Population  size 50 
+Maximum  number of generations  250 
+GWO Number of wolf 50 
+Upper bound 5 
+Lower bound −5 
+Maximum  number of iterations  250 
+LGWO a 0 2 
+β ~U(0,2) 
+p ~U(0,1) 
+ALO w [2,6] 
+Number of search agent 50 
+Modiﬁed  bound [ −100,100]  
+Maximum  number of iterations  250 
+BH a [0,1] 
+Number of stars 100 
+Maximum  number of iterations  250 
+PSO Cognitive  constant  ( C 1 ) 1 
+Social constant  ( C 2 ) 1 
+Local constant  ( W ) 0.3 
+Population  size 50 
+Maximum  number of iterations  250 
+GA Type Real coded 
+Selection  Roulette  wheel 
+Recombination  Single-point  (1) 
+Mutation  Uniform (0.01) 
+Layout Full connection  
+Population  size 50 
+Maximum  number of iterations  250 
+GSA Population  size 50 
+Number of masses 30 
+Gravitational  constant  1 
+Maximum  number of iterations  250 
+pa 0.25 
+CS Population  size 50 
+Maximum  number of iterations  250 
+
+M. Khishe and M.R. Mosavi / Expert Systems With Applications  149 (2020) 113338 15 
+Table 9 
+The results of unimodal  benchmark  functions.  
+Algorithm  F 1 F 2 F 3 F 4 F 5 F 6 F 7 
+ChOA11 Ave 5.9216e-33  1.0792e-19  1.9616e-08  1.0878e-08  27.1256 0.78715 0.0011101  
+Std 0.0000507  0.00017244  0.0015376  0.00029664  0.001221  0.00066241  0.0004353  
+p -value 0.0001 0.0001 0.0001 0.0001 0.0001 0.0001 0.0001 
+ChOA12 Ave 6.8573e-49  2.1821e-28  1.3912e-08  1.4402e-12  27.1546 0.2159 0.0011056  
+Std 0.00000003  0.00000035  0.0000141  0.00001211  0.0016241  0.00091769  0.683e-05  
+p -value N/A N/A N/A N/A 0.0001 0.0001 N/A 
+ChOA13 Ave 5.793e-25  2.6344e-15  0.0016344  2.0177e-06  27.1812 0.59441 0.0014983  
+Std 0.00044803  0.0025339  0.0008674  0.00036884  0.0012275  0.00022243  0.000892  
+p -value 0.0001 0.0001 0.0001 0.0001 0.0001 0.0001 0.0001 
+ChOA14 Ave 2.2761e-07  1.337e-06  2.3752 0.029591  29.0001 0.92924 0.0020332  
+Std 0.00068042  0.00028847  0.00061586  9.2999e-05  0.00070309  0.00028788  0.0012945  
+p -value 0.0047 0.0047 0.0047 0.0047 0.0047 0.0047 0.0047 
+ChOA15 Ave 1.7851e-09  1.0453e-07  1.9476 0.028648  28.0388 1.2473 0.0019176  
+Std 0.0023071  0.00058469  0.0014968  0.00034511  0.00048538  0.0024164  0.0001202  
+p -value 0.00797 0.00797 0.00797 0.00797 0.00797 0.00797 0.00797 
+ChOA16 Ave 2.0825e-05  9.8232e-05  2.02153 2.4511 33.9835 3.9568 0.010535  
+Std 0.00088144  0.00020824  0.00048348  0.00014341  0.00076807  0.0008887  0.0009381  
+p -value 0.00797 0.0047 0.0047 0.0047 0.00797 0.00797 0.0001 
+BBO Ave 0.013011  0.2334 3.9745 1.7185 40.8825 0.39002 0.081996  
+Std 0.00028037  0.0013183  0.00057292  0.00036264  0.00034323  0.0007505  3.456e-05  
+p -value 6.39e-05  6.39e-05  0.0047 6.39e-05  0.00797 0.00797 0.0001 
+BH Ave 0.27385 1.132 3.9664 1.0276 50.9993 0.065608  0.11347 
+Std 0.00093598  6.3233e-05  0.0016358  0.00026678  0.0021593  0.00073555  2.793e-05  
+p -value 0.00797 6.39e-05  6.39e-05  6.39e-05  0.00797 0.00797 0.0001 
+ALO Ave 1.2444 2.3692 3.8894 33.7621 63.3616 2.0344 0.79273 
+Std 0.00092526  7.7181e-05  0.0010751  0.0011727  0.0007689  0.00073103  0.001886  
+p -value 0.0057 6.39e-05  6.39e-05  6.39e-05  6.39e-05  6.39e-05  6.39e-05  
+GWO Ave 5.0555e-13  4.6933e-08  0.7213 0.00074374  28.8595 1.2504 0.0014836  
+Std 0.00040636  0.00013043  0.00078211  7.9584e-06  7.3315e-05  0.00063077  0.0005685  
+p -value 0.0057 0.0049 6.39e-05  6.39e-05  6.39e-05  0.0049 0.0057 
+ChOA21 Ave 1.6375e-26  6.8737e-17  3.8819e-07  1.4583e-06  27.1736 0.50289 0.0016598  
+Std 0.00057013  0.00068177  0.00016291  0.00029769  0.00010131  0.00098584  0.0015441  
+p -value 0.00797 0.0049 0.0049 0.0057 0.0049 0.0049 0.0057 
+ChOA22 Ave 1.552 1.1836 1.759 0.9313 58.5251 1.2803 3.3205 
+Std 0.00114 0.0013475  9.319e-05  0.00077073  0.0011949  0.0019343  0.0011812  
+p-v alue 0.00797 0.0049 0.0049 0.00797 0.0057 0.0049 0.0057 
+ChOA23 Ave 0.0042069  0.46036 2.06 0.7323 20.8532 0.058577  0.10077 
+Std 0.00031728  8.4022e-05  0.0013834  0.00052112  0.00010311  0.00026976  7.668e-05  
+p-v alue 0.0057 0.00797 0.0049 0.00797 N/A 0.0057 0.00797 
+ChOA24 Ave 0.43608 0.65876 2.7305 1.8589 39.7043 0.18706 0.072983  
+Std 0.00087541  0.001156  0.00011975  0.0030722  0.00026654  0.0011506  0.0004988  
+p -value 0.0057 0.0057 0.0049 0.0049 0.0057 0.00797 0.00797 
+ChOA25 Ave 0.02323 0.58268 3.3941 1.9377 40.7174 0.0064761  0.063093  
+Std 0.00027643  0.00016033  0.0012325  0.0011574  0.00032931  0.00000431  0.0010881  
+p -value 0.0057 0.0049 0.0049 0.0057 0.00797 N/A 0.00797 
+ChOA26 Ave 0.10797 0.16594 2.6906 1.3117 38.7458 0.070298  0.11899 
+Std 0.00036936  0.00084257  0.00013504  0.00023687  0.0015624  0.0016968  0.0005133  
+p -value 0.0057 0.00797 0.0049 0.0049 0.0057 0.0049 0.0049 
+Fig. 8 shows the process  of updating  the search chimp’s  location  
+in two-dimensional  search space regarding  the position  of other 
+chimp positions.  As it can be seen, the ﬁnal position  is located  
+randomly  in a circle which is deﬁned  by attacker,  barrier,  chaser 
+and driver chimp positions.  In other words, the prey position  is 
+estimated  by four best groups  and other chimps  randomly  update  
+their positions  within its vicinity.  
+2.2.3. Prey attacking  (utilization)  
+As mentioned  previously,  in the ﬁnal stage, the chimps  will at- 
+tack the pray and ﬁnish the hunt as soon as the prey stops mov- 
+ing. To mathematically  model the attacking  process,  the value of f 
+should be reduced.  Note that the variation  range of the a is also 
+reduced  by f . In other words, a is a random  variable  in the interval  
+of [ −2 f ,2 f ], whereas  the value of f reduces  from 2.5 to 0 in the pe- 
+riod of iterations.  When the random  values of a lie in the range of 
+[ −1,1], the next position  of a chimp can be in any location  between  its current  position  and the position  of the prey. Fig. 9 shows that 
+the inequality  forces the chimps  to attack the prey. 
+According  to the operators  that have already  been presented,  
+ChOA allows the chimps  to update  their positions  according  to the 
+positions  of attacker,  barrier,  chaser,  and driver chimps  and attack 
+the prey. However,  ChOAs may still be at the risk of trapping  in 
+local minima,  so other operators  are required  to avoid this issue. 
+Although,  the proposed  driving,  blocking,  and chasing  mechanism  
+somehow  shows exploration  process,  ChOA requires  more opera- 
+tors to emphasize  exploration  phase. 
+2.2.4. Searching  for pray (exploration)  
+As previously  mentioned,  the exploration  process  among  the 
+chimps  is mainly  done considering  the location  of attacker,  bar- 
+rier, chaser,  and driver chimps.  They diverge  to seek for the prey 
+and aggregate  to attack prey. In order to mathematically  model 
+the divergence  behaviour,  the a vector with a random  value bigger 
+
+16 M. Khishe and M.R. Mosavi / Expert Systems With Applications  149 (2020) 113338 
+Table 10 
+The results of multimodal  benchmark  functions.  
+Algorithm  F 8 F 9 F 10 F 11 F 12 F 13 
+ChOA11 Ave −6432.073  5.6843e-14  3.9968e-14  0 0.03789 0.59045 
+Std 3.2605 0.0007579  0.014542  0 0.00062651  0.018694  
+p -value 0.0001 N/A 0.0057 0.0057 0.0049 0.0049 
+ChOA12 Ave −3150.5985  2.738 7.9936e-15  0 0.29035 1.7768 
+Std 21.9845 0.008412  0.000851  0 0.015873  0.0097053  
+p -value 0.0057 0.0057 0.0049 0.0049 0.0001 0.0001 
+ChOA13 Ave −3628.8022  5.6843e-14  1.0036e-13  0 0.043508  0.53169 
+Std 5.1249 0.0012031  0.0051235  0 0.010383  0.003692  
+p -value 0.0057 0.0057 0.0049 0.0049 0.0001 N/A 
+ChOA14 Ave −5652.3897  1.1596 2.9619 0.036661  0.16291 3.0763 
+Std 7.6746 0.0030101  0.010755  0.0015965  0.014936  0.018627  
+p -value 0.0057 0.0057 0.0049 0.0049 
+ChOA15 Ave −5594.9085  1.3417 2.9668 0.014122  0.07438 2.8352 
+Std 4.5861 0.0010454  0.0075506  0.013896  0.00086557  0.019978  
+p -value 0.00747 0.0001 0.0057 0.0057 0.0049 0.0049 
+ChOA16 Ave −5588.3064  5.5591e-05  2.9668 0.42516 0.4587 2.2013 
+Std 21.4912 0.0064053  0.013362  0.0076654  0.007336  0.018548  
+p -value 0.00747 0.0057 0.0057 0.0049 0.0049 0.0001 
+BBO Ave −9952.6876  1.0027 0.5129 0.29361 2.1009 4.8418 
+Std 7.2952 0.012332  0.01008 0.0074866  0.0089069  0.0047195  
+p -value 6.39e-05  6.39e-05  6.39e-05  0.0057 0.0057 0.0049 
+BH Ave −9230.6623  2.0007 0.6284 0.31144 1.1078 0.39991 
+Std 5.5351 0.017319  0.011713  0.0096344  0.014307  2.8186e-05  
+p -value 6.38e-05  6.39e-05  6.39e-05  6.39e-05  6.38e-05  6.38e-05  
+ALO Ave −7167.2698  2.4653 0.8945 2.5676 1.5463 5.7996 
+Std 10.5861 0.012509  0.0092374  0.016871  0.0043937  0.00586957  
+p -value 6.38e-05  6.38e-05  6.39e-05  6.39e-05  6.39e-05  0.0001 
+GWO Ave −5665.3886  1.4001 2.9667 0.014955  0.081592  2.316 
+Std 24.838 0.0066279  0.0073361  0.0084009  0.0056174  0.010415  
+p -value 6.39e-05  6.39e-05  6.39e-05  6.39e-05  6.39e-05  0.0001 
+ChOA21 Ave −6738.8454  0.0026 1.2168e-15  0 0.027962  0.8424 
+Std 6.4067 0.010056  0.0000505  0 0.0000267  0.023382  
+p -value 6.39e-05  6.39e-05  N/A N/A N/A 0.0045 
+ChOA22 Ave −2609.1446  2.2198 0.7874 0.13063 0.1821 0.52586 
+Std 3.81561 0.013331  0.00065341  0.0036728  0.0076626  0.000825  
+p -value 0.00747 0.0057 0.0057 0.0049 0.0049 N/A 
+ChOA23 Ave −1023.9291  1.0698 1.2264 0.12105 3.0047 2.513 
+Std 1.8642 0.0032444  0.010339  0.016238  0.0046195  0.0013249  
+p -value N/A 0.00747 0.0057 0.0057 0.0049 0.0049 
+ChOA24 Ave −9655.5997  1.42 0.7238 0.010202  0.283 5.1047 
+Std 10.4246 0.0070324  0.002375  0.011905  0.016156  0.02809 
+p -value 0.00747 0.0057 0.0057 0.0049 0.0049 0.0001 
+ChOA25 Ave −9146.7686  1.6997 1.7298 0.025172  7.4374 4.3983 
+Std 9.9677 0.017173  0.014912  0.010107  0.013853  0.0070056  
+p -value 0.0001 0.00747 0.0057 0.0057 0.0049 0.0049 
+ChOA26 Ave −9026.9166  1.7645 1.3173 0.01028 0.89062 3.9773 
+Std 4.356 0.006938  0.014907  0.013683  0.00010712  0.00455227  
+p -value 0.00747 0.00747 0.00747 0.0057 0.0057 0.0049 
+than 1 or smaller  than −1 is used, so that the search agents are 
+forced to diverge  and get distant  from prey. This procedure  shows 
+the exploration  process  and allows the ChOA to search globally.  Fig. 
+9 shows that the inequality  | a | > 1 forces the chimps  to scatter in 
+the environment  to ﬁnd a better prey. This section  is inspired  from 
+GWO (Mirjalili,  2013). 
+Another  ChOA component  that affects the exploration  phase is 
+the value of c . As in Eq. (4) , c vector elements  are random  variables  
+in the interval  of [0,2]. This component  provides  random  weights  
+for prey to reinforce  ( c > 1) or lessen ( c < 1) the effect of prey lo- 
+cation in the determination  of the distance  in Eq. (5) . It also helps 
+ChOA to enhance  its stochastic  behaviour  along the optimization  
+process  and reduce the chance  of trapping  in local minima.  c is 
+always needed  to generate  the random  values and execute  the ex- 
+ploration  process  not only in the initial iterations,  but also in the 
+ﬁnal iterations.  This factor is very useful for avoiding  local minima,  especially  in the ﬁnal iterations.  c vector is also considered  as the 
+inﬂuence  of the obstacles  which prevent  chimps  from approach-  
+ing the prey in nature.  In general,  natural  obstacles  in the path 
+of chimps  prevent  them from approaching  the prey with proper 
+speed. This is the precise  expression  of the c vector effect. Depend-  
+ing on chimp’s  position,  the c vector can assign a random  weight  
+to prey in order to make the hunt harder or easier. 
+2.2.5. Social incentive  (sexual motivation)  
+As mentioned  previously,  acquiring  meet and subsequent  social 
+motivation  (sex and grooming)  in the ﬁnal stage causes chimps  to 
+release  their hunting  responsibilities.  Therefore,  they try to obtain 
+meat forcefully  chaotic.  
+This chaotic  behaviour  in ﬁnal stage helps chimps  to further  al- 
+leviate the two problems  of entrapment  in local optima  and slow 
+convergence  rate in solving  high-dimensional  problems.  
+
+M. Khishe and M.R. Mosavi / Expert Systems With Applications  149 (2020) 113338 17 
+Table 11 
+The results of ﬁxed-dimension  multimodal  benchmark  functions.  
+Algorithm  F 14 F 15 F 16 F 17 F 18 
+ChOA11 Ave 0.998 0.020364  −1.0316 0.39792 3 
+Std 0.00059718  0.010885  0.0095395  0.0047829  0.010803  
+p -value 0.00747 0.0057 0.0057 0.0049 0.0049 
+ChOA12 Ave 0.998 0.00034398  −1.0316 0.39792 3 
+Std 0.0057686  0.00000001  0.021147  0.00026104  0.009066  
+p -value 0.00747 N/A 0.0057 0.0049 0.0049 
+ChOA13 Ave 0.99801 0.00067708  −1.0316 0.39865 3.0001 
+Std 0.0047493  0.0068029  0.0096524  0.015434  0.03319 
+p -value 0.0001 0.0001 0.00747 0.0057 0.0057 
+ChOA14 Ave 0.998 0.0012896  −1.0316 0.39833 3.0002 
+Std 0.00037144  0.011627  0.0052976  0.0020581  0.0067462  
+p -value 0.00747 0.0057 0.0057 0.0049 0.0049 
+ChOA15 Ave 0.99802 0.00125 −1.0316 0.39796 3.0001 
+Std 0.014758  0.0077204  0.016366  0.0023049  0.00043324  
+p -value 0.00747 0.0057 0.0057 0.0049 0.0049 
+ChOA16 Ave 0.99809 0.0013562  −1.0316 0.39805 3.0001 
+Std 0.0024767  0.0011969  0.00089862  0.0062243  0.0070154  
+p -value 0.00747 0.0057 0.0057 0.0049 0.0049 
+BBO Ave 0.998 0.00042263  −1.0316 0.39789 3 
+Std 0.0090912  0.01693 0.014821  0.0065533  0.01335 
+p -value 6.39e-05  6.39e-05  6.39e-05  6.39e-05  
+BH Ave 0.998 0.020363  −1.0316 0.39789 3 
+Std 0.0038131  0.00066429  0.012439  0.014056  0.021488  
+p -value 6.39e-05  6.39e-05  6.39e-05  6.39e-05  6.39e-05  
+ALO Ave 0.998 0.020363  −1.0316 0.39789 3 
+Std 0.021358  0.0017314  0.012602  0.0096567  0.007996  
+p -value 6.39e-05  6.39e-05  6.39e-05  6.39e-05  6.39e-05  
+GWO Ave 0.998 0.0012849  −1.0316 0.39842 3.0001 
+Std 0.018609  0.020989  0.021182  0.0097607  0.0099344  
+p -value 6.38e-05  6.39e-05  6.38e-05  6.39e-05  6.38e-05  
+ChOA21 Ave 0.998 0.00035113  −1.0316 0.39789 3.0004 
+Std 0.0063754  0.0028921  0.0011222  0.013257  0.011011  
+p -value 0.00747 0.0057 0.0057 0.0049 0.0049 
+ChOA22 Ave 2.9821 0.00099085  −1.0316 0.39789 3 
+Std 0.0078901  0.0042495  0.010545  0.00093272  0.016413  
+p -value 0.00747 0.0057 0.0057 0.0049 0.0001 
+ChOA23 Ave 0.998 0.00034349  −1.0316 0.39789 3 
+Std 0.0001241  0.00000013  0.0000741  0.000793  0.0001531  
+p -value N/A N/A N/A N/A N/A 
+ChOA24 Ave 0.998 0.00033082  −1.0316 0.39789 3 
+Std 0.0092874  0.0071116  0.0061951  0.0045872  0.01198 
+p -value 0.00747 0.0057 0.0057 0.0049 0.0049 
+ChOA25 Ave 0.998 0.0016554  −1.0316 0.39789 3 
+Std 0.0056774  0.006215  0.0010265  0.0086782  0.0020994  
+p -value 0.0047 0.00757 0.0057 0.0049 0.0049 
+ChOA26 Ave 0.998 0.00030769  −1.0316 0.39789 3 
+Std 0.010431  0.0032917  0.0047039  0.0044647  0.00028328  
+p -value 0.00547 0.00457 0.0057 0.0049 0.0049 
+The chaotic  maps which have been used to improve  the perfor-  
+mance of ChOA are explained  in this section.  Six chaotic  maps have 
+been used in this article as shown in Table 2 and Fig. 10 . These 
+chaotic  maps are deterministic  processes  which also have random  
+behaviour.  In this article, value 0.7 has been considered  as the pri- 
+mary point of all the maps in accordance  with reference  ( Saremi,  
+Mirjalili,  & Lewis, 2014 ). To model this simultaneous  behaviour,  we 
+assume  that there is a probability  of 50% to choose  between  either 
+the normal  updating  position  mechanism  or the chaotic  model to 
+update  the position  of chimps  during optimization.  The mathemat-  
+ical model is expressed  by Eq. (9) . 
+x chimp (t + 1) = /braceleftbigg
+x prey (t) −a . d ifμ< 0 . 5 
+Chaotic  _ value ifμ≥0 . 5 (9) Where μis a random  number  in [0,1]. 
+In brief, the searching  process  in ChOA begins with generat-  
+ing a stochastic  population  of chimps  (candidate  solutions).  Then, 
+all chimps  are randomly  divided  into four predeﬁned  independent  
+groups  entitled  attacker,  barrier,  chaser and driver. Each chimp up- 
+dates its f coeﬃcients  using the group strategy.  During  the iter- 
+ation period,  attacker,  barrier,  chaser and driver chimps  estimate  
+the possible  prey locations.  Each candidate  solution  updates  its dis- 
+tance from the prey. Adaptive  tuning the c and m vectors  cause 
+local optima  avoidance  and faster convergence  curve, simultane-  
+ously. The value of f is reduced  from 2.5 to zero, to enhance  the 
+process  of exploitation  and attacking  the prey. The inequality  | a | > 
+1 results in divergence  of the candidate  solutions,  otherwise,  they 
+eventually  converge  toward  the prey. Fig. 11 presents  the pseudo-  
+code of ChOA. 
+
+18 M. Khishe and M.R. Mosavi / Expert Systems With Applications  149 (2020) 113338 
+Table 12 
+The results of ﬁxed-dimension  multimodal  benchmark  functions  (continued).  
+Algorithm  F 19 F 20 F 21 F 22 F 23 
+ChOA11 Ave −3.8622 −3.1969 −2.593 −10.2537 −9.3837 
+Std 0.019162  0.018342  0.022841  0.014715  0.0066907  
+p -value 0.00747 0.0057 0.0057 0.0049 0.0049 
+ChOA12 Ave −3.8619 −3.1825 −6.7593 −9.2651 −7.9056 
+Std 0.0071951  0.00030283  0.0070818  0.0043589  0.0081338  
+p -value 0.001 0.00747 0.0057 0.0057 0.0001 
+ChOA13 Ave −3.8614 −3.3106 −7.9664 −8.6936 −10.0206 
+Std 0.012393  0.0093514  0.016142  0.0085863  0.0021619  
+p -value 0.00452 0.00747 0.0057 0.0057 0.0049 
+ChOA14 Ave −3.8547 −2.0591 −4.8606 −5.0383 −5.0358 
+Std 0.006271  0.0001319  0.01722 0.0076048  0.013176  
+p -value 0.0045 N/A 0.00747 0.0057 0.0057 
+ChOA15 Ave −3.8548 −2.6329 −5.0189 −0.91158 −5.1029 
+Std 0.021395  0.014033  0.013209  0.0041865  0.0017119  
+p -value 0.0001 0.00747 0.0057 0.0057 0.0049 
+ChOA16 Ave −3.8624 −2.2492 −4.8537 −4.8401 −4.8898 
+Std 0.00026981  0.0075036  0.00034583  0.008309  0.0075659  
+p -value 0.00747 0.0057 0.0057 0.0049 0.0049 
+BBO Ave −3.8628 −3.322 −5.1008 −2.7519 −10.5364 
+Std 0.0051 0.0044809  0.010935  0.014868  0.014644  
+p -value 6.38e-05  6.39e-05  6.38e-05  0.00005 6.39e-05  
+BH Ave −3.8628 −3.2031 −2.6829 −10.4029 −10.5364 
+Std 0.0034586  0.00073532  0.0091199  0.0021605  0.022491  
+p -value 6.38e-05  6.39e-05  6.38e-05  0.00005 6.39e-05  
+ALO Ave −3.8628 −3.1974 −10.1532 −10.4029 −10.5364 
+Std 0.0077814  0.0075256  0.0051117  0.0067976  0.016077  
+p -value 6.38e-05  6.39e-05  6.38e-05  0.00005 6.39e-05  
+GWO Ave −3.8541 −3.0731 −0.88288 −5.0532 −5.0601 
+Std 0.0027469  0.00016015  0.0067064  0.0016984  0.0034639  
+p -value 6.38e-05  6.39e-05  6.38e-05  0.00005 6.39e-05  
+ChOA21 Ave −3.8627 −3.322 −10.1505 −10.4028 −10.5336 
+Std 0.011721  0.011144  0.003524  0.0017081  0.0044508  
+p -value 0.00747 0.0057 0.0057 0.0049 0.0049 
+ChOA22 Ave −3.8628 −3.322 −2.6829 −10.4029 −10.5364 
+Std 0.0053146  0.00084038  0.0039454  0.0004916  0.0018552  
+p -value 0.0045 0.00747 0.0057 N/A 0.0001 
+ChOA23 Ave −3.8628 −3.2031 −10.1532 −2.7659 −10.5364 
+Std 0.000045  0.0001641  0.0000534  0.0035001  0.0015218  
+p -value N/A N/A N/A N/A 
+ChOA24 Ave −3.8628 −3.322 −5.1008 −10.4029 −10.5364 
+Std 0.013575  0.0039439  0.010463  9.5041e-05  0.022171  
+p-value 0.00747 0.0057 0.0057 0.0049 0.0049 
+ChOA25 Ave −3.8628 −3.2031 −10.1532 −10.4029 −10.5364 
+Std 0.003998  0.011924  0.0079751  8.3701e-05  0.0023049  
+p -value 0.00747 0.0057 0.0057 0.0049 0.0049 
+ChOA26 Ave −3.8628 −3.322 −10.1532 −10.4029 −10.5364 
+Std 0.012586  0.01132 0.018268  0.02068 0.012983  
+p -value 0.0045 0.00747 0.0057 0.0057 0.0049 
+3. Simulation  results  and discussion  
+In this section,  the ChOA is tested on 30 benchmark  functions.  
+The ﬁrst 23 test functions  are the classical  benchmark  functions  
+used in the many kinds of research  ( Digalakis  & Margaritis,  2001 ; 
+Molga & Smutnicki,  2005 ; Yang, 2010 ). Generally,  these functions  
+are divided  into three groups:  unimodal,  multimodal,  and ﬁxed- 
+dimension  multimodal  which are reported  in Tables 3–5 , respec-  
+tively. In these tables, dim indicates  the dimension  of the problem,  
+fmin is the minimum  reported  in the literature,  and Range is the 
+boundary  of the problem’s  search space. 
+The three aforementioned  groups  of benchmark  functions  are 
+utilized  with different  characteristics  to test the performance  of 
+the ChOA from different  aspects.  As their names imply, unimodal  
+benchmark  functions  have a single minimum  so they can test the 
+exploitation  and convergence  rate of ChOA. In contrast  to uni- modal, multimodal  benchmark  functions  have more than one min- 
+imum, making  them more challenging  than unimodal  benchmarks.  
+Therefore,  exploration  and local minima  avoidance  of optimizers  
+can be tested by the multimodal  benchmark  functions.  It should be 
+mentioned  that the difference  between  ﬁxed-dimensional  multi- 
+modal benchmarks  in Table 4 and multimodal  benchmarks  in Table 
+5 is the ability to deﬁne the desired  number  of design variables.  
+The mathematical  models  of ﬁxed-dimensional  benchmark  func- 
+tions do not let us tune the number  of design variables,  but they 
+prepare  various  search space compared  to multimodal  benchmark  
+functions  in Table 4 . 
+In the following,  in order to have a comprehensive  compari-  
+son, we use other newly proposed  rotated  and shifted  benchmark  
+function  deﬁned  in the IEEE CEC 2013 special  session  and Compe-  
+tition on Niching  Methods  for Multimodal  Function  Optimization  
+( Li, Engelbrecht,  & Epitropakis,  2013 ) and also ( Mishra,  2007 ). The 
+
+M. Khishe and M.R. Mosavi / Expert Systems With Applications  149 (2020) 113338 19 
+Table 13 
+The results of shifted and rotated benchmark  functions.  
+Algorithm  F 24 F 25 F 26 F 27 F 28 F 29 F 30 
+ChOA11 Ave −104.6332  2.0711e-5  1.9616e-9  −8.2221 0.9256 −0.78715 1000.254  
+Std 0.0000607  0.0011244  0.0001376  0.000114  0.001221  0.00054 10.2254 
+p -value 0.007937  0.0001 0.0001 0.0047 0.0047 0.0001 0.00747 
+ChOA12 Ave −103.2584  1.1821e-4  1.4412e-8  −7.0022 0.9946 −0.5214 999.547 
+Std 0.004101  0.0000122  0.0001457  0.000012  0.00162 0.00091 11.2547 
+p -value 0.007937  0.0001 0.0001 0.0047 0.0047 0.0001 0.00747 
+ChOA13 Ave −102.2589  2.6224e-5  2.0041e-7  −7.1245 0.8812 −0.59441 1001.0254  
+Std 0.0022803  0.0021139  0.005574  0.00022 0.0099275  0.00044 12.2547 
+p -value 0.007937  0.0001 0.0001 0.0047 0.0047 0.0001 0.00747 
+ChOA14 Ave −102.2369  0.0012 1.22335 −6.029591  0.8001 10.9291 985.635 
+Std 0.068042  0.0022847  0.00001586  9.2999e-05  0.000703  0.00028 9.2514 
+p -value 0.007937  0.0001 0.0001 0.0047 0.0047 0.0001 0.00747 
+ChOA15 Ave −102.3251  1.0453e-4  1.33254 −6.0286 1.0888 10.2473 998.254 
+Std 0.03071 0.001845  0.0014448  0.00011 0.000485  0.00241 2.2547 
+p -value 0.007937  0.0001 0.0001 0.0047 0.0047 0.0001 0.00747 
+ChOA16 Ave −102.3214  0.0058 3.12451 −6.0011 1.0005 15.9568 1000.0214  
+Std 0.000224  0.00980824  0.00048348  0.000121  0.00076 0.00089 5.5454 
+p -value 0.007937  0.0001 0.0001 0.0047 0.0047 0.0001 0.0047 
+BBO Ave −100.8888  3.2584 4.9745 −5.7122 1.8825 2.39002 1005.888  
+Std 0.0002803  0.01183 0.0005112  0.00364 0.000343  0.0007505  12.547 
+p -value 6.38e-05  6.39e-05  6.38e-05  0.00005 6.39e-05  6.39e-05  6.39e-05  
+BH Ave −99.2233 4.2154 4.1214 −5.3621 1.0093 1.065608  1009.214  
+Std 0.002298  0.001254  0.0011118  0.00026 0.00215 0.000735  14.2147 
+p -value 6.38e-05  6.39e-05  6.38e-05  0.00005 6.39e-05  6.39e-05  6.39e-05  
+ALO Ave −100.2589  5.2104 3.2147 −6.3254 1.3644 8.0344 999.357 
+Std 0.0011126  0.000114  0.0020711  0.00117 0.0007689  0.00073 3.2546 
+p -value 6.38e-05  6.39e-05  6.38e-05  0.0001 6.39e-05  6.39e-05  6.39e-05  
+GWO Ave −102.9999  0.14572 0.00013 −6.00074 1.8595 10.2504 984.2145  
+Std 0.0002236  0.0002243  0.001111  0.000123  7.3315e-05  0.000639  4.5454 
+p -value 6.38e-05  6.39e-05  6.38e-05  0.00047 6.39e-05  6.39e-05  6.39e-05  
+ChOA21 Ave −104.2312  1.8737e-17  0.004e-09  −7.2145 0.1006 −0.50289 968.245 
+Std 0.0001013  0.0002177  9.319e-05  0.000297  0.000007  0.00098584  3.2458 
+p -value 0.007937  0.4429 N/A 0.0081 N/A N/A 0.0047 
+ChOA22 Ave −105.2587  0.1245e-20  3.8819e-07  −7.5214 21.5251 −0.2803 960.999 
+Std 0.0000114  0.0000075  0.00088791  0.0000707  5.22119 0.0019343  1.25478 
+p -value N/A N/A 0.0047 N/A 6.39e-05  0.04785 N/A 
+ChOA23 Ave −104.8555  0.00036 3.7777 −6.1323 0.8532 1.058577  987.245 
+Std 0.0003172  8.4022e-05  0.0013834  0.00012 0.000125  0.00026976  3.6547 
+p -value 0.007937  0.0001 0.0001 0.00014 0.0074 0.0001 0.0047 
+ChOA24 Ave −103.2555  0.00876 4.2305 −7.0009 0.7043 2.18706 984.258 
+Std 0.0012541  0.001156  0.0001175  0.00307 0.000266  0.0011506  5.2145 
+p -value 0.007937  0.0001 0.0001 0.00047 0.0047 0.00047 0.00747 
+ChOA25 Ave −103.2411  1.58268 5.3941 −6.9377 159.7174  3.0064761  982.021 
+Std 0.0017643  0.0011603  0.0012325  0.00174 0.00032931  0.0008431  4.25896 
+p -value 0.007937  0.0001 0.0001 0.000041  0.0001 0.0047 0.00747 
+ChOA26 Ave −102.0541  0.16594 4.2211 −6.3117 111.7458  2.088298  1000.024  
+Std 0.0016936  0.003257  0.00013504  0.000287  0.0015624  0.00169 7.2145 
+p -value 0.007937  0.0001 0.00098 0.00021 0.0001 0.0001 0.00747 
+remaining  benchmark  functions  are more complex  and follow the 
+paradigm  of composition  functions.  The mathematical  models  of 
+these benchmark  functions  are shown in Table 6 . 
+The ChOAs have been divided  into and named  with regard to 
+the type of the dynamic  strategies  for independent  groups  (illus- 
+trated in Table 1 ) and the number  of the chaotic  maps (illustrated  
+in Table 2 ). For instance,  if the dynamic  strategy  number  one- 
+(from Table 1 ) and tent map (from Table 2 ) has been used to en- 
+hance ChOA, the name of that algorithm  will be ChOA16  in such 
+a way that 1 refers to the dynamic  strategy  type 1 and 6 refers to 
+the row number  of the temp map in Table 2 . This type of naming  
+has been thoroughly  shown in Table 7 . 
+Figs. 12 to 15 draw a comparison  between  the convergence  
+curves of different  algorithms  for unimodal,  multimodal,  ﬁxed- 
+dimension  multimodal,  and rotated  and shifted  benchmark  func- 
+tions, respectively.  For verifying  the results,  the ChOAs are compared  to ALO 
+( Mirjalili,  2015 ) as a kind of SIAs, BBO (Simon,  2008) as a pow- 
+erful kind of EAs and BH (Hatamlou,  2013) as a physics-based  al- 
+gorithm.  In addition,  the ChOAs are compared  with GWO ( Mirjalili  
+et al., 2014 ) as the most famous  hunting-based  benchmark  algo- 
+rithm. The parameters  of these algorithms  are presented  in Table 
+8 . 
+For these experiments,  each test is carried  out a Windows  10 
+system  using Intel Core i7, 3.8 GHz, 16 G RAM and, Matlab  R2016a.  
+The ChOA algorithms  were run 30 times on each benchmark  func- 
+tion. The statistical  results (Average  (Ave), Standard  Deviation  (Std), 
+and p -value)  are reported  in Tables 9 to 13 . The best results are il- 
+lustrated  in bold type. The concepts  of Ave and Std can be used 
+to show the algorithms  capability  of avoiding  the local minima.  
+The lower the value of Ave, the greater  the algorithms  capability  of 
+ﬁnding  a solution  near the global optimum.  Although  the Ave value 
+
+20 M. Khishe and M.R. Mosavi / Expert Systems With Applications  149 (2020) 113338 
+Table 14 
+The results of unimodal  benchmark  functions  (100-dimensional).  
+Function  ChOA PSO GSA BH 
+Ave Std Ave Std Ave Std Ave Std 
+F1 2.8e-09 1.1e-09 2.799 0.721 86.213 0.04243 9.34 2.0731 
+F2 44.16 18.17 23.87 2.432 152.44 0.00122 320.82 38.28 
+F3 194.11 42.18 391.34 41.57 169.88 0.03780 900.75 409.06 
+F4 2.18 0.0846 3.131 0.0879 10.265 0.0013 5.6670 0.8293 
+F5 13.94 1.71 75.2342 5.245 321.13 0.05329 117.80 49.07 
+F6 1.60e-07  1.09e-08  3.421 1.206 207.13 0.0003 4.2056 1.005 
+F7 0.000546  0.004407  1.721 4.0133 2.309 1.99e-05  0.4344 0.0127 
+GWO CS LGWO GA 
+Ave Std Ave Std Ave Std Ave Std 
+F1 4. 989 2. 678 3.80e-05  1.85e-05  6.1218 0.5744 18.7475 15.500 
+F2 28.647 0.9384 33.10 0.0656 22.191 1.0191 526.612 92.127 
+F3 2219 85.540 1,9527 52.7511 1852 418.4 933.21 332.1 
+F4 3.689 0.4572 2.9362 0.6877 2.736 0.0947 8.5144 0.5321 
+F5 262.7 11.490 27.672 13.88 11.171 0.76 91.4449 62.706 
+F6 13.99 2.1091 1.17e-05  1.55e-05  1.11e-05  1.05e-05  40.56 23.681 
+F7 0.8391 0.05354 0.00131 0.0087 0.00273 0.00041 9.56 5.1061 
+of the two algorithms  can be equal, their performance  in ﬁnding  
+the global optimum  may differ in each iteration.  Thus, Std is used 
+to make a better comparison.  To have a lower dispersion  of results,  
+the Std should have a small value. 
+According  to Derrac,  García, Molina,  and Herrera  (2011) , statis- 
+tical tests are required  to evaluate  the performance  of MOAs ad- 
+equately.  Comparing  MOAs according  to their Ave and Std values 
+is not enough  ( Garcia, Molina,  Lozano,  & Herrera,  2009 ) and a sta- 
+tistical test is needed  to indicate  a remarkable  improvement  of a 
+new MOA in comparison  to the other existing  MOAs to solve a 
+particular  optimization  problem  (Mirjalili  & Lewis, 2013). In order 
+to see whether  the results of ChOA differ from other benchmark  
+algorithms  in a statistically  signiﬁcant  way, Wilcoxon’s  rank-sum  
+( Wilcoxon,  1945 ), which is a non-parametric  statistical  test, was 
+performed  and the signiﬁcance  level of 5% accomplished.  The cal- 
+culated  p -values  of the Wilcoxon’s  rank-sum  are given in the re- 
+sults as well. The N/A in tables is the abbreviation  of ‘‘Not Appli- 
+cable’’ which means that the corresponding  MOA cannot be com- 
+pared with itself in the rank-sum  test. Conventionally,  p -values  less 
+than 0.05 are considered  as strong evidence  against  the null hy- 
+pothesis.  Note that p -values  greater  than 0.05 are underlined  in the 
+tables. 
+3.1. Evaluation  of exploitation  ability 
+Functions  F1, F2,…, F7 have only one global optimum  since they 
+are unimodal.  These benchmark  functions  permit to evaluate  the 
+exploitation  capability  of the investigated  MOAs. Table 9 illustrates  
+ChOAs is very competitive  with other MOAs. It can be seen from 
+Table 9 that ChOA12  has the best results in ﬁve out of seven uni- 
+modal test functions.  
+Fig. 12 shows the convergence  curves of the algorithms.  As can 
+be seen from these curves,  ChOA12  has the best convergence  rates 
+for most of the benchmark  functions,  followed  by ChOA11  and 
+ChOA21.  
+It is worth mentioning  that unimodal  test functions  have no lo- 
+cal minima  and there is only one global minimum  in the search 
+space. So these kinds of benchmark  functions  are quite appro- 
+priate for evaluating  the convergence  capability  of MOAs. Conse-  
+quently,  the results of the ChOAs show that independent  groups  
+could improve  signiﬁcantly  the convergence  ability of the ChOAs.  
+The two main reasons  for the superior  results is that the chimps  
+have diversity  in their ﬁssion-fusion  societies  and are able to ex- 
+ploit knowledge  of the position  of near optimal  solutions  effec- tively and they also utilize the chaotic  maps biasing  chimps  to 
+move quickly  toward  the global optimum  (prey). As can be seen 
+from Fig. 12 and Table 9 , among  the two proposed  group sets, the 
+ﬁrst group set indicates  much superior  results for unimodal  bench-  
+mark function.  This better result can be well justiﬁed  by Fig. 6 . Ac- 
+cording  to this ﬁgure, ChOA1 has an excellent  local search ability 
+because  the forms of updating  strategies  were chosen  in such a 
+way that different  groups  tend to converge  faster than ChOA2 and 
+they search more locally than globally.  In other words, the reduc- 
+tion rate of the independent  groups’  coeﬃcient  of ChOA1 is faster 
+than those coeﬃcients  of ChOA2.  So, ChOA1 allows chimps  to dis- 
+cover the search space more locally than globally,  because  the am- 
+plitude  of the searching  coeﬃcient  decreases  severely  after almost 
+one-quarters  of the allowed  iterations.  
+It should be noted that this considerable  improvement  has not 
+been made only with categorizing  chimps  to independent  groups  
+but also by utilizing  the new chaotic  map in such a way that this 
+chaotic  behaviour  in ﬁnal stage helps chimps  to further  decline  
+the problems  of slow convergence  rate. As can be seen from Fig. 
+12 and Table 4 , the chaotic  map number  two i.e., Gauss/mouse  
+map has the most signiﬁcant  effect on the global minima  ﬁnding  
+and convergence  speed so that ChOA12  has the best results in the 
+ﬁve out of seven unimodal  benchmark  functions  and at least the 
+second  best optimizer  in other benchmark  functions.  The afore- 
+mentioned  algorithm  can hence provide  fair exploitation  ability. 
+These superior  results of ChOA12  are based on the special  form 
+of the Gauss/mouse  map. This chaotic  map has very special  shape 
+in such a way that in early stage it has large and extremely  
+variable  amplitude,  while its amplitude  and variableness  decrease  
+severely  in the ﬁnal stages. This special  shape of Gauss/mouse  map 
+causes chimps  to behave  both very extensively  in early stage and 
+in focus of the ﬁnal stages. Generally  speaking,  chaotic  maps pro- 
+vide soft transition  between  global and local search ability. These 
+maps prevent  chimps  from quickly  becoming  trapped  in local min- 
+ima because  chimps  have stochastically  movement  even in the ﬁ- 
+nal stages. This stochastic  movement  in the ﬁnal stage may be con- 
+sidered  as sexual motivations.  This is the main reason for the supe- 
+rior results of the proposed  maps (specially  the Gauss/mouse  map). 
+In this way, chimps  tend to broadly  discover  promising  regions  
+of search space and exploit  the best one. Chimps  change  abruptly  
+in the early stages of the hunting  process  and then gradually  con- 
+verge. However,  there is no additional  computational  cost for the 
+proposed  algorithm.  
+
+M. Khishe and M.R. Mosavi / Expert Systems With Applications  149 (2020) 113338 21 
+Fig. 15. Convergence  curve of algorithms  on the rotated and shifted multimodal  benchmark  functions.  
+
+22 M. Khishe and M.R. Mosavi / Expert Systems With Applications  149 (2020) 113338 
+Fig. 15. Continued  
+Table 15 
+The results of multimodal  benchmark  functions  (100-dimensional).  
+p ChOA PSO GSA BH 
+Ave Std Ave Std Ave Std Ave Std 
+F8 −44,426 144.5 −18,136 4962.4 −35,969 1876 −25,632 869.47 
+F9 11.89 1.005 62.58 2.301 12.01 0.12365 60.38 7.96 
+F10 0.3058 0.00542 1.183 0.07627 1.293 0.0974 1.159 0.0077 
+F11 0.0014 0.00021 270.2 11.49 400.5 0.8532 411 22.42 
+F12 0.3982 0.09591 2.07e + 05 2.77e + 05 1.00e + 08 1.99e + 05 1.09e + 09 2.28e + 08 
+F13 0.13915 0.22199 1.24e + 06 3.82e + 05 1.00e + 08 1.99e + 05 1.25e + 09 3.85e + 08 
+GWO CS LGWO GA 
+Ave Std Ave Std Ave Std Ave Std 
+F8 −55,771 3097.8 −52,600 156.04 −39,753 649.69 −28,660 1011 
+F9 58.95 6.653 45.58 7.889 13.45 1.058 137.8 3.155 
+F10 1.544 0.06684 17.654 2.982 2.4297 0.038545  1.361 0.0421 
+F11 0.0011 0.00011 0.001191  0.001148  1.7048 0.014301  175.8 7.3 
+F12 2.37e + 07 1.22e + 07 1.00e + 10 0.0045 2.426 0.05985 3.14e + 09 2.54e + 08 
+F13 3.87e + 07 1.80e + 07 1.00e + 10 0.0568 0.0014 0.0568 1.38e + 10 1.45e + 09 
+
+M. Khishe and M.R. Mosavi / Expert Systems With Applications  149 (2020) 113338 23 
+Table 16 
+The general description  of real-world  constrained  optimization  problem.  D is the total number of decision variables  of 
+the problem,  g is the number of inequality  constraints  and h is the number of equality constraints.  
+No ID Problems  D g h 
+1 RC01 Heat Exchanger  Network  Design (case 1) 9 0 8 
+2 RC04 Reactor Network  Design (RND) 6 1 4 
+3 RC11 Two-reactor  Problem  7 4 4 
+4 RC14 Multi-product  batch plant 10 10 0 
+5 RC16 Optimal Design of Industrial  refrigeration  System 14 15 0 
+6 RC23 Optimal Design of Industrial  refrigeration  System 5 8 3 
+7 RC35 Optimal Sizing of Distributed  Generation  for Active Power Loss Minimization  153 0 148 
+8 RC37 Optimal Power ﬂow (Minimization  of Active Power Loss) 126 0 116 
+9 RC45 SOPWM for 3-level Inverters  25 24 1 
+10 RC51 Beef Cattle(case  1) 59 14 1 
+3.2. Evaluation  of exploration  ability 
+In contrast  to unimodal  benchmark  functions,  multimodal  prob- 
+lems include  many local minima  whose number  increases  drasti- 
+cally with the number  of design variables  (problem  size). Hence, 
+this kind of benchmark  functions  turns very helpful  if the inten- 
+tion is to evaluate  the exploration  capability  of a MOA and avoid- 
+ing local minima.  Table 10 and Fig. 13 show the results for multi- 
+modal benchmark  functions  (F8-F13).  As the results show, ChOAs 
+have also fair exploration  capability.  In fact, ChOAs always is the 
+most eﬃcient  algorithm  in the all of the benchmark  problems.  This 
+is due to the four different  mechanisms  of exploration  in ChOAs 
+leading  this algorithm  into the global optimum  in the early stages 
+and chaotic  mechanism  guaranteeing  to reach the best result in the 
+ﬁnal stages. 
+The results of Table 10 indicate  that the independent  groups  in- 
+creased  the performance  of ChOA in terms of avoiding  local min- 
+ima. As may be observed  in Fig. 13 , similar  to the results of uni- 
+modal benchmark  functions,  the convergence  speed of ChOAs is 
+almost better than the other MOAs. The ChOA group set 2 (espe- 
+cially ChOA21)  have the best convergence  rates among  the ChOAs.  
+The group set 2 has the special  updating  coeﬃcients  so that these 
+special  updating  forms give ChOA more randomized  search ability 
+in comparison  with ChOA group set 1; therefore,  the chimps  are 
+not easily trapped  in local minima.  In other words, the reduction  
+rate of the independent  groups’  coeﬃcient  of ChOA2 is less than 
+those coeﬃcients  of ChOA1.  As a result, the updating  coeﬃcients  
+of ChOA2s  allows chimps  to discover  globally  the search space. Be- 
+cause the amplitudes  of the searching  coeﬃcient  decrease  gradu- 
+ally after almost three-quarters  of the allowed  iterations.  
+In addition,  the ChOA21  outperform  other ChOA2s  through  its 
+special  chaotic  map (Quadratic  map). In this map, a very slight 
+change  of the input value can lead to signiﬁcantly  various  be- 
+haviour  of the map’s amplitude.  This particular  behaviour  of the 
+quadratic  map causes chimps  to explore  the search space com- 
+pletely even in the ﬁnal stages in such a way that this map 
+enhances  the exploration  capability  of ChOA21  more than other 
+ChOAs combined  with the other chaotic  map. 
+Unlike the multimodal  test functions,  the ﬁxed-dimension  mul- 
+timodal  benchmark  functions  have few local minima.  As shown in 
+Tables 11 and 12 , the results of all MOAs are similar  on six of 
+the functions.  However,  the ChOA outperform  the other MOAs on 
+F20 to F22. ChOA23  has the best results in the almost all of these 
+benchmark  functions.  Fig. 14 shows the convergence  rate of the 
+algorithms  dealing  with ﬁxed-dimension  benchmark  functions.  All 
+the MOAs have close convergence  curves,  somewhat  better for the 
+ChOAs.  The analogy  of results and convergence  rate is owing to the 
+low dimensional  characteristic  of these benchmark  problems;  the 
+effect of independent  groups  is more apparent  for the high dimen-  
+sional problems.  To sum up, the results indicate  that the indepen-  
+dent groups  and the chaotic  maps are proﬁtable  for ChOA in terms not only of avoiding  local optima  but also improved  convergence  
+speed. The results of the ChOA show that the proposed  indepen-  
+dent groups  permit chimps  to have various  patterns  for following  
+the social behaviour  of the whole society,  resulting  in higher local 
+minima  avoidance  ability. 
+Finally,  for comprehensive  comparison,  newly proposed  ChOAs 
+were tested using some complex,  rotated  and shifted  version  of 
+multimodal  benchmark  functions.  
+Fig. 15 and Table 13 show the results obtained  using afore- 
+mentioned  algorithms  and benchmark  functions.  As can be seen, 
+the convergence  rate of ChOAs were signiﬁcantly  better than for 
+other MOAs, which is even better than results obtained  in previ- 
+ous tests (unimodal,  ﬁxed-dimension  and multimodal).  Because  the 
+complexity  of these benchmark  function  is more than other bench-  
+marks. Therefore,  the ability of ChOAs in these complex  problem  is 
+more evident  than other experiment.  
+3.3. Optimization  of high-dimensional  problems  using ChOA 
+To further  conﬁrm  the capability  of ChOA in working  with 
+high-dimensional  problems,  this subsection  investigates  the 100- 
+dimensional  versions  of the unimodal  (F1 to F7) and multimodal  
+(F8 to F13) optimization  test functions  introduced  in the preced-  
+ing subsections.  50 search agents (candidate  solutions)  are utilized  
+to solve these benchmark  optimization  problems  over 20 0 0 iter- 
+ations. Finally,  the results are illustrated  in Tables 14 and 15 for 
+unimodal  and multimodal  test functions,  respectively.  
+As results are shown in Table 14 , the ChOA outperforms  all the 
+other algorithms  on ﬁve of the unimodal  optimization  benchmark  
+functions  (F1, F3, F4, F6, and F7). Besides,  Table 15 indicates  that 
+this algorithm  provides  the best results on ﬁve of the six mul- 
+timodal  optimization  benchmark  functions  (F8, F9, F10, F12, and 
+F13). For the rest of the unimodal  and multimodal  optimization  
+benchmark  functions,  the ChOA is ranked  as the second-best  af- 
+ter LGWO (F2 and F5), and GWO (F11). Poor performances  of the 
+majority  of algorithms  in Tables 14 and 15 show that such high- 
+dimensional  optimization  benchmark  functions  can be very chal- 
+lenging.  These results highly evidence  that the ChOA algorithm  can 
+be very effective  for solving  high-dimensional  optimization  prob- 
+lems as well. 
+To sum up, the results of this subsection  indicates  that ChOAs 
+propose  high exploitation  and exploration.  First, the proposed  
+individual  intelligence  (autonomous  group in initial iteration)  
+and sexual motivation  (chaotic  behaviour  in ﬁnal iteration)  of 
+chimps  in their group hunting  promote  exploration,  enhance  the 
+ChOA algorithm  to avoid local optima  stagnation  when solving  
+high-dimensional  optimization  problems.  Secondly,  the decreasing  
+shape of f for each independent  group of chimps,  emphasizes  ex- 
+ploitation  as iteration  increases,  which results in a very precise  es- 
+timation  of the global optimum.  
+
+24 M. Khishe and M.R. Mosavi / Expert Systems With Applications  149 (2020) 113338 
+Table 17 
+The results of ChOA in comparison  with benchmark  algorithms  for real-world  problems.  
+Problem Optimization  Algorithms  
+ID metric GA GSA PSO BH CS GWO LGWO ChOA 
+RC01 Ave 2.18E + 02 3.12E + 02 2.23E + 02 3.36E + 02 4.02E + 02 2.12E + 02 2.01E + 02 1.92E + 2 
+STD 5.34E −02 2.18E −02 2.81E −02 3.21E −02 3.18E −02 2.85E-02  1.67E-03  1.45E-03  
+RC04 Ave −1.38E-01  −3.86E-01  −1.15E-01  −3.60E-00  −3.86E-00  −3.52E-01  −3.56E-01  −3.87E-01  
+STD 7.98E −01 1.92E −01 2.84E −01 3.41E −01 3.80E −01 3.96E + 00 2.57E + 00 1.02E −01 
+RC11 Ave 12.63E + 01 11.93E + 01 11.62E + 01 10.56E + 01 10.13E + 01 10.17E + 01 10.74E + 01 9.99E + 01 
+STD 2.76E + 01 1.67E + 01 2.21E + 01 1.79E + 01 1.97E + 01 1.54E + 01 2.34E + 01 1.34E + 01 
+RC14 Ave 9.45E + 04 7.24E + 04 9.82E + 04 9.24E + 04 9.23E + 04 6.12E + 04 5.89E + 04 5.92E + 04 
+STD 5.84E + 00 5.62E + 02 1.91E + 00 9.68E + 02 8.10E + 00 1.87E + 01 9.59E + 00 1.01E + 00 
+RC16 Ave 4.59E-02  4.09E-02  4.52E-02  4.58E-02  4.89E-02  4.09E-02  4.98E-02  3.99E-02  
+STD 2.41E −04 8.58E-02  5.32E −03 2.51E −02 6.98E −03 8.58E-02  3.71E-01  1.58E-02  
+RC23 Ave 3.18E + 01 3.75E + 01 2.88E + 01 2.85E + 01 2.27E + 01 2.82E + 01 1.98E + 01 2.02E + 01 
+STD 6.78E + 00 4.73E + 00 4.21E + 00 6.73E + 00 1.21E + 00 6.27E + 00 1.02E-02  1.27E + 00 
+RC35 Ave 9.78E-02  9.56E-02  9.36E-02  9.74E-02  9.56E-02  9.24E-02  9.81E-02  9.01E-02  
+STD 8.64E-02  9.47E-02  9.42E-01  9.64E-01  4.73E + 00 6.56E-01  6.15E-01  5.42E-01  
+RC37 Ave 2.85E-02  3.11E-02  3.24E-02  2.94E-02  2.45E-02  3.11E-02  2.92E-02  2.20E-02  
+STD 1.64E-02  1.24E-02  1.79E-02  2.02E-02  1.40E-02  1.78E-02  1.68E-02  1.11E-02  
+RC45 Ave 4.38E-02  3.92E-02  4.49E-02  4.75E-02  4.12E-02  4.02E-02  3.89E-02  3.99E-02  
+STD 1.36E-03  1.07E-03  1.54E-03  1.50E-03  1.81E-02  1.47E-03  1.03E-03  1.53E-03  
+RC51 Ave 4.59E + 03 4.91E + 03 5.24E + 03 5.29E + 03 4.89E + 03 4.62E + 03 4.59E + 03 4.55E + 03 
+STD 1.49E + 00 2.94E + 00 2.84E + 00 2.75E + 00 2.21E + 00 2.83E + 00 1.90E + 00 1.09E + 00 
+3.4. Results and analysis  of real-world  problems  
+In this section,  the effectiveness  of ChOA is investigated  using 
+Ten real-world  problems  from IEEE CEC2020  ( Kumar et al., 2019 ). 
+It’s worth mentioning  that these evaluations  are carried  out ac- 
+cording  to the guidelines  of CEC2020.  Note that the complete  de- 
+scription  of these real-world  problems  is described  in CEC2020  
+( Kumar et al., 2019 ). However,  the general  description  of the real- 
+world problems,  used in this section,  can be obtained  from Table 
+16 . Also, the results of these evaluations  are shown in Table 17 . 
+Based on Table 17 , it is seen that the conventional  LGWO rep- 
+resents  the best performance  in two cases Optimal  Design of In- 
+dustrial  refrigeration  System  (RC23) and SOPWM  for 3-level  In- 
+verters  (RC45).  The proposed  ChOA provides  the best results in 
+the remaining  real-world  optimization  test cases (RC01, RC04, RC11, 
+RC14, RC16, RC35, RC37, and RC51). Therefore,  In comparison  with 
+GA , GSA , PSO, BH, CS, GWO and LGWO algorithms,  the ChOA’s  sta- 
+tistical results indicate  that it can be considered  as the best op- 
+timization  algorithm  in working  with real-world  optimization  test 
+problems.  The LGWO is also the second  best algorithm  in dealing  
+with these test cases. 
+4. Conclusion  
+This paper proposed  a novel hunting-based  optimization  algo- 
+rithm called ChOA. The proposed  ChOA mimicked  the social di- 
+versity and hunting  behaviour  of chimps.  Four hunting  behaviors  
+(driving,  chasing,  blocking,  and attacking),  several  operators  such 
+as diverse  intelligence  and sexual motivation,  and also four kinds 
+of chimps  were proposed  and mathematically  modelled  for supply-  
+ing the ChOA with high exploitation  and exploration.  The perfor-  
+mance of ChOA was benchmarked  on 30 mathematical  test func- 
+tions, 13 high-dimensional  test problems,  and 10 real-world  opti- 
+mization  problems  in terms of exploration,  exploitation,  local op- 
+tima avoidance,  and convergence  rate. As per the superior  results 
+of the ChOA on the majority  of the unimodal  test functions  and 
+convergence  curves,  it can be concluded  that the proposed  algo- 
+rithm beneﬁts  from convergence  rate and high exploitation.  The 
+main reason for the high exploitation  and convergence  speed is 
+due to the proposed  semi-deterministic  feature  of chaotic  maps. 
+High exploration  of ChOA can be concluded  from the results of 
+multimodal  and composite  test functions,  which is because  of di- viding chimps  into independent  groups  and allowing  them to have 
+different  searching  behaviour.  
+Finally,  the special  decreasing  shapes of various  f parameter  
+evidenced  that the ChOA requires  chimps  to move suddenly  in 
+the initial steps of the algorithm  and locally in the ﬁnal steps of 
+the algorithm,  which leads to a gentle transition  and balance  be- 
+tween exploitation  and exploration.  The ChOA was compared  to 
+nine well-known  optimization  algorithms  in the literature:  PSO, 
+GA , GSA , BH, GWO, CS, BBO, ALO, and LGWO. Wilcoxon  statisti-  
+cal tests were also conducted  when comparing  other optimiza-  
+tion algorithms.  The results indicated  that the ChOA provides  very 
+competitive  results and outperforms  other optimization  algorithms  
+in the majority  of benchmark  functions.  The statistical  test also 
+proved  that the results were statistically  signiﬁcant  for the ChOA. 
+Therefore,  it may be concluded  from the comparative  results that 
+the proposed  ChOA is able to be employed  as an alternative  opti- 
+mizer for optimizing  various  high-dimensional  optimization  prob- 
+lems. 
+The paper also considered  solving  ten real-world  optimization  
+problems  using the ChOA. The results of the ChOA on these real- 
+world problems  were compared  to a wide range of other optimiza-  
+tion algorithms.  The comparative  results indicated  that the ChOA 
+is able to solve real-world  optimization  problems  with unknown  
+search spaces as well. Other conclusion  remarks  that can be made 
+from the results of this study are as follows:  
+•Dividing  chimps  in independent  groups  guarantees  exploration  
+of the search space, particularly  for problems  of higher dimen-  
+sionality.  
+•The proposed  semi-deterministic  feature  of chaotic  maps em- 
+phasizes  the exploitation  ability of the ChOA. 
+•The use of chaotic  maps assists the ChOA algorithm  to resolve  
+local optima  stagnations.  
+•Local optima  avoidance  is very high since the ChOA algorithm  
+employs  a four kind of population  of search agents to approxi-  
+mate the global optimum.  
+•The special  decreasing  shapes of various  f parameter  promotes  
+exploitation  and convergence  rate as the iteration  counter  in- 
+creases.  
+•Chimps  memorize  search space information  over the course of 
+iteration.  
+•ChOA almost uses memory  to keep the best solution  acquired  
+so far. 
+
+M. Khishe and M.R. Mosavi / Expert Systems With Applications  149 (2020) 113338 25 
+•ChOA generally  has a few parameters  to adjust. 
+•Considering  the parallel  structure  of independent  groups  and 
+the simplicity  of ChOA, it is very easy to implement  the pro- 
+posed algorithm.  
+•Chimps  are not quite similar  in terms of ability and intelligence,  
+but they all perform  their tasks as members  of a hunting  group. 
+So, each individual’s  ability can be useful in a special  phase of 
+the hunting  event. 
+Several  research  directions  can be recommended  for future 
+studies  with the proposed  algorithm.  Utilizing  the ChOA to tackle 
+different  optimization  problems  in different  industrial  tasks. Also, 
+modifying  ChOA to solve multi- and many-objective  optimization  
+problems  can be investigated  as a good contribution.  Besides,  the 
+effectiveness  of ChOA can be compared  with other hunting-based  
+optimizers  for solving  different  optimization  problems.  Another  re- 
+search direction  is to investigate  the effectiveness  of other chaotic  
+maps in improving  the performance  of the ChOA algorithm.  Finally,  
+it is possible  to design a discrete  extension  of ChOA. 
+References  
+Atashpaz-Gargari,  E. , & Lucas, C. (2007). Imperialist  competitive  algorithm:  An algo- 
+rithm for optimization  inspired by imperialistic  competition.  In Proceedings  of 
+the 2007 IEEE congress on evolutionary  computation  (pp. 4661–4667)  . 
+Basturk, B. , & Karaboga,  D. (2006). An artiﬁcial bee colony (ABC) algorithm  for nu- 
+meric function optimization.  In Proceedings  of the 2006 IEEE Swarm Intelligence  
+Symposium  (pp. 12–14) . 
+Beyer, H. G. , & Schwefel,  H. P. (2002). Evolution  strategies—A  comprehensive  intro- 
+duction. Natural Computing,  1 (1), 3–52 . 
+Boesch, C. (2002). Cooperative  hunting roles among taï chimpanzees.  Human Nature, 
+13 , 27–46 . 
+Couzin, I. D. , & Laidre, M. E. (2009). Fission-fusion  populations.  Current Biology, 
+19 (15), 633–635  . 
+Derrac, J. , García, S. , Molina, D. , & Herrera, F. (2011). A practical  tutorial on the use 
+of nonparametric  statistical  tests as a methodology  for comparing  evolutionary  
+and swarm intelligence  algorithms.  Swarm and Evolutionary  Computation,  1 (1), 
+3–18 . 
+Digalakis,  J. G. , & Margaritis,  K. G. (2001). On benchmarking  functions  for genetic 
+algorithms.  International  Journal of Computer  Mathematics,  77 (4), 481–506  . 
+Dorigo, M. , Birattari,  M. , & Stutzle, T. (2006). Ant colony optimization.  IEEE Compu- 
+tational Intelligence  Magazine,  1 (4), 29–39 . 
+Emary, E. H. , Zawbaa, M. , & Grosan, C. (2017). Experienced  grey wolf optimization  
+through reinforcement  learning and neural networks.  IEEE Transaction  on Neural 
+Network Learning System, 99 , 1–14 . 
+Erol, O. K. , & Eksin, I. (2006). A new optimization  method:  Big bang-big  crunch. 
+Advances  in Engineering  Software,  37 (2), 106–111 . 
+Farisa, H. , Mafarja, M. M. , Heidari, A. A. , Aljarah, I. , Al-Zoubia,  A. M. , Mirjalili, S. A. , 
+et al. (2018). An eﬃcient binary salp swarm algorithm  with crossover  scheme 
+for feature selection  problems.  Knowledge-Based  Systems, 154 , 43–67 . 
+Gandomi,  A. H. , & Alavi, A. H. (2012). Krill herd: A new bio-inspired  optimization  
+algorithm.  Communications  in Nonlinear  Science and Numerical  Simulation,  17 (12), 
+4 831–4 845 . 
+Garcia, S. , Molina, D. , Lozano, M. , & Herrera, F. (2009). A study on the use of non–
+parametric  tests for analysing  the evolutionary  algorithms’  behaviour:  A case 
+study on the CEC’2005  special session on real parameter  optimization.  Journal 
+of Heuristics,  15 (6), 617–644  . 
+Han, H. G. , Lu, W. , Hou, Y. , & Qiao, J. F. (2016). An adaptive-pso-based  self-organiz-  
+ing rbf neural network.  IEEE Transaction  on Neural Network Learning System, 99 , 
+1–14 . 
+Heidari, A . A . , & Abbaspour,  R. A . (2017). Enhanced  chaotic grey wolf optimizer  for 
+real-world  optimization  problems:  A comparative  study. Handbook  of Research 
+on Emergent  Applications  of Optimization  Algorithms  , 693–727  . 
+Heidari, A . A . , Farisa, H. , Aljarah, I. , & Mirjalili, S. A. (2019). An eﬃcient hybrid multi- 
+layer perceptron  neural network with grasshopper  optimization.  Soft Computing,  
+23 , 1432–7643  . 
+Heidari, A. A. , & Pahlavani,  P. (2017). An eﬃcient modiﬁed  grey wolf optimizer  with 
+levy ´ﬂight for optimization  tasks. Applied Soft Computing,  60 , 115–134 . 
+Holland, J. H. (1992). Genetic algorithms.  Scientiﬁc  America, 267 , 66–72 . 
+Israﬁl, H. , Zehr, S. M. , Mootnick,  A. R. , Ruvolo, M. , & Steiper, M. E. (2011). Unresolved  
+molecular  phylogenies  of gibbons and siamangs  (Family: Hylobatidae)  based on 
+mitochondrial,  Y-linked,  and X-linked loci indicate a rapid miocene radiation  or 
+sudden vicariance  event. Molecular  Phylogenetics  and Evolution,  58 (3), 447–455  . 
+Khishe, M. , & Mohammadi,  H. (2019). Sonar target classiﬁcation  using multi-layer  
+perceptron  trained by salp swarm algorithm.  Ocean Engineering,  181 , 98–108 . 
+Khishe, M. , & Mosavi, M. R. (2019). Improved  whale trainer for sonar datasets clas- 
+siﬁcation  using neural network.  Applied Acoustic, 154 , 176–192 . Khishe, M. , Mosavi, M. R. , & Kaveh, M. (2017). Improved  migration  models of bio- 
+geography-based  optimization  for sonar data set classiﬁcation  using neural net- 
+work. Applied Acoustic, 118 , 15–29 . 
+Khishe, M. , Mosavi, M. R. , & Moridi, A. (2018). Chaotic fractal walk trainer for sonar 
+data set classiﬁcation  using multi-layer  perceptron  neural network and its hard- 
+ware implementation.  Applied Acoustics,  137 , 121–139 . 
+Khishe, M. , & Saffari, A. (2019). Classiﬁcation  of sonar targets using an MLP neu- 
+ral network trained by dragonﬂy  algorithm.  Wireless Personal System, 108 (4), 
+2241–2260  . 
+Kirkpatrick,  S. , Gelatt, C. D. , & Vecchi, M. P. (1983). Optimization  by simulated  an- 
+nealing. Science (New York, N.Y.) (New York, N.Y.), 13 (220), 671–680  . 
+Kumar, A. , Wu, G. , Ali, M. Z. , Mallipeddi,  R. , Suganthan,  P. N. , & Das, S. (2019). A 
+test-suite  of non-convex  constrained  optimization  problems  from the real-world  
+and some baseline results. Swarm and Evolutionary  Computation,  2019 , 1–15 . 
+Li, X., Engelbrecht,  A., & Epitropakis,  M. G. (2013). Benchmark  functions  for CEC’2013  
+special session and competition  on niching methods  for multimodal  function 
+optimization.  In Evolutionary  Computation  and Machine Learning Group Tech- 
+nical Report. RMIT University  Available  from: Http://goanna.cs.rmit.edu.au/  
+∼xiaodong/cec13-niching/competition/  . 
+Mafarja, M. M. , Aljarah, I. , Heidari, A . A . , Hammouri,  A . I. , Farisa, H. , Al-Zoubia,  A. M. , 
+et al. (2017). Evolutionary  population  dynamics  and grasshopper  optimization  
+approaches  for feature selection  problems.  Knowledge-Based  Systems, 145 , 25–45 . 
+Mafarja, M. M. , & Mirjalili, S. A. (2019). Hybrid binary ant lion optimizer  with rough 
+set and approximate  entropy reducts for feature selection.  Soft Computing,  23 , 
+6249–6265  . 
+Mirjalili, S. A. (2015). The ant lion optimizer.  Advances  in Engineering  Software,  83 , 
+80–98 . 
+Mirjalili, S. A. (2016). Dragonﬂy  algorithm:  A new meta-heuristic  optimization  tech- 
+nique for solving single-objective,  discrete, and multi-objective  problems.  Neural 
+Computing  and Application,  27 (4), 1053–1073  . 
+Mirjalili, S. , Lewis, A. , & Sadiq, A. S. (2014). Autonomous  particles  groups for par- 
+ticle swarm optimization.  Arabian Journal for Science and Engineering,  39 (6), 
+4683–4697  . 
+Mishra, S. (2007). Some new test functions  for global optimization  and performance  
+of repulsive  particle swarm method. MPRA Article, no. 2718, posted 13, Available  
+from: Https://mpra.ub.uni-muenchen.de/2718/  
+Molga, M., & Smutnicki,.C.  (.2005). Test functions  for optimization  needs. Available  
+from: Http://www.zsd.ict.pwr.wroc.pl/ﬁles/docs/functions.pdf  
+Mosavi, M. R. , Khishe, M. , Parvizi, G. R. , Naseri, M. J. , & Ayat, M. (2019). Training 
+multi-layer  perceptron  utilizing adaptive best-mass  gravitational  search algo- 
+rithm to classify sonar dataset. Archive of Acoustics,  44 (1), 137–151 . 
+Osman, I. H. (1993). Metastrategy  simulated  annealing  and tabu search algorithms  
+for the vehicle routing problem.  Annals of Operations  Research,  41 (4), 421–451  . 
+Pijarski, P. , & Kacejko, P. (2019). A new metaheuristic  optimization  method:  The 
+algorithm  of the innovative  gunner (AIG). Engineering  Optimization,  51 (12), 
+204 9–206 8 . 
+Rao, R. V. , Savsani, V. J. , & Vakharia,  D. P. (2011). Teaching-learning-based  optimiza-  
+tion: A novel method for constrained  mechanical  design optimization  problems.  
+Computer-Aided  Design, 43 (3), 227–330  . 
+Rashedi, E. , Nezamabadi-Pour,  H. , & Saryazdi,  S. (2009). GSA: A gravitational  search 
+algorithm.  Information  Science, 13 (179), 2232–2248  . 
+Ravakhah,  S. , Khishe, M. , Aghababaee,  M. , & Hashemzadeh,  E. (2017). Sonar false 
+alarm rate suppression  using classiﬁcation  methods  based on interior search 
+algorithm.  International  Journal of Computer  Science and Network Security, 17 (7), 
+58–65 . 
+Roth, G. , & Dicke, U. (2005). Evolution  of the brain and intelligence.  Trends in Cog- 
+nitive Sciences, 9 (5), 250–257  . 
+Saremi, S. , Mirjalili, S. , & Lewis, A. (2014). Biogeography-based  optimization  with 
+chaos. Neural Computing  and Applications,  25 (5), 1077–1097  . 
+Stanford,  C. B. (1996). The hunting ecology of wild chimpanzees:  Implications  for 
+the evolutionary  ecology of pliocene hominids.  American  Anthropologist,  98 (1), 
+96–113 . 
+Storn, R. , & Price, K. (1997). Differential  evolution  –A Simple and eﬃcient heuristic  
+for global optimization  over continuous  spaces. Journal of Global Optimization,  
+11 , 341–359  . 
+Sun, L. , Chen, S. , Xu, J. , & Tian, Y. (2019). Improved  monarch  butterﬂy  optimization  
+algorithm  based on opposition-based  learning and random local perturbation.  
+Complexity,  2019 , 20 . 
+Tomkins,  J. , & Bergman,  J. (2012). Genomic  monkey business-estimates  of nearly 
+identical  human-chimp  dna similarity  re -evaluated  using omitted data. Journal 
+of Creation,  26 (1), 94–100 . 
+Wilcoxon,  F. (1945). Individual  comparisons  by ranking methods.  Biometrics  Bulletin, 
+1 (6), 80–83 . 
+Wolpert,  D. H. , & Macready,  W. G. (1997). No free lunch theorems  for optimization.  
+IEEE Transaction  on Evolutionary  Computing,  1 , 67–82 . 
+Yang, X. S. (2010). A new metaheuristic  bat-inspired  algorithm.  In Proceedings  of the 
+2010 workshop  on nature inspired cooperative  strategies  for optimization  (NICSO 
+2010) (pp. 65–74). Springer . 
+Yang, X. S. , & Deb, S. (2009). Cuckoo search via lévy ﬂights. In Proceedings  
+of the 2009 IEEE world congress on nature & biologically  inspired computing  
+(pp. 210–214)  . 
+
+26 M. Khishe and M.R. Mosavi / Expert Systems With Applications  149 (2020) 113338 
+Mohammad  Khishe received his B.Sc. degree from Uni- 
+versity of Nowshahr  Marine Sciences,  Nowshahr,  Iran, 
+M.Sc. degree from Islamic Azad University,  Qazvin Branch, 
+and Ph.D. degree from Iran University  of Science and 
+Technology  in 2007, 2011, and 2018, respectively.  He is 
+currently  faculty member (assistant  professor)  of the De- 
+partment  of Electrical  Engineering  of University  of Now- 
+shahr Marine Sciences.  His research interests  include neu- 
+ral networks,  meta-heuristic  algorithms  and digital de- 
+sign. 
+Mohammad-Reza  Mosavi (Corresponding  Author) re- 
+ceived his B.S., M.S., and Ph.D. degrees in Electronic  En- 
+gineering  from Iran University  of Science and Technology  
+(IUST), Tehran, Iran in 1997, 1998, and 2004, respectively.  
+He is currently  faculty member (full professor)  of the De- 
+partment  of Electrical  Engineering  of IUST. He is the au- 
+thor of more than 350 scientiﬁc  publications  in journals 
+and international  conferences  in addition to 10 academic  
+books. His research interests  include circuits and systems 
+design. He is also editor-in-chief  of “Iranian Journal of 
+Marine Technology” and  editorial board member of “Ira- 
+nian Journal of Electrical  and Electronic  Engineering”.  

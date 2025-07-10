@@ -1,0 +1,2547 @@
+Computers & Industrial Engineering 157 (2021) 107250
+Available online 23 March 2021
+0360-8352/© 2021 Elsevier Ltd. All rights reserved.Aquila Optimizer: A novel meta-heuristic optimization algorithm Laith 
+ Abualigaha,*, Dalia Yousrib, Mohamed Abd Elazizc,g, Ahmed A. Eweesd, Mohammed A. 
+A. Al-qanesse, Amir H. Gandomif a
+Faculty of Computer Sciences and Informatics, Amman Arab University, Amman 11953, Jordan b
+Department of Electrical Engineering, Faculty of Engineering, Fayoum University, Fayoum, Egypt c
+Department of Mathematics, Faculty of Science, Zagazig University, Egypt d
+Department of Computer, Damietta University, Damietta 34517, Egypt e
+State Key Laboratory for Information Engineering in Surveying, Mapping and Remote Sensing, Wuhan University, Wuhan 430079, China f
+Faculty of Engineering & Information Technology, University of Technology Sydney, Ultimo, NSW 2007, Australia g
+Academy of Scientific Research and Technology (ASRT), Cairo, Egypt   ARTICLE 
+ INFO  Keywords: 
+Aquila Optimizer (AO) 
+Optimization algorithms 
+Meta-heuristics 
+Real-word problems 
+Optimization problems ABSTRACT  This 
+ paper proposes a novel population-based optimization method, called Aquila Optimizer (AO), which is 
+inspired by the Aquila ’s behaviors in nature during the process of catching the prey. Hence, the optimization 
+procedures of the proposed AO algorithm are represented in four methods; selecting the search space by high 
+soar with the vertical stoop, exploring within a diverge search space by contour flight with short glide attack, 
+exploiting within a converge search space by low flight with slow descent attack, and swooping by walk and grab 
+prey. To validate the new optimizer ’s ability to find the optimal solution for different optimization problems, a 
+set of experimental series is conducted. For example, during the first experiment, AO is applied to find the so-
+lution of well-known 23 functions. The second and third experimental series aims to evaluate the AO’s perfor -
+mance to find solutions for more complex problems such as thirty CEC2017 test functions and ten CEC2019 test 
+functions, respectively. Finally, a set of seven real-world engineering problems are used. From the experimental 
+results of AO that compared with well-known meta-heuristic methods, the superiority of the developed AO al-
+gorithm is observed. Matlab codes of AO are available at https://www.mathworks.com/matlabcentral/fileexch 
+ange/89381-aquila-optimizer-a-meta-heuristic-optimization-algorithm and Java codes are available at https:// 
+www.mathworks.com/matlabcentral/fileexchange/89386-aquila-optimizer-a-meta-heuristic-optimization- 
+algorithm .   1.
+Introduction 
+An optimization process refers to find the optimal values for specific 
+parameters of a system to fulfill the system design at the lowest cost 
+(Hajipour, Kheirkhah, Tavana, & Absi, 2015 ). Generally, real-world 
+applications and problems in artificial intelligence and machine 
+learning have a discrete, unconstrained, or discrete nature (Hajipour, 
+Mehdizadeh, & Tavakkoli-Moghaddam, 2014 ). Accordingly, employing 
+traditional mathematical based programming methods is hard to find 
+the optimal solutions (Wu, 2016 ). Therefore, in all science fields, we can 
+find optimization problems. In recent decades we witnessed various 
+optimization algorithms have been proposed to improve different sys-
+tems performance and reduce computation cost. The traditional optimization methods suffer from certain shortcomings and limitations, 
+for example, converging to local optima and unknown search space. 
+Besides, they have only a single-based solution (Hashim, Houssein, 
+Mabrouk, Al-Atabany, & Mirjalili, 2019 ). To solve these shortcomings, 
+in recent years, many new optimization methods have been proposed. 
+They have been applied to solve various problems. 
+Meta-heuristic (MH) algorithms have received wide attention and 
+have been employed to solve various optimization problems. In general, 
+we can categorize MH into four categories, swarm intelligence (SI) al-
+gorithms, Evolutionary Algorithms (EA), and Physics-based algorithms 
+(PhA), and Human-based algorithms. SI algorithms include a group of 
+algorithms inspired by swarms and animals ’ social behaviors, such as 
+(Dorigo, Maniezzo, & Colorni, 1996; Eberhart & Kennedy, 1995; *
+Corresponding author. 
+E-mail addresses: Aligah.2020@gmail.com (L. Abualigah), day01@fayoum.edu.eg (D. Yousri), abd_el_aziz_m@yahoo.com (M. Abd Elaziz), ewees@du.edu.eg 
+(A.A. Ewees), alqaness@whu.edu.cn (M.A.A. Al-qaness), Gandomi@uts.edu.au (A.H. Gandomi).  
+Contents lists available at ScienceDirect Computers 
+ & Industrial Engineering u{�~zkw!
+ s{yo|kr o>!ÐÐÐ1ow�o �to~1m{y2w{m k�o2mkto!
+https://doi.org/10.1016/j.cie.2021.107250 
+Received 16 October 2020; Received in revised form 15 February 2021; Accepted 16 March 2021   
+
+Computers & Industrial Engineering 157 (2021) 107250
+2Karaboga & Basturk, 2007). The EA algorithms are proposed by simu-
+lating biological evolutionary behaviors, for example, mutation, cross-
+over, and selections, such as (Holland, 1992). PhA algorithms are 
+inspired by physical laws, such as (Mirjalili, Mirjalili, & Hatamlou, 
+2016; Rashedi, Nezamabadi-Pour, & Saryazdi, 2009). Human-based 
+methods are inspired by some human behavior, such as (Kumar, Kul-
+karni, & Satapathy, 2018). 
+Generally, all of these MH algorithms have standard features, such as 
+the searching process, which in general has two phases, the first one 
+called diversification (exploration), and the second phase called inten -
+sification (exploitation) (Abualigah, Diabat, & Geem, 2020; Salcedo- 
+Sanz, 2016). In the first phase, the MH algorithm generates random 
+operators to explore different search space regions. In the second phase, 
+the optimization method tries to find the optimal solution from the 
+search space. Therefore, an efficient MH optimization algorithm has to 
+balance the exploration and exploitation phase tendencies to avoid 
+trapping at local optima. 
+We intend to introduce a more productive and effective algorithm; 
+this paper introduces a novel natural-inspired based meta-heuristic 
+optimization algorithm, called Aquila Optimizer (AO). The proposed 
+AO algorithm simulates the Aquila’s behavior during hunting in which 
+showing the actions of each step of the hunt. A set of twenty-three 
+classical, thirty CEC2017, and ten CEC2019 test functions is used to 
+verify the robustness and effectiveness of the proposed AO rigorously. 
+Moreover, seven engineering design problems are used to investigate the 
+proposed AO’s effectiveness further in solving real-world problems. 
+The rest of this study is as follows: Section 2 describes the introduced 
+meta-heuristic optimization algorithms’ backgrounds. Section 3 illus-
+trates the structure of the proposed AO. In Section 4, we evaluate the 
+proposed AO with different optimization problems. Also, the compari -
+sons with the state-of-the-art methods are presented. Finally, Section 5 
+concludes the study. 
+2.Related work 
+This section presents a light review of some selected MH algorithms 
+that belong to the four mentioned types and highlight some of their 
+applications in recent years. 
+2.1. Swarm Intelligence (SI) algorithms 
+Swarms inspire (SI) methods and animal behaviors in nature 
+(Abualigah, 2020a). Scholars and researchers have proposed different SI 
+algorithms. Here we highlight some of these algorithms as follows. One 
+of the most popular SI algorithms is the Particle Swarm Optimization 
+(PSO), which is inspired by swarm particles’ natural behaviors, in which 
+each particle represents a candidate solution. Then each particle can be 
+updated according to the global best position and its local position 
+(Eberhart & Kennedy, 1995). In the previous decades, the PSO has been 
+employed to solve different problems, for example, to solve global 
+optimization problems, document classification, image segmentation, 
+feature selection (Shang, Zhou, & Liu, 2016), data clustering, and also 
+other industrial and engineering problems and applications (Elsheikh & 
+Abd Elaziz, 2019). Some ant species foraging behaviors inspire the Ant 
+Colony Optimization (ACO) (Dorigo et al., 1996). In nature, ants deposit 
+pheromone on the ground to mark the optimal path that needs to be 
+followed by the colony members (Dorigo, Birattari, & Stutzle, 2006). It 
+has received wide attention, and it has been applied in different opti-
+mization tasks. For example, data mining, vehicle routing problems, 
+classification, feature selection, time series prediction, and others 
+(Abualigah & Diabat, 2021). 
+Artificial Bee Colony (ABC) is inspired by the behaviors of the honey 
+bee colony. It has three collections, employed bees to search for food 
+resources, onlooker bees to choose the food sources, and scout bees to 
+randomly search for food sources (Karaboga & Basturk, 2007). The ABC 
+has been used in many optimization applications, such as image segmentation, global optimization, wireless sensor network, job shop 
+scheduling problems, and others. Firefly Algorithm (FA) is inspired by 
+flashing light of fireflies in oceans (Yang, 2009). It also received wide 
+attentions and has been adopted in different applications, such as image 
+processing, feature selection, and other optimization problems. In 
+addition, there are many SI algorithms that proposed in literature, and 
+they showed good performances in various optimization tasks, such as 
+Cuckoo Search (CS) Algorithm (Gandomi, Yang, & Alavi, 2013), Whale 
+Optimization Algorithm WOA (Mirjalili & Lewis, 2016), Salp Swarm 
+Algorithm (SSA) (Mirjalili et al., 2017), Moth Flame Optimization 
+(MFO) (Mirjalili, 2015a), Marine Predators Algorithm (MPA) (Far-
+amarzi, Heidarinejad, Mirjalili, & Gandomi, 2020), Lion Optimization 
+Algorithm (LOA) (Yazdani & Jolai, 2016), Grasshopper Optimization 
+Algorithm (Saremi, Mirjalili, & Lewis, 2017), Emperor Penguin Opti-
+mizer (Dhiman & Kumar, 2018), and Squirrel Search Algorithm (Jain, 
+Singh, & Rani, 2019). 
+2.2. Evolutionary Algorithms (EA) 
+Several EA algorithms have been proposed in the literature to solve 
+optimization problems based on biological evolution’s natural behav -
+iors. Here we present several examples of the EA algorithms. The Ge-
+netic Algorithm (GA) is the most popular EA algorithm. It was developed 
+by Holland Holland (1992), which inspired by the Darwinian theory of 
+evolution. It has received wide attention and has been employed in 
+many applications. For example, face recognition, feature selection, 
+network anomaly detection, scheduling problems, and many other en-
+gineering applications and problems (Bharathi, Rekha, & Vijayakumar, 
+2017). Differential evolution (DE) is presented by Storn and Price 
+(1997). Also, it has been applied in various optimization tasks, such as, 
+image classification, global optimization, text classification, parallel 
+machine scheduling, and others. Other popular EA-based MH algorithms 
+confirmed their performance in various optimization tasks, including 
+Biogeography-Based Optimizer (BBO) (Simon, 2008), and Invasive 
+Tumor Growth (Tang, Dong, Jiang, Li, & Huang, 2015). 
+2.3. Physics-based algorithms (PhA) 
+PhA algorithms depend on the physical law to propose solutions to 
+optimization tasks. Among PhA algorithms, we list some efficient PhA 
+based optimization algorithms as follows. Big Bang-Big Crunch (BBBC) 
+is one of the popular MH algorithms inspired by the evolution of the 
+universe (Erol & Eksin, 2006). It has been utilized by researchers in 
+different fields, such as data clustering, global optimization, classifica -
+tion problems, different engineering designs, and others. Gravitational 
+Search Algorithm (GSA) is inspired by the law of gravity and mass in-
+teractions (Rashedi et al., 2009). Also, it received wide attention and has 
+been used to improve and solve various applications and problems. For 
+example, image segmentation, feature selection, global optimization, 
+engineering designs, and others. Multi-verse Optimizer (MVO) (Mirjalili 
+et al., 2016) is inspired by the multi-verses theory in physics. In recent 
+years, MVO has been employed to solve several problems, such as global 
+optimization problems, time series forecasting, image segmentation, 
+feature selection, and others. Also, there are other PhA based MH al-
+gorithms, such as Central Force Optimization (CFO) (Formato, 2007), 
+and Henry gas solubility optimization (HGSO) (Hashim et al., 2019). 
+2.4. Human-based algorithms 
+By simulating some natural human behaviors, researchers proposed 
+several MH algorithms for solving optimization problems. Here, we 
+highlight some of these methods as follows. Teaching based learning 
+algorithm (TBLA) (Rao, Savsani, & Vakharia, 2012) is inspired by the 
+influence of a teacher on the output of learners in the class. It has been 
+applied to solve various problems such as constrained optimization 
+problems (Rao & Patel, 2013) and various problems such as (Ho, Dao, Le L. Abualigah et al.                                                                                                                                                                                                                              
+
+Computers & Industrial Engineering 157 (2021) 107250
+3Chau, & Huang, 2019). Socio Evolution Learning Optimization Algo-
+rithm (SELOA) (Kumar et al., 2018) is proposed by simulating the social 
+learning behavior of humans organized as families in a societal setup. 
+Furthermore, other popular MH algorithms, such as sine cosine algo-
+rithm (Mirjalili, 2016a), and volleyball Premier League Algorithm 
+(Moghdani & Salimifard, 2018). Table 1 summarizes several popular 
+MH algorithms. 
+Generally, population-based optimization algorithms start the opti-
+mization processes (improvement processes) by selecting candidate so-
+lutions randomly. These created solutions are evolutionary improved by 
+the optimization rules and evaluated by a specific objective function 
+iteratively, the optimization techniques’ nature. Since optimization al-
+gorithms endeavor to find the optimal or near-optimal solution for the 
+given optimization problems stochastically, finding a solution in a single 
+run is not guaranteed (Abualigah, 2020b; Abualigah, Shehab, Alshin -
+wan, & Alabool, 2019). However, the probability of obtaining the 
+optimal global solution for the given problem is grown by a sufficient 
+number of random solutions and evolutionary iterations. 
+Despite the variations between optimization algorithms in 
+population-based meta-heuristic methods, the optimization process is 
+divided into two main phases: exploration/diversification versus 
+exploitation/intensification (Abualigah, Shehab, Alshinwan, Mirjalili, & 
+Abd Elaziz, 2020; Shehab et al., 2019). This refers to the wide coverage 
+of the search space by utilizing different search solutions of the used 
+algorithm to avoid the searching problems. 
+3.Aquila Optimizer (AO) 
+In this section, the proposed nature-inspired algorithm, called Aquila 
+Optimizer (AO), is presented as follows. 3.1. Inspiration and behavior of Aquila during hunting 
+In the Northern Hemisphere, the Aquila is one of the most popular 
+birds of prey. Aquila is the most common spread species of the Aquila. 
+Similar to all birds, Aquila belongs to the group “Accipitridae”. Typi-
+cally, Aquila is dark brown, with lighter Golden-brown plumage on their 
+back of a neck. Young Aquila of this group mainly has white color on the 
+tail, and usually, their wings have minor white marks. Aquila uses its 
+speed and agility united with sturdy feet and large, sharpened talons to 
+grab various prey, mainly rabbits, hares, deeps, marmots, squirrels, and 
+other ground animals (Steenhof, Kochert, & Mcdonald, 1997). Aquila 
+and their distinctive behaviors can be observed in nature. 
+Aquila keeps territories that may be as high as 200 km2. They create 
+large nests in mountains and other high positions. The breeding actions 
+occur in the spring; they are monogamous and may survive together for 
+many years or probably throughout life. Females produce up to 4 eggs 
+and later incubate them for 6 weeks. Typically, one or two newborns live 
+to fledge in about 12 weeks. These young Aquila usually achieve com-
+plete confidence in the fall, following which they move widely to 
+building territory for themselves. 
+Due to its hunting bravery, Aquila is one of the most studied birds 
+globally. Male Aquila got significantly more prey when solo-hunting. 
+Aquila utilizes their speed and sharp talons to hunt squirrels, rabbits, 
+and many other animals. They have even been recognized as an attacker 
+for full-grown deer (Hatch, 1968). The next most notable animal in the 
+diet of Aquila is the ground squirrels. 
+Mainly, four hunting methods are recognized to be used by the 
+Aquila, with many distinct differences and most Aquila’s ability to 
+cleverly and quickly vary back and forth between hunting methods 
+relying on the situations. The following points express the hunting Table 1 
+A summary of popular MH algorithms.  Type 
+ Algorithm Ref. Inspired by 
+SI Particle Swarm Optimization (PSO) (Eberhart & Kennedy, 1995) The natural behaviors of swarm particles  
+Ant Colony Optimization (ACO) (Dorigo et al., 1996) Ants deposit pheromone on the ground  
+Artificial Bee Colony (ABC) (Karaboga & Basturk, 2007) The behaviors of the honey bees colony  
+Firefly Algorithm (FA) (Yang, 2009) Flashing light of fireflies in oceans  
+Cuckoo Search (CS) (Gandomi et al., 2013) The behavior of cuckoo breeding parasitism  
+Whale Optimization Algorithm (WOA) (Mirjalili & Lewis, 2016) The behavior of humpback whales  
+Salp Swarm Algorithm (SSA) (Mirjalili et al., 2017) The behavior of salps navigating in oceans  
+Moth Flame Optimization (MFO) (Mirjalili, 2015a) The moths navigation method in nature  
+Lion Optimization Algorithm (LOA) (Yazdani & Jolai, 2016) Lifestyle and cooperation of lions  
+Marine Predators Algorithm (MPA), (Faramarzi, Heidarinejad, Mirjalili, et al., 
+2020) predators foraging strategy in oceans  
+Squirrel Search Algorithm (SSA) (Jain et al., 2019) The behavior of southern flying squirrels  
+Grasshopper Optimization Algorithm (GOA) (Saremi et al., 2017) The behavior of grasshopper swarms  
+Golden Eagle Optimizer (GEO) (Mohammadi-Balani et al., 2021) The behavior of golden eagles in tuning speed  
+EA Genetic Algorithm (GA) (Holland, 1992) Darwinian theory of evolution  
+Differential evolution (DE) (Storn & Price, 1997) the natural phenomenon of evolution  
+Biogeography-Based Optimizer (BBO) (Simon, 2008) Biogeography related to species migration  
+Invasive Tumor Growth (ITG) (Tang et al., 2015) Kidney process.  
+Tree Growth Algorithm (TGA) (Cheraghalipour et al., 2018) Competition of trees for acquiring foods and light  
+Arithmetic Optimization Algorithm (AOA) (Abualigah et al., 2021) The distribution behavior of the main arithmetic 
+operators  
+PhA Big Bang-Big Crunch (BBBC) (Erol & Eksin, 2006) The evolution of the universe  
+Gravitational Search Algorithm (GSA) (Rashedi et al., 2009) The law of gravity and mass interactions  
+Multi-verse Optimizer (MVO) (Mirjalili et al., 2016) multi-verses theory  
+Central Force Optimization (CFO) (Formato, 2007) The metaphor of gravitational kinematics  
+Henry Gas Solubility Optimization (HGSO) (Hashim et al., 2019) The behavior of Henry’s law  
+Thermal Exchange Optimization (TEO) (Kaveh & Dadras, 2017) Newton’s law of cooling  
+Electromagnetic Field Optimization (EFO) (Abedinpourshotorban et al., 2016) The behavior of electromagnets  
+Human 
+based Teaching based learning algorithm (TBLA) (Rao et al., 2012) The influence of a teacher on the output of learners  
+Collective Decision Optimization (CSO) (Zhang et al., 2017) Human decision-making characteristics  
+Socio Evolution & Learning Optimization Algorithm 
+(SELOA) (Kumar et al., 2018) Social learning behavior of humans  
+Others Volleyball Premier League Algorithm (VPLA) (Moghdani & Salimifard, 2018) Competitions of volleyball teams  
+Sine Cosine Algorithm (SCA) (Mirjalili, 2016a) Sine and cosine functions  L. Abualigah et al.                                                                                                                                                                                                                              
+
+Computers & Industrial Engineering 157 (2021) 107250
+4methods of Aquila.  
+≡The first method, high soar with a vertical stoop, is utilized for hunting 
+birds in flight, where the Aquila rises at a high level over the ground. 
+Once it explores prey, the Aquila enters a long, low-angled glide with 
+speed rising as the wings close further. The Aquila needs a height 
+feature over its prey for the success of this method. Just before the 
+engagement, the wings and tail are unfolded, and feet are pushed 
+ahead to grab the prey to look like a clap of thunder (Carnie, 1954 ). 
+≡The second method, contour flight with short glide attack, is recog -
+nized as the most usually used method by Aquila, where the Aquila 
+rises at a low level over the ground. The prey is then hounded closely, 
+whether the prey is running or flying. This method is beneficial for 
+hunting ground squirrels, breeding grouse, or seabirds (Mei-
+nertzhagen, 1940 ).  
+≡The third method is a low flight with a slow descent attack. In this, 
+the Aquila lows to the ground, and next onslaught progressively on 
+the prey. The Aquila selects its victim and lands on the prey ’s neck 
+and back, trying to penetrate. This hunting method is utilized for 
+slow prey, such as rattlesnakes, hedgehogs, foxes, and tortoises, or 
+any prey with an absence of escape response (Dekker, 1985 ).  
+≡The fourth method is walking and grab prey, in which the Aquila 
+walks on the land and tries to pull its prey. It is utilized for pulling the 
+young of large prey (i.e., deer or sheep) out of the coverage area 
+(Watson, 2010 ). 
+In conclusion, Aquila is one of the most intelligent and skillful hunters 
+and probably next after humans. The main inspiration for the proposed AO 
+algorithm is derived from the methods mentioned above. The following 
+subsections describe how these processes are modeled in the AO. 
+3.2. Solutions initialization 
+In AO, it is a population-based method, the optimization rule begins 
+with the population of candidate solutions (X) as presented in Eq. (1), 
+which is generated stochastically between the upper bound (UB) and 
+lower bound (LB) of the given problem. The best-obtained solution, so far, 
+is determined as the optimal solution approximately in each iteration. 
+X⎫
+⎬⎬⎬⎬⎬⎬⎭x1C1⋯ x1Cjx1CDim 1x 1CDimx
+2C1⋯ x2Cj⋯ x2CDim⋯
+ ⋯ xiCj⋯ ⋯
+⋮ ⋮ ⋮ ⋮ ⋮
+xN 1C1⋯ xN 1Cj⋯ xN 1CDimx
+NC1⋯ xNCjxNCDim 1xNCDim⎩
+⎪⎪⎪⎪⎪⎪⎨(1)  
+where X denotes a set of current candidate solutions, which are gener -
+ated randomly by using Eq. (2), Xi denotes to the decision values (po-
+sitions) of the ith solution, N is the total number of candidate solutions 
+(population), and Dim denotes to the dimension size of the problem. 
+Xijrand× 
+UBj  LBj)
+LBjCi1C2C…BBCNj1C2C…CDim (2)  
+where rand is a random number, LBj denotes to the jth lower bound, and 
+UBj denotes to the jth upper bound of the given problem. 
+3.3. Mathematical model of AO 
+The proposed AO algorithm simulates Aquila ’s behavior during 
+hunting in which showing the actions of each step of the hunt. Hence, 
+the optimization procedures of the proposed AO algorithm are repre -
+sented in four methods; selecting the search space by high soar with the 
+vertical stoop, exploring within a diverge search space by contour flight 
+with short glide attack, exploiting within a converge search space by low 
+flight with slow descent attack, and swooping by walk and grab prey. 
+The AO algorithm can transfer from exploration steps to exploitation 
+steps using different behaviors based on this condition if t⩽(2
+3)∗T the 
+Fig. 1.The behavior of the Aquila high soar with the vertical stoop.  
+Fig. 
+2.The behavior of the Aquila contour flight with short glide attack.  
+Fig. 
+3.The behavior of the AO in a spiral shape.  L. Abualigah et al.                                                                                                                                                                                                                              
+
+Computers & Industrial Engineering 157 (2021) 107250
+5exploration steps will be excited; otherwise, the exploitation steps well 
+be executed. 
+We modeled Aquila behaviors as a mathematical optimization 
+paradigm, and it is determining the best solution subjected to specific 
+constraints. The mathematical model of the AO is proposed as follows. 
+3.3.1. Step 1: Expanded exploration (X1) 
+In the first method (X1), the Aquila recognizes the prey area and 
+selects the best hunting area by high soar with the vertical stoop. Here, the AO widely explorers from high soar to determine the area of the 
+search space, where the prey is. Fig. 1 shows the behavior of the Aquila 
+high soar with the vertical stoop. This behavior is mathematically pre-
+sented as in Eq. (3). 
+X1(
+t1)
+Xbest(
+t)
+×(
+1 t
+T)
+(
+XM(
+t)
+ Xbest(
+t)
+∗rand)
+C (3)  
+where, X1(t 1) is the solution of the next iteration of t, which is 
+generated by the first search method (X1). Xbest(t) is the best-obtained 
+solution until tth iteration, this reflects the approximate place of the 
+prey. This equation [1
+ t
+T]
+is used to control the expanded search 
+(exploration) through the number of iterations. XM(t) denotes to the 
+locations mean value of the current solutions connected at tth iteration, 
+which is calculated using Eq. (4). rand is a random value between 0 and 
+1. t and T present the current iteration and the maximum number of 
+iteration, respectively. 
+XM⌊
+t⌋
+1
+N̂N
+i1Xi⌊
+t⌋
+C⊥j1C2C…CDim (4)  
+where, Dim is the dimension size of the problem and N is the number of 
+candidate solution (population size). 
+3.3.2. Step 2: Narrowed exploration (X2) 
+In the second method (X2), when the prey area is found from a high 
+soar, the Aquila circles above the target prey, prepares the land, and 
+then attacks. This method called contour flight with short glide attack. 
+Here, AO narrowly explores the selected area of the target prey in 
+preparation for the attack. Fig. 2 shows the behavior of the Aquila 
+contour flight with short glide attack. This behavior is mathematically 
+presented as in Eq. (5). 
+X2t1Xbestt×LevyDXRty x*randC (5)  
+where X2(t 1) is the solution of the next iteration of t, which is generated 
+by the second search method (X2). D is the dimension space, and LevyD
+is the levy flight distribution function, which is calculated using Eq. (6). 
+XR(t) is a random solution taken in the range of [1 N] at the ith iteration. 
+Levy 
+D)
+s×u×σ⃦
+⃦⃦⃦⃦υ⃦⃦⃦⃦⃦1
+β(6) 
+Fig. 4.The behavior of the Aquila low flight with slow descent attack.  
+Fig. 
+5.The behavior of the Aquila walk and grab prey.  
+Fig. 
+6.The effects of the quality function (QF), G1, and G2 on the behavior of the AO.  L. Abualigah et al.                                                                                                                                                                                                                              
+
+Computers & Industrial Engineering 157 (2021) 107250
+6where s is a constant values fixed to 0.01, u, and υ are random numbers 
+between 0 and 1. σ is calculated using Eq. (7). σ
+⎢
+⨀⨀⨀⨀∮Γ(
+1β)
+×sine(π
+β
+2)
+Γ⎢
+∮1β
+2⎥
+⨀×β×2[β
+ 1
+2]⎥
+⨁⨁⨁⨁⨀(7)  
+where β is a constant value fixed to 1.5. In Eq. (5), y and x are used to present the spiral shape in the search, which are calculated as follows. 
+yr×cosθ (8)  
+xr×sinθ (9)  
+where, 
+rr1U×D1(10)  
+θ ω×D1θ1(11)  
+θ13×π2
+(12)  
+r1 takes a value between 1 and 20 for fixed the number of search cycles, 
+and U is a small value fixed to 0.00565. D1 is integer numbers from 1 to 
+the length of the search space (Dim), and ω is a small value fixed to 
+0.005. Fig. 3 shows the behavior of the AO in a spiral shape. 
+3.3.3. Step 3: Expanded exploitation (X3) 
+In the third method (X3), when the prey area is specified accurately, 
+and the Aquila is ready for landing and attack, the Aquila descends 
+vertically with a preliminary attack to discover the prey reaction. This 
+method called low flight with slow descent attack. Here, AO exploits the 
+selected area of the target to get close of prey and attack. Fig. 4 shows 
+the behavior of the Aquila low flight with a slow descent attack. This 
+behavior is mathematically presented as in Eq. (13). Table 
+ 3 
+Multimodal benchmark functions.  Function 
+ Description Dimensions Range fmin  F8 
+ fx⋃n
+i1 xisin⎪⎪⎪⎪⎪⎪⎪
+†xi†⇓
+ 10, 50, 100, 500 [ 500,500]  418.9829×n  
+F9 fx⋃n
+i1x2
+i 10cos2πxi10 10, 50, 100, 500 [ 5.12,5.12] 0 
+F10 
+f⌊
+x 20exp⌊
+ 0B2⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪1
+n̂n
+i1x2
+i̅⌋
+ exp[1
+n̂n
+i1cos2πxi⌋⌋
+20e  10, 50, 100, 500 [ 32,32] 0 
+F11 f[
+x11
+4000̂n
+i1x2
+i ⋂n
+i1cos[xi⎪⎪
+i♠]10, 50, 100, 500 [ 600,600] 0 
+F12 f(
+xπn
+⊔10sinπy1⊓⋃n 1
+i1yi 12[
+110sin2 πyi1)
+⋃n
+i1uxiC10C100C4)⇑
+, where yi1xi1
+4 
+Cu⎢
+∮xiCaCkCm⎥
+⨀|
+〈
+⎜Kxi amifxiFa
+0 a⩽xi⩾a
+K xi am a⩽xi   10, 50, 100, 500 [ 50,50] 0 
+F13 fx0B1sin23πx1⋃n
+i1xi 121sin23πxi1xn 121sin22πxn⋃n
+i1uxiC5C100C4 10, 50, 100, 500 [ 50,50] 0  Table 
+ 4 
+Fixed-dimension multimodal benchmark functions.  Function 
+ Description Dimensions Range fmin  F14 
+f⎢
+∮x⌊1
+500̂25
+j11
+j⋃2
+i1 
+xi aij⌋⌋ 1  2 [ 65,65] 1 
+F15 
+f⎢
+∮x⋃11
+i1⌈
+ai x1b2
+ibix2
+b2
+ibix3x4⌉2  4 [ 5,5] 0.00030 
+F16 f[
+x4x2
+1 2B1x4
+11
+3x6
+1x1x2 4x2
+24x4
+2  2 [ 5,5]  1.0316 
+F17 
+f(x)[
+x2 5B1
+4π2x2
+15π
+x1 6]2
+10[
+1 1
+8π⌋
+cos x110  2 [ 5,5] 0.398 
+F18 fx[
+1x1x21219 14x13x2
+1 14x26x1x23x2
+2]
+×[
+302x1 3x22×18 32xi12x2
+148x2 
+36x1x227x2
+2]2 [ 2,2] 3 
+F19 fx ⋃4
+i1ciexp(
+ ⋃3
+i1aijxj pij2)3 [ 1,2]  3.86 
+F20 fx ⋃4
+i1ciexp(
+ ⋃6
+i1aijxj pij2)6 [0,1]  .32 
+F21 fx ⋃5
+i1[ 
+X aiX aiTci] 1  4 [0,1]  10.1532 
+F22 fx ⋃7
+i1[ 
+X aiX aiTci] 1  4 [0,1]  10.4028 
+F23 fx ⋃10
+i1[ 
+X aiX aiTci] 1  4 [0,1]  10.5363  Table 2 
+Unimodal benchmark functions.  Function 
+ Description Dimensions Range fmin  F1 
+ fx⋃n
+i1x2
+i  10, 50, 100, 
+500 [ 100,100] 0 
+F2 fx⋃n
+i0⃦⃦xi⃦⃦⋂n
+i0⃦⃦xi⃦⃦ 10, 50, 100, 
+500 [ 10,10] 0 
+F3 fx⋃d
+i1⋃i
+j1xj2  10, 50, 100, 
+500 [ 100,100] 0 
+F4 fxmaxi ⊔†xi†C1⩽i⩽n⊓ 10, 50, 100, 
+500 [ 100,100] 0 
+F5 fx⋃n 1
+i1100x2
+i xi12
+1 xi210, 50, 100, 
+500 [ 30,30] 0 
+F6 fx⋃n
+i1xi0B52  10, 50, 100, 
+500 [ 100,100] 0 
+F7 fx⋃n
+i0ix4
+irandom0C1 10, 50, 100, 
+500 [ 128,128] 0  L. Abualigah et al.                                                                                                                                                                                                                              
+
+Computers & Industrial Engineering 157 (2021) 107250
+7X3t1Xbestt XMt×α randUB LB×randLB×δC
+(13)  
+where X3(t 1) is the solution of the next iteration of t, which is 
+generated by the third search method (X3). Xbest(t) refers to the 
+approximate location of the prey until ith iteration (the best-obtained 
+solution), and XM(t) denotes to the mean value of the current solution 
+at tth iteration, which is calculated using Eq. (4). rand is a random value 
+between 0 and 1. α and δ are the exploitation adjustment parameters 
+fixed in this paper to a small value (0.1). LB denotes to the lower bound 
+and UB denotes to the upper bound of the given problem. 
+3.3.4. Step 4: Narrowed exploitation (X4) 
+In the fourth method (X4), when the Aquila got close to the prey, the 
+Aquila attacks the prey over the land according to their stochastic 
+movements. This method called walk and grab prey. Here, and finally, 
+AO attacks the prey in the last location. Fig. 5 shows the behavior of the 
+Aquila walk and grab prey. This behavior is mathematically presented as 
+in Eq. (14). 
+X4t1QF×Xbestt G1×Xt×rand G2×LevyDrand
+×G1C
+(14)  
+where X4(t 1) is the solution of the next iteration of t, which is 
+generated by the fourth search method (X4). QF denotes to a quality 
+function used to equilibrium the search strategies, which is calculated 
+using Eq. (15). G1 denotes various motions of the AO that are used to 
+track the prey during the elope, which is generated using Eq. (16). G2 presents 
+ decreasing values from 2 to 0, which denote the flight slope of 
+the AO that is used to follow the prey during the elope from the first 
+location (1) to the last location (t), which is generated using Eq. (17). 
+Xtis the current solution at the tth iteration. 
+QFtt2×rand 1
+1 T2(15)  
+G12×rand 1 (16)  
+G22×(
+1 t
+T)
+(17)  
+QFtis the quality function value at the tth iteration, and rand is a 
+random value between 0 and 1. t and T present the current iteration and the maximum number of iteration, respectively. LevyDis the levy flight 
+distribution function calculated using Eq. (6). Fig. 6 shows the effects of 
+the quality function (QF), G1, and G2 on the behavior of the AO. 
+3.4. Pseudo-code of the Aquila Optimizer (AO) 
+To recap, in AO, the optimization start the improvement procedures 
+by generating a random predefined set of candidate solutions, called 
+population. Through the trajectory of repetition, the search strategies of 
+the AO explore the reasonable positions of the near-optimal solution or 
+the best-obtained solution. Each solution updates its positions according 
+to the best-obtained solution by the optimization processes of the AO. To 
+emphasize the equilibrium between the search strategies of the AO (i.e., 
+exploration and exploitation), four different search strategies for the 
+exploration and exploitation are provided (i.e., expanded exploration, 
+narrowed exploration, expanded exploitation, and narrowed exploita -
+tion). Finally, the search process of the AO is terminated when the end 
+criterion is met. The Pseudo-code of the AO is detailed in Algorithm 1. 
+Algorithm 1.Aquila Optimizer   1: 
+Initialization phase: 
+2: Initialize the population X of the AO. 
+3: Initialize the parameters of the AO (i.e., α Cδ, etc).  
+4: WHILE (The end condition is not met) do 
+5:  Calculate the fitness function values. 
+6:  Xbest(t)Determine the best obtained solution according to the fitness values.  
+7:  for (i 1,2…,N) do 
+8:  Update the mean value of the current solution XM(t).  
+9:  Update the xCyCG1CG2, Levy(D), etc.  
+10:  if t⩽(2
+3)∗T then  
+11: if rand ⩽0B5 then  
+12: ▹ Step 1: Expanded exploration (X1)  
+13: Update the current solution using Eq. (3). 
+14: if Fitness( X1(t 1)) DFitness( X(t)) then  
+15: X(t) (X1(t 1))  
+16: if Fitness( X1(t 1)) DFitness( Xbest(t)) then  
+17: Xbest(t) X1(t 1)  
+18: end if 
+19: end if 
+20: else 
+21: {▹ Step 2: Narrowed exploration (X2)}  
+22: Update the current solution using Eq. (5). 
+23: if Fitness( X2(t 1)) DFitness( X(t)) then  
+24: X(t) (X2(t 1))  
+25: if Fitness( X2(t 1)) DFitness( Xbest(t)) then  
+26: Xbest(t) X2(t 1)  
+27: end if 
+28: end if 
+29: end if 
+30: else 
+31: if rand ⩽0B5 then  
+32: {▹ Step 3: Expanded exploitation (X3)}  
+33: Update the current solution using Eq. (13). 
+34: if Fitness( X3(t 1)) DFitness( X(t)) then  
+35: X(t) (X3(t 1))  
+36: if Fitness( X3(t 1)) DFitness( Xbest(t)) then  
+37: Xbest(t) X3(t 1)  
+38: end if 
+39: end if 
+40: else 
+41: ▹ Step 4: Narrowed exploitation (X4)  
+42: Update the current solution using Eq. (14). 
+43: if Fitness( X4(t 1)) DFitness( X(t)) then  
+44: X(t) (X4(t 1))  
+45: ifFitness( X4(t 1)) DFitness( Xbest(t)) then  
+46: Xbest(t) X4(t 1)  
+47: end if 
+48: end if 
+49: end if 
+50: end if 
+51: end for 
+52: end while 
+53: return The best solution (Xbest).  Table 5 
+Parameter values for the comparative algorithms.  Algorithm 
+ Parameter Value 
+GOA l 1.5  
+f 0.5 
+EO r 0.5  
+a 4  
+GP 0.5 
+PSO Topology Fully connected  
+Cognitive and social constant (C1, C2) 2, 2  
+Inertia weight Linear reduction from 0.9 to 0.1  
+Velocity limit 10% of dimension range 
+DA w 0.2–0.9  
+sCa, and c  0.1  
+f and e 1 
+ALO I ratio 10w   w 
+ 2–6 
+GWO Convergence parameter (a) Linear reduction from 2 to 0 
+MPA γ  γF1   
+P 0.0 
+SSA v0  0 
+SCA – – 
+WOA α  Decreased from 2 to 0  
+b 2 
+SMA vb and vc Decreased from 2 to 0  L. Abualigah et al.                                                                                                                                                                                                                              
+
+Computers & Industrial Engineering 157 (2021) 107250
+8
+Fig. 7.Qualitative results for the studied problems.  L. Abualigah et al.                                                                                                                                                                                                                              
+
+Computers & Industrial Engineering 157 (2021) 107250
+93.5. Computational complexity of the Aquila Optimizer (AO) 
+In this section, the general computational complexity of the AO is 
+presented. The computational complexity of the AO typically relies on 
+three rules: solutions initialization, calculate the fitness functions, and 
+updating of solutions. Assume that, N is the number of solutions, O(N) is 
+the computational complexity of the solutions ’ initialization processes. 
+The computational complexity of the solutions ’ updating processes is O 
+(T ×N) O(T ×N ×Dim), which consists of exploring for the best 
+positions and updating the solutions ’ positions of all solutions, where 
+the total number of iterations is called T and the dimension size of the 
+given problem is called Dim. Accordingly, the total computational 
+complexity of the proposed AO is O(N ×(T ×D 1)). 
+4.Experimental results and discussions 
+The current investigation appraises the performance of the AO using 
+numerous test benchmark functions and real-world optimization prob-
+lems. Three series of well-regarded functions suit including twenty-three 
+classical functions, twenty-nine CEC2017 benchmarks, and ten 
+CEC2019 benchmarks are utilized in the numerical validation stage; 
+moreover, seven engineering optimization problems are employed as 
+examples for the real-world applications. The AO has been implemented 
+for 500 iterations with 30 search agents to solve the considered test 
+benchmarks and engineering applications. In order to examine the 
+consistency and reliability of the AO, it has been executed for 30 inde-
+pendent times at this the average of the results (Average), standard 
+deviation (STD), worst-so-far solutions, and best-so-far ones have been 
+reported. To confirm the AO quality, it has been compared with a wide 
+range of meta-heuristic optimization algorithms by using Friedman ’s 
+mean rank test to demonstrate the AO superiority described in the following sections. To achieve a fair comparison, the considered algo-
+rithms have implemented the same number of iterations and population 
+size of AO 500, 30, respectively. 
+4.1. Definition of twenty-three classical test functions 
+To assess the AO’s in exploring the search space, exploiting the 
+global solutions, and escaping from the local minima, twenty-three 
+benchmark functions include unimodal, multimodal, and fixed dimen -
+sion multimodal functions. The Unimodal test benchmarks (F1-F7), in 
+Table 2, are applied to examine the AO’s exploitation ability. While, the 
+set of multimodal benchmarks (F8-F13), in Table 3, are designed to test 
+the AO’s exploration tendency. These two sets of benchmarks are 
+employed in 10, 50, 100, and 500 dimensions. The fixed dimension 
+multimodal test benchmarks (F14-F23) of Table 4 show the ability of AO 
+in exploration the search space in the low dimensions. Numerous of 
+well-established optimization algorithms including Grasshopper Opti-
+mization Algorithm (GOA) (Abualigah & Diabat, 2020 ), Equilibrium 
+Optimizer (EO) (Faramarzi, Heidarinejad, Stephens, & Mirjalili, 2020 ), 
+Particle Swarm Optimization (PSO) (Abualigah, Khader, & Hanandeh, 
+2018 ), Dragonfly Algorithm (DA) (Mirjalili, 2016b ), Ant Lion Optimizer 
+(ALO) (Abualigah, Shehab, Alshinwan, Mirjalili, et al., 2020 ), Grey Wolf 
+Optimizer (GWO) (Abualigah, Shehab, Alshinwan, Alabool, et al., 
+2020 ), Marine Predators Algorithm (MPA) (Al-Qaness, Ewees, Fan, 
+Abualigah, & Abd Elaziz, 2020 ), Salp Swarm Algorithm (SSA) (Abuali -
+gah et al., 2019 ), Sine Cosine Algorithm (SCA) (Mirjalili, 2016a ), Whale 
+Optimization Algorithm (WOA) (Mirjalili & Lewis, 2016 ), and Slime 
+Mould Algorithm (SMA) (Zhao, Gao, & Sun, 2020 ) have been tested with 
+the same benchmarks set to show the superiority of the proposed AO. 
+Table 5 summaries the parameter settings of the counterparts algo-
+rithms. The iterations number and population size have been tuned as 
+500 and 50, respectively, for all the investigated methods with 30 in-
+dependent runs. The analysis has been performed on MATLAB 2018 
+platform using PC an Intel Core i5, 2.2 GHz CPU and 16 GB of RAM. 
+4.1.1. Qualitative analysis for the convergence of AO 
+To validate the developed AO model ’s performance, the convergence 
+and the trajectory are used as in Fig. 7. This figure depicts the qualitative 
+measures, such as the 2D shape of the function (as in the first column), to 
+discuss the search space ’s topology-the search history of the solutions 
+(second column). The average fitness value, trajectory, and convergence 
+curve in the third, fourth, and fifth columns. 
+In general, the search ’s history discusses the interaction between the 
+glad and prey. It improves the behavior of the AO to determine the 
+modality of the collective search of glads. This modality represents the 
+movements of the glads around the optimal point in the case of unimodal 
+functions. While in the case of multimodal functions, the modality Table 6 
+Scenarios of the tuning parameters.  Scenario 
+ No. α value  δ value  
+1 0.1 0.1 
+2 0.1 0.5 
+3 0.1 0.9 
+4 0.5 0.1 
+5 0.5 0.5 
+6 0.5 0.9 
+7 0.9 0.1 
+8 0.9 0.5 
+9 0.9 0.9  
+Fig. 7. (continued ). L. Abualigah et al.                                                                                                                                                                                                                              
+
+Computers & Industrial Engineering 157 (2021) 107250
+10represents the scattering properties of glads. All of these modality 
+characteristics enhance the exploration and exploitation abilities when 
+AO is used to solve multimodal and unimodal functions, respectively. 
+Moreover, from the third column that represents the average fitness 
+value overall the solutions among the number of iteration, it can be 
+observed that the average fitness value at the beginning iterations is 
+high. However, before the number of iterations reached 50, the average 
+becomes small, which indicates that the AO requires a small number of 
+iterations to convergence to the optimal solution. From the trajectory of 
+the solution (as in the fourth column), it can be seen that the solution has 
+a high magnitude and frequency at the early iterations. At the last it-
+erations, they have nearly vanished. This illustrates AO’s high explora -
+tion ability at the early iterations and good exploitation at the last 
+iterations. Based on this behavior, AO has a high chance of reaching the 
+optimal solution. 
+It can be noticed from the convergence curve (last column in Fig. 7) 
+that there are variant types of patterns based on the tested functions. For 
+example, for the unimodal functions, their conference curves are 
+smooth. It needs a small number of iterations to be enhanced. The convergence curve is similar to step-wise for the multimodal functions 
+because this type is more complex than unimodal functions. 
+4.1.2. Parameters analysis of the AO 
+In this section, we test the effect of changing the value of AO’s pa-
+rameters on its performance. In general, there are two main parameters 
+in AO, so we put different scenarios according to the value of these 
+parameters. These parameters are evaluated at one value from 0.1, 0.5, 
+and 0.9; therefore, we have nine scenarios (as in Table 6). 
+Table 7 depicts the statistical results obtained at each scenario 
+among nine functions (i.e., F1, F3, F5, F6, F7, F9, F11, F12, and F13). 
+From these results, it can be noticed that the first scenario (i.e., α 0B1 
+and δ0B1) among all the tested functions has better results overall in 
+other scenarios. Followed by fourth and seventh scenarios that allocated 
+the second and third rank, respectively. However, it can be observed that 
+AO’s performance at all of these scenarios is similar at F1, F3, F9, and 
+F11. Also, by comparing the first scenario (at low value) with scenario 9 
+(at high value), it can be noticed that the AO at the first scenario wins 
+two times while at another scenario not win. AO lost only three times in Table 7 
+The influence of the AO parameters (i.e., α and δ) tested on various classical test functions.  Fun 
+No. Scenario No. 
+Measure Scenario 1 Scenario 2 Scenario 3 Scenario 4 Scenario 5 Scenario 6 Scenario 7 Scenario 8 Scenario 9 
+F1          
+Worst 0.0000E00 0.0000E00 0.0000E00 0.0000E00 0.0000E00 0.0000E00 0.0000E00 0.0000E00 0.0000E00 
+Average 0.0000E00 0.0000E00 0.0000E00 0.0000E00 0.0000E00 0.0000E00 0.0000E00 0.0000E00 0.0000E00 
+Best 0.0000E00 0.0000E00 0.0000E00 0.0000E00 0.0000E00 0.0000E00 0.0000E00 0.0000E00 0.0000E00 
+STD 0.0000E00 0.0000E00 0.0000E00 0.0000E00 0.0000E00 0.0000E00 0.0000E00 0.0000E00 0.0000E00 
+F3          
+Worst 0.0000E00 0.0000E00 0.0000E00 0.0000E00 0.0000E00 0.0000E00 0.0000E00 0.0000E00 0.0000E00 
+Average 0.0000E00 0.0000E00 0.0000E00 0.0000E00 0.0000E00 0.0000E00 0.0000E00 0.0000E00 0.0000E00 
+Best 0.0000E00 0.0000E00 0.0000E00 0.0000E00 0.0000E00 0.0000E00 0.0000E00 0.0000E00 0.0000E00 
+STD 0.0000E00 0.0000E00 0.0000E00 0.0000E00 0.0000E00 0.0000E00 0.0000E00 0.0000E00 0.0000E00 
+F5          
+Worst 3.5452E 03 1.2003E 02 1.0688E00 2.4860E 03 7.7249E 02 1.5643E 01 9.2393E 03 8.7626E 02 1.9360E 01 
+Average 7.5563E 04 5.3272E 03 3.7669E 01 9.3808E 04 2.3046E 02 6.1452E 02 2.9616E 03 3.0283E 02 3.5318E 02 
+Best 3.0716E 05 4.9156E 05 2.5972E 03 2.1377E 05 2.6727E 04 3.3591E 03 4.8392E 05 2.5782E 04 2.3909E 04 
+STD 1.2825E 03 4.6059E 03 4.3612E 01 8.1676E 04 2.4598E 02 6.8500E 02 2.9794E 03 3.6559E 02 6.6042E 02 
+F6          
+Worst 9.3433E 04 1.4871E 03 1.6305E 03 4.5867E 04 1.6101E 03 1.8361E 03 2.5836E 04 5.0271E 04 1.2255E 02 
+Average 1.2866E 04 3.2509E 04 2.6693E 04 8.3540E 05 5.7930E 04 7.1889E 04 6.4938E 05 1.3677E 04 3.2565E 03 
+Best 8.9132E 08 1.2406E 05 1.8149E 07 4.0921E 09 9.8538E 07 2.0150E 05 9.8426E 08 2.4579E 06 1.9958E 05 
+STD 3.2581E 04 4.8124E 04 5.5469E 04 1.5817E 04 5.6937E 04 6.5062E 04 9.6101E 05 2.0381E 04 4.2484E 03 
+F7          
+Worst 2.4857E 03 6.0771E 04 9.8470E 04 1.8054E 03 7.5880E 04 1.5938E 03 2.5689E 03 2.2417E 03 1.5480E 03 
+Average 6.7149E 04 3.4123E 04 3.8074E 04 6.1805E 04 3.0839E 04 9.4638E 04 8.1345E 04 5.7466E 04 5.3287E 04 
+Best 7.4363E 05 9.3075E 05 7.2355E 05 1.6019E 05 2.6660E 06 3.0243E 04 5.4588E 05 7.3517E 05 2.0936E 05 
+STD 8.1515E 04 1.8032E 04 3.1235E 04 5.8056E 04 2.8467E 04 4.2589E 04 7.7100E 04 7.0843E 04 4.7333E 04 
+F9          
+Worst 0.0000E00 0.0000E00 0.0000E00 0.0000E00 0.0000E00 0.0000E00 0.0000E00 0.0000E00 0.0000E00 
+Average 0.0000E00 0.0000E00 0.0000E00 0.0000E00 0.0000E00 0.0000E00 0.0000E00 0.0000E00 0.0000E00 
+Best 0.0000E00 0.0000E00 0.0000E00 0.0000E00 0.0000E00 0.0000E00 0.0000E00 0.0000E00 0.0000E00 
+STD 0.0000E00 0.0000E00 0.0000E00 0.0000E00 0.0000E00 0.0000E00 0.0000E00 0.0000E00 0.0000E00 
+F11          
+Worst 0.0000E00 0.0000E00 0.0000E00 0.0000E00 0.0000E00 0.0000E00 0.0000E00 0.0000E00 0.0000E00 
+Average 0.0000E00 0.0000E00 0.0000E00 0.0000E00 0.0000E00 0.0000E00 0.0000E00 0.0000E00 0.0000E00 
+Best 0.0000E00 0.0000E00 0.0000E00 0.0000E00 0.0000E00 0.0000E00 0.0000E00 0.0000E00 0.0000E00 
+STD 0.0000E00 0.0000E00 0.0000E00 0.0000E00 0.0000E00 0.0000E00 0.0000E00 0.0000E00 0.0000E00 
+F12          
+Worst 2.5953E 06 2.4913E 04 6.0485E 04 1.4918E 05 6.8346E 03 3.9597E 04 8.0765E 05 2.5108E 04 1.8653E 03 
+Average 1.0423E 06 7.3327E 05 1.4308E 04 6.6588E 06 8.7494E 04 1.3414E 04 2.4816E 05 4.3581E 05 2.9459E 04 
+Best 2.2313E 08 7.3942E 07 6.3818E 07 3.1857E 07 4.2849E 08 6.2585E 06 2.2365E 07 3.7318E 08 3.2924E 07 
+STD 9.3764E 07 9.8852E 05 2.2879E 04 5.9844E 06 2.4083E 03 1.3325E 04 3.3871E 05 8.5033E 05 6.4205E 04 
+F13          
+Worst 4.4032E 04 2.1265E 03 4.8500E 03 2.0505E 04 5.4268E 04 1.9890E 03 3.1063E 04 9.6081E 04 2.4658E 03 
+Average 7.2669E 05 3.8436E 04 6.7492E 04 8.4223E 05 1.2665E 04 5.3678E 04 4.8247E 05 4.0248E 04 8.1892E 04 
+Best 9.3142E 08 5.7119E 06 7.0224E 06 7.4176E 07 2.6086E 06 2.8230E 06 2.9500E 07 1.8673E 05 4.4407E 05 
+STD 1.4966E 04 7.2191E 04 1.6890E 03 8.3966E 05 1.8606E 04 7.5516E 04 1.0756E 04 4.5882E 04 8.4563E 04  
+(W†L†T)  (2†3†4)  (0†5†4)  (0†5†4)  (0†5†4)  (1†4†4)  (0†5†4)  (2†3†4)  (0†5†4)  (0†5†4)  
+Mean 2.0000E00 2.8889E00 4.0000E00 2.1111E00 3.3333E00 4.6667E00 2.2222E00 3.2222E00 4.5556E00 
+Ranking 1 4 7 2 6 9 3 5 8  L. Abualigah et al.                                                                                                                                                                                                                              
+
+Computers & Industrial Engineering 157 (2021) 107250
+11the first scenario, but AO using the ninth scenario, lost five times. The 
+seventh scenario has the same analysis as the first scenario. However, it 
+allocates the third rank with a small difference from the first scenario. 
+The impact of the number of solutions (i.e., N) is examined on several 
+benchmark functions. To appropriately analyze the AO’s parameter 
+sensitivity, we tested several numbers of solutions (i.e., 10, 20, 30, 40, 
+and 50) by comparing the changes in the number of solution parameters 
+throughout 100 iterations. It can be seen from the obtained results in 
+Fig. 8 that when uses many population sizes, the proposed AO method 
+keeps its advantages, which means that AO is more robust and less 
+overwhelmed by the population size. As shown in this figure, it is also 
+clear that the change in the number of solutions in the first example 
+(F23) did not affect the algorithm ’s ability to solve this problem. For F12 
+and F13, it was clear that the number of smaller solutions was less 
+efficient than the rest at solving problems. Thus, we can say that the best 
+number of solutions is 30. 4.1.3. Intensification capability of the AO 
+The set of unimodal functions of (F1-F7) have been employed to 
+examine AO’s ability in exploiting the global solutions as this suite of 
+functions has only one global optimum. Table 8 displays AO and other 
+recent competitors ’ results on the studied unimodal benchmarks (F1- 
+F7). The results include the worst-so-far solutions, the Average and STD 
+values across the number of independent runs, and the best-so-far so-
+lutions that have been involved. The attained values confirm the supe-
+riority of the AO as it prevails over the other peers in achieving the 
+minimal values of the best-so-far solutions and the worst-so-far solutions 
+and the Average values with high reliability and consistency (minimum 
+STD) for six functions of this set. The SMA achieves the least mean value 
+for F7 while the GWO and AO occupy the second and third positions for 
+this function ’s mean value. 
+Nonetheless, the AO offers the least best value for F7. Through this 
+observation, one can see the AO’s high ability in the intensification 
+Fig. 8.The influence of the AO population size (i.e., number of solutions (N)) tested on various classical test functions.  L. Abualigah et al.                                                                                                                                                                                                                              
+
+Computers & Industrial Engineering 157 (2021) 107250
+12Table 
+ 8 
+Results of the comparative methods on classical test functions (F1-F13), the dimension is fixed to 10.  Fun 
+No. Comparative methods  
+Measure AO GOA EO PSO DA ALO GWO MPA SSA SCA WOA SMA 
+F1             
+Worst 0.0000E00 3.6969E 04 7.7535E 55 6.2268E 19 2.3600E01 1.4323E 07 1.4594E 48 1.0861E 29 1.4896E 09 8.0970E 10 2.9973E 69 1.6487E 209 
+Average 0.0000E00 9.2301E 05 1.9446E 55 1.6757E 19 1.3050E01 4.3784E 08 7.0295E 49 5.1571E 30 8.8917E 10 2.0351E 10 1.0157E 69 2.3553E 210 
+Best 0.0000E00 4.5311E 06 4.3340E 58 2.8877E 21 9.4062E 01 1.3931E 08 3.3951E 51 4.8287E 31 4.5257E 10 2.2968E 15 1.2964E 74 0.0000E00 
+STD 0.0000E00 1.5720E 04 3.3159E 55 2.5923E 19 8.5620E00 5.6212E 08 5.5804E 49 3.9049E 30 4.0621E 10 3.4922E 10 1.4278E 69 0.0000E00 
+F2             
+Worst 3.2140E 217 8.0714E00 1.7385E 32 5.6805E 09 5.0004E00 1.8234E00 5.0478E 27 2.6606E 16 1.6008E 01 1.9284E 08 7.0476E 49 3.3909E 102 
+Average 9.4973E 218 1.9913E00 4.7530E 33 1.8197E 09 2.6815E00 6.5730E 01 1.8314E 27 1.1119E 16 3.2973E 02 7.1625E 09 1.4120E 49 4.8441E 103 
+Best 6.5477E 225 4.2831E 02 4.4565E 34 1.8509E 10 1.1170E00 2.0566E 05 5.2330E 29 1.5592E 17 7.8584E 06 2.2667E 11 2.3267E 54 4.0840E 185 
+STD 0.0000E00 3.4564E00 7.1132E 33 2.3197E 09 1.4933E00 9.0885E 01 2.2740E 27 1.2968E 16 7.1078E 02 9.7874E 09 3.1504E 49 1.2816E 102 
+F3             
+Worst 0.0000E00 7.9216E00 1.3672E 26 8.9441E 05 2.2990E02 3.5658E01 5.9319E 19 8.8997E 13 1.6144E 02 1.5833E00 9.1052E02 5.9474E 170 
+Average 0.0000E00 2.3721E00 2.7965E 27 2.4370E 05 1.5135E02 9.7732E00 1.4430E 19 2.9489E 13 3.2460E 03 3.1907E 01 4.1977E02 8.4963E 171 
+Best 0.0000E00 7.6675E 01 3.2828E 30 3.0206E 07 4.9375E01 7.7055E 01 5.8410E 22 4.3286E 15 5.5017E 06 8.7897E 06 1.8044E01 0.0000E00 
+STD 0.0000E00 3.1152E00 6.0803E 27 3.7242E 05 6.6986E01 1.4868E01 2.5214E 19 4.1003E 13 7.2100E 03 7.0675E 01 3.7377E02 0.0000E00 
+F4             
+Worst 3.4546E 217 3.6825E 01 4.5050E 18 9.0690E 04 5.4895E00 1.4412E 01 5.9612E 15 8.9567E 13 6.6264E 04 4.2456E 03 1.0180E01 4.1196E 106 
+Average 9.9112E 218 1.6042E 01 9.0972E 19 2.4924E 04 3.1205E00 3.4159E 02 2.1428E 15 4.8253E 13 1.7262E 04 1.3333E 03 3.1560E00 6.2423E 107 
+Best 2.3220E 221 8.7472E 02 7.2504E 22 2.0935E 05 1.5899E00 1.0461E 03 2.3617E 16 2.3066E 13 1.6171E 05 4.3787E 06 2.1035E 03 4.1535E 184 
+STD 0.0000E00 1.1778E 01 2.0099E 18 3.7336E 04 1.6164E00 6.1690E 02 2.5515E 15 2.7060E 13 2.7860E 04 1.8792E 03 4.0482E00 1.5441E 106 
+F5             
+Worst 7.2509E 03 4.7288E02 5.8178E00 7.6530E00 1.2150E04 2.1338E02 8.0599E00 8.8155E00 6.4316E02 8.2314E00 8.9311E00 8.2833E00 
+Average 1.8851E 03 1.3186E02 5.5290E00 4.9164E00 2.7086E03 1.1610E02 6.9905E00 8.7760E00 1.8700E02 7.6830E00 7.6503E00 6.6668E00 
+Best 5.8588E 05 3.5924E00 5.3001E00 1.0189E 01 1.3482E02 5.9959E00 6.2379E00 8.7560E00 7.8930E00 7.2782E00 6.8245E00 1.3987E 01 
+STD 2.5151E 03 1.9815E02 2.4395E 01 2.8429E00 5.2795E03 1.0054E02 7.6379E 01 2.3773E 02 2.5958E02 4.4474E 01 8.2650E 01 2.9165E00 
+F6             
+Worst 1.9689E 04 7.2259E 04 8.5541E 14 2.0342E 16 4.5832E01 1.1796E 07 5.3267E 06 8.6068E 11 9.3625E 01 5.1611E 01 2.3389E 01 1.1110E 03 
+Average 6.3114E 05 2.2305E 04 4.1139E 14 4.3574E 17 1.6905E01 3.2933E 08 3.5900E 06 2.8785E 11 6.1533E 01 4.1137E 01 5.0174E 02 4.7827E 04 
+Best 7.2800E 08 3.7020E 07 4.8416E 16 2.8863E 21 1.0348E00 7.9036E 09 2.5332E 06 3.7619E 12 3.1269E 01 2.9111E 01 1.1980E 03 2.0744E 04 
+STD 8.9617E 05 2.9549E 04 3.2871E 14 8.9572E 17 1.8622E01 4.7742E 08 1.1089E 06 3.2764E 11 2.3594E 01 9.6704E 02 1.0272E 01 3.0449E 04 
+F7             
+Worst 1.5929E 03 1.5150E 01 1.8674E 03 1.6135E 02 4.2162E 02 6.1820E 02 1.3368E 03 2.1653E 03 3.6384E 02 3.8409E 03 8.9085E 03 9.9489E 04 
+Average 8.2851E 04 1.0781E 01 1.3129E 03 9.4087E 03 2.4046E 02 3.4906E 02 6.4406E 04 1.0836E 03 2.1775E 02 2.4214E 03 5.2117E 03 4.9240E 04 
+Best 3.6048E 05 5.4523E 02 7.1835E 04 3.9634E 03 7.3884E 03 1.6443E 02 3.9526E 04 3.9490E 04 1.3986E 02 1.4779E 03 1.9935E 03 6.3985E 05 
+STD 4.8479E 04 4.3620E 02 4.8920E 04 4.3669E 03 1.6416E 02 1.9059E 02 3.8983E 04 7.1962E 04 8.7354E 03 9.6575E 04 3.3316E 03 3.9987E 04 
+F8             
+Worst  1.4073E03  2.4131E03  2.6410E03  1.5161E03  2.5770E03  2.0333E03  2.2885E03  3.2378E03  2.4891E03  1.9022E03  2.5990E03  4.1892E03 
+Average  2.2694E03  2.7474E03  3.1952E03  2.1103E03  2.7496E03  2.4552E03  2.7077E03  3.5326E03  2.9844E03  2.0030E03  3.0851E03  4.1895E03 
+Best  2.6958E03  3.3212E03  3.5946E03  2.5933E03  2.9985E03  3.2226E03  3.1415E03  3.9514E03  3.2590E03  2.1001E03  3.8213E03  4.1898E03 
+STD 4.6187E02 3.4712E02 3.9090E02 4.4304E02 1.6458E02 4.9743E02 3.4845E02 2.7177E02 3.0091E02 7.7952E01 4.4698E02 1.8346E 01 
+F9             
+Worst 0.0000E00 6.2682E01 0.0000E00 1.2934E01 4.7290E01 4.2783E01 1.5144E01 5.0275E 07 2.5869E01 6.3709E00 1.4211E 14 0.0000E00 
+Average 0.0000E00 4.3380E01 0.0000E00 5.6148E00 3.1340E01 3.1441E01 4.3101E00 1.0055E 07 1.4327E01 1.2742E00 2.8422E 15 0.0000E00 
+Best 0.0000E00 2.8854E01 0.0000E00 1.9899E00 1.0558E01 1.5919E01 0.0000E00 0.0000E00 5.9697E00 2.7143E 12 0.0000E00 0.0000E00 
+STD 0.0000E00 1.4099E01 0.0000E00 4.3077E00 1.5146E01 1.1401E01 6.6614E00 2.2484E 07 8.7477E00 2.8492E00 6.3553E 15 0.0000E00 
+F10             
+Worst 8.8818E 16 3.5742E00 4.4409E 15 1.1957E 09 1.2660E01 2.0133E00 1.5099E 14 7.9936E 15 2.8136E00 6.9120E 06 7.9936E 15 8.8818E 16 
+Average 8.8818E 16 1.6781E00 4.4409E 15 7.0605E 10 4.9842E00 4.0282E 01 1.1546E 14 5.1514E 15 1.4882E00 1.7246E 06 4.4409E 15 8.8818E 16 
+Best 8.8818E 16 1.0370E 03 4.4409E 15 3.2066E 10 1.4270E00 8.1753E 05 7.9936E 15 4.4409E 15 9.2279E 06 5.6642E 08 8.8818E 16 8.8818E 16 
+STD 0.0000E00 1.3033E00 0.0000E00 3.7348E 10 4.4356E00 9.0030E 01 3.5527E 15 1.5888E 15 1.1045E00 2.9457E 06 3.5527E 15 0.0000E00 
+F11             
+Worst 0.0000E00 2.9456E 01 2.9518E 02 5.3434E 01 1.0454E00 3.7635E 01 5.9217E 02 0.0000E00 2.6543E 01 4.7349E 02 2.4588E 01 0.0000E00 
+(continued on next page) L. Abualigah et al.                                                                                                                                                                                                                              
+
+Computers & Industrial Engineering 157 (2021) 107250
+13(exploitation) of the optimal solutions. This feature proceeds from its 
+main procedures; the proposed AO has two exploitation strategies to 
+focus on the local search area mainly (i.e., expanded exploitation and 
+narrowed exploitation). This encourages the optimization process dur-
+ing the search to focus on the local area widely and narrowly. 
+4.1.4. Diversification capability of AO 
+The multiple local optima of the multimodal benchmarks are the 
+recommended gate to examine the MHs ’ exploration (diversification) 
+capacity. Two multimodal test functions are applied while testing the 
+AO, multidimensional (F8-F13) and fixed-dimensional test functions 
+(F14-F23). The worst, average, best, and STD values of the studied 
+functions set are illustrated in Tables 8,9 for multidimensional (F8-F13), 
+and fixed-dimensional (F14-F23) functions, respectively. The results of 
+the tables reveal that the AO outperforms the other peers in the majority 
+of the high dimensional multimodal benchmarks (see Table 8) as it 
+provides the minimum statistical metrics values (worst, average, best, 
+and STD) in five functions out of six from this set. The SMA is the best 
+competitor for F8, as shown in Table 8. For low (fixed) dimensional 
+multimodal benchmarks (F14-F23) (see Table 9), the AO attains the best 
+performance for half of this set. In order to have meaningful statistical 
+results, three lines of Tables 8,9 have been reported to display statistical 
+analysis for the implemented algorithms across the course of the studied 
+functions to demonstrate the superiority of AO. The first line shows three 
+symbols (W†L†T) that denote the number of the functions in which the 
+performance of the algorithm is the best (win) †indistinguishable (tie) †
+inferior to the others (loss). The second line refers to the Friedman mean 
+rank. The third line illustrates the final rank values of the implemented 
+algorithms. As per those lines, one can see that the AO exhibits the best 
+performance in the majority of the multimodal benchmarks; that is why 
+it occupied the first position as a final rank in comparison with the other 
+peers. The reason behind this performance is that the proposed AO has 
+two exploration strategies to focus on the global search area mainly (i.e., 
+expanded exploration and narrowed exploitation). This helps the algo-
+rithm discover the search-land space efficiently and with high quality 
+compared to the other recently proved algorithms. These strategies lead 
+the optimization process in two ways during the search on a wide search 
+area (i.e., widely and narrowly). 
+4.1.5. Acceleration convergence analysis of AO 
+The convergence of the AO for the optimal solutions across the 
+iteration numbers is an essential factor that should be investigated, 
+therefore Fig. 9 depicts the best solutions attained so far across the it-
+erations number. The acceleration convergence curves of the proposed 
+AO show a detectable decaying rate in the cases of the unimodal func-
+tions (F1-F7). Meanwhile, other algorithms suffer from an intense 
+stagnation to the local solutions that confirm the AO’s exploitation stage 
+is high capacity with a reliable exploration. The AO’s convergence 
+curves of the multimodal functions show the smooth transition between 
+its exploration and exploitation phases. It convergences for optimal so-
+lutions with an observable speed compared with the other peers in F10, 
+F11, F12, F13, F14, F16, F17. F21, F22, and F23. For these functions, it 
+can be seen that the AO has a high balance between exploration and 
+exploitation stages as it catches the nearest values for the optimal so-
+lutions with the fastest response in comparison with the other peers then 
+these solutions have been exploited efficiently across the number of it-
+erations to provide the optimal solutions. For F18, F19, and F20, the AO 
+gradually recognizes the optimal solutions and updates the solutions 
+across the iteration numbers that confirm the preceding observation. 
+4.1.6. Stability analysis of AO 
+To evaluate the stability and quality of the proposed AO’s perfor -
+mance while dealing with high dimensional optimization problems, 
+thirteen functions of Tables 2 and 3 have been employed with three 
+dimensions levels of 50, 100, and 500. The AO and the other counter -
+parts (GOA, EO, PSO, DA, ALO, GWO, MPA, SSA, SCA, WOA, and SMA) Table 8 (continued ) Fun 
+No. Comparative methods  
+Measure AO GOA EO PSO DA ALO GWO MPA SSA SCA WOA SMA 
+Average 0.0000E00 2.5765E 01 5.9036E 03 2.4519E 01 5.8851E 01 2.3516E 01 1.3919E 02 0.0000E00 1.9428E 01 1.2173E 02 9.7462E 02 0.0000E00 
+Best 0.0000E00 1.9581E 01 0.0000E00 1.0083E 01 6.5156E 02 1.2060E 01 0.0000E00 0.0000E00 1.3262E 01 6.6321E 12 0.0000E00 0.0000E00 
+STD 0.0000E00 4.1907E 02 1.3201E 02 1.7935E 01 3.7515E 01 1.1319E 01 2.5718E 02 0.0000E00 5.8327E 02 2.0376E 02 1.3346E 01 0.0000E00 
+F12             
+Worst 1.0421E 04 3.5311E00 6.8465E 14 2.8069E 19 4.6366E00 5.6267E00 2.0267E 02 4.3457E 11 5.1834E 01 2.1882E 01 2.3163E 02 2.9263E 02 
+Average 2.9262E 05 1.2733E00 1.7762E 14 5.8169E 20 1.6329E00 2.9035E00 1.0206E 02 2.5447E 11 1.9305E 01 1.3370E 01 1.1534E 02 1.1291E 02 
+Best 1.1309E 07 8.3499E 04 5.9790E 17 2.0418E 21 7.5827E 02 2.6276E 01 2.7411E 06 1.1688E 11 5.1467E 11 6.6012E 02 1.4821E 03 8.9676E 05 
+STD 3.5700E 05 1.4307E00 2.8777E 14 1.2439E 19 1.7959E00 1.9525E00 9.9777E 03 1.3247E 11 2.1431E 01 6.0210E 02 9.0233E 03 1.2002E 02 
+F13             
+Worst 2.7104E 04 5.5560E 02 4.3949E 02 1.0987E 02 1.5863E00 1.0991E 02 1.9995E 01 9.4975E 11 1.0987E 02 4.7545E 01 1.5739E 01 5.1401E 01 
+Average 9.5026E 05 2.2263E 02 8.7898E 03 2.1975E 03 9.3911E 01 4.3965E 03 4.0000E 02 5.6741E 11 2.1975E 03 3.9263E 01 7.2692E 02 1.1294E 01 
+Best 2.7176E 06 8.2498E 04 4.0278E 16 8.6127E 22 2.8877E 01 2.2534E 07 6.5501E 06 3.5877E 11 5.7806E 10 3.3532E 01 2.4993E 03 6.6998E 03 
+STD 1.0312E 04 2.2905E 02 1.9655E 02 4.9137E 03 4.6888E 01 6.0192E 03 8.9412E 02 2.3790E 11 4.9137E 03 5.0910E 02 6.4705E 02 1.8368E 01  
+(W†L†T)  (6†5†2)  (0†13†0)  (0†12†1)  (2†10†0)  (0†13†0)  (0†13†0)  (0†13†0)  (1†12†0)  (0†13†0)  (1†12†0)  (0†13†0)  (1†10†2)  
+Mean 2.0000E00 8.8667E00 4.1333E00 5.9333E00 9.8667E00 8.4667E00 5.0000E00 4.8667E00 8.8000E00 7.3333E00 6.2000E00 4.7333E00 
+Ranking 1 11 2 6 12 9 5 4 10 8 7 3  L. Abualigah et al.                                                                                                                                                                                                                              
+
+Computers & Industrial Engineering 157 (2021) 107250
+14Table 
+ 9 
+Results of the comparative methods on classical test functions (F14-F23).  Fun 
+No. Comparative methods  
+Measure AO GOA EO PSO DA ALO GWO MPA SSA SCA WOA SMA 
+F14             
+Worst 2.9821E00 1.4600E01 9.9800E 01 3.9700E00 1.9900E00 5.9300E00 1.0800E01 9.9800E 01 2.9800E00 2.9800E00 1.0800E01 4.6705E00 
+Average 2.3207E00 1.2300E01 9.9800E 01 2.7800E00 1.4000E00 3.5700E00 6.2900E00 9.9800E 01 1.5900E00 1.4900E00 4.1400E00 2.4741E00 
+Best 9.9800E 01 9.8000E00 9.9800E 01 1.9900E00 9.9800E 01 9.9800E 01 2.9800E00 9.9800E 01 9.9800E 01 9.9800E 01 9.9800E 01 9.9800E 01 
+STD 1.0246E00 1.8600E00 1.5700E 16 1.0800E00 5.4400E 01 2.2700E00 4.1000E00 0.0000E00 8.8800E 01 8.5900E 01 4.2300E00 4.6712E00 
+F15             
+Worst 8.4575E 04 2.1800E 02 3.5300E 04 9.9300E 04 2.0400E 02 2.0400E 02 2.0400E 02 3.0700E 04 2.0800E 02 1.9100E 03 1.5200E 03 1.4362E 03 
+Average 5.5089E 04 9.7900E 03 3.2100E 04 9.2000E 04 5.7200E 03 4.9500E 03 8.4500E 03 3.0700E 04 4.8000E 03 1.2800E 03 7.7400E 04 8.3936E 04 
+Best 4.0581E 04 7.8500E 04 3.0800E 04 8.6600E 04 1.5000E 03 7.7800E 04 3.0800E 04 3.0700E 04 7.4300E 04 6.9200E 04 3.1300E 04 5.1901E 04 
+STD 1.9027E 04 1.0500E 02 1.9800E 05 6.6400E 05 8.1900E 03 8.6500E 03 1.0900E 02 2.9000E 15 8.9500E 03 4.9000E 04 4.5600E 04 3.6588E 04 
+F16             
+Worst  1.0316E00  1.0300E00  1.0300E00  1.0300E00  1.0300E00  1.0300E00  1.0300E00  1.0300E00  1.0300E00  1.0300E00  1.0300E00  1.0290E00 
+Average  1.0316E00  1.0300E00  1.0300E00  1.0300E00  1.0300E00  1.0300E00  1.0300E00  1.0300E00  1.0300E00  1.0300E00  1.0300E00  1.0306E00 
+Best  1.0316E00  1.0300E00  1.0300E00  1.0300E00  1.0300E00  1.0300E00  1.0300E00  1.0300E00  1.0300E00  1.0300E00  1.0300E00  1.0313E00 
+STD 6.5206E 08 2.1400E 13 1.9200E 16 1.9200E 16 4.2300E 07 2.9300E 13 2.8000E 08 0.0000E00 1.5200E 14 2.1700E 05 1.1800E 09 8.5115E 04 
+F17             
+Worst 3.9789E 01 0.0000E00 3.9800E 01 3.9800E 01 3.9800E 01 3.9800E 01 3.9800E 01 3.9800E 01 0.0000E00 4.0200E 01 3.9800E 01 3.9933E 01 
+Average 3.9789E 01 0.0000E00 3.9800E 01 3.9800E 01 3.9800E 01 3.9800E 01 3.9800E 01 3.9800E 01 0.0000E00 4.0000E 01 3.9800E 01 3.9829E 01 
+Best 3.9789E 01 0.0000E00 3.9800E 01 3.9800E 01 3.9800E 01 3.9800E 01 3.9800E 01 3.9800E 01 0.0000E00 3.9900E 01 3.9800E 01 3.9798E 01 
+STD 4.7081E 07 0.0000E00 0.0000E00 0.0000E00 1.1900E 06 1.8000E 13 1.0500E 05 4.3700E 14 0.0000E00 1.3700E 03 1.9800E 04 5.2390E 04 
+F18             
+Worst 3.0000E00 3.0000E00 3.0000E00 3.0000E00 3.0000E00 3.0000E00 8.4000E01 3.0000E00 3.0000E00 3.0000E00 3.0000E00 3.0000E00 
+Average 3.0000E00 3.0000E00 3.0000E00 3.0000E00 3.0000E00 3.0000E00 1.9200E01 3.0000E00 3.0000E00 3.0000E00 3.0000E00 3.0000E00 
+Best 3.0000E00 3.0000E00 3.0000E00 3.0000E00 3.0000E00 3.0000E00 3.0000E00 3.0000E00 3.0000E00 3.0000E00 3.0000E00 3.0000E00 
+STD 3.0000E00 1.7500E 12 1.1300E 15 1.2600E 15 4.6300E 13 1.5400E 12 3.6200E01 1.1300E 15 5.9500E 13 1.1300E 03 1.5500E 04 4.6300E 13 
+F19             
+Worst  3.8607E00  3.0800E00  3.8600E00  3.8600E00  3.8600E00  3.8600E00  3.8600E00  3.8600E00  3.8600E00  3.8500E00  3.8500E00  3.8336E00 
+Average  3.8624E00  3.5400E00  3.8600E00  3.8600E00  3.8600E00  3.8600E00  3.8600E00  3.8600E00  3.8600E00  3.8500E00  3.8500E00  3.8499E00 
+Best  3.8628E00  3.8600E00  3.8600E00  3.8600E00  3.8600E00  3.8600E00  3.8600E00  3.8600E00  3.8600E00  3.8500E00  3.8600E00  3.8601E00 
+STD 8.4657E 04 3.2900E 01 6.2800E 16 3.1400E 16 1.4800E 03 4.6500E 11 1.8200E 03 3.1400E 16 2.8100E 10 1.3200E 03 4.4600E 03 1.0229E 02 
+F20             
+Worst  3.1994E00  3.2000E00  3.2000E00  3.2000E00  3.1800E00  3.1900E00  3.0800E00  3.2000E00  3.1600E00  2.6000E00  3.0900E00  2.8432E00 
+Average  3.3014E00  3.3000E00  3.3000E00  3.2500E00  3.2100E00  3.2700E00  3.2000E00  3.3000E00  3.2400E00  2.9300E00  3.2600E00  3.3011E00 
+Best  3.3220E00  3.3200E00  3.3200E00  3.3200E00  3.3200E00  3.3200E00  3.3200E00  3.3200E00  3.3200E00  3.0700E00  3.3200E00  3.2223E00 
+STD 4.9969E 02 5.5600E 02 5.3200E 02 6.5100E 02 6.0500E 02 6.9000E 02 8.5900E 02 5.3200E 02 7.7000E 02 1.8900E 01 9.9200E 02 1.3453E 01 
+F21             
+Worst  1.0140E01  2.6800E00  2.9400E 01  2.6300E00  2.6300E00  2.6800E00  1.0100E01  1.0002E01  5.0600E00  4.9600E 01  5.0500E00  5.0240E00 
+Average  1.0149E01  6.1500E00  4.6600E 01  7.1500E00  6.6300E00  4.6100E00  1.0100E01  1.0013E01  6.0800E00  8.9400E 01  8.0700E00  7.5258E00 
+Best  1.0153E01  1.0200E01  7.1100E 01  1.0200E01  1.0200E01  5.1000E00  1.0200E01  1.0200E01  1.0200E01  2.1000E00  1.0100E01  1.0152E01 
+STD 4.9281E 03 3.7800E00 1.5900E 01 4.1100E00 3.3700E00 1.0800E00 2.9900E 03 1.7800E 11 2.2700E00 6.9300E 01 2.7500E00 2.7307E00 
+F22             
+Worst  1.0395E01  2.7500E00  5.0900E00  2.7500E00  2.7500E00  3.7200E00  1.0400E01  1.0400E01  3.7200E00  9.0600E 01  2.9400E 01  5.0840E00 
+Average  1.0401E01  7.3400E00  9.3400E00  6.4700E00  6.3800E00  7.7300E00  1.0400E01  1.0400E01  8.0100E00  1.9000E00  5.5600E 01  1.0304E01 
+Best  1.0403E01  1.0400E01  1.0400E01  1.0400E01  1.0300E01  1.0400E01  1.0400E01  1.0400E01  1.0400E01  4.0200E00  8.5800E 01  1.0401E01 
+STD 2.9768E 03 4.1900E00 2.3800E00 3.6800E00 3.5400E00 3.6600E00 1.3400E 03 1.0400E 11 3.3100E00 1.4300E00 2.7200E 01 2.7263E00 
+F23             
+Worst  1.0535E01  1.6800E00  3.8400E00  1.0500E01  1.6800E00  3.8400E00  1.0500E01  7.8900E 01  1.0500E01  2.4600E00  5.1000E00  5.1209E00 
+Average  1.0536E01  4.2600E00  9.2000E00  1.0500E01  6.5200E00  9.2000E00  1.0500E01  2.0900E00  1.0500E01  4.1400E00  9.4200E00  7.6143E00 
+Best  1.0536E01  1.0500E01  1.0500E01  1.0500E01  1.0500E01  1.0500E01  1.0500E01  5.1300E00  1.0500E01  7.2700E00  1.0500E01  1.0485E01 
+STD 2.7562E 04 3.6000E00 3.0000E00 1.5400E 15 3.7400E00 3.0000E00 1.9800E 03 1.9000E00 2.1000E 11 1.9000E00 2.4200E00 2.7558E00  
+(W†L†T)  (6†6†1)  (1†11†1)  (0†11†2)  (0†12†1)  (0†12†1)  (0†12†1)  (0†13†0)  (2†9†2)  (1†11†1)  (0†12†1)  (0†12†1)  (0†12†1)  
+Mean 2.0000E00 7.0000E00 3.9000E00 4.9000E00 5.9000E00 5.7000E00 6.1000E00 3.0000E00 4.6000E00 8.1000E00 5.9000E00 5.6000E00 
+Ranking 1 11 3 5 8 7 10 2 4 12 8 6  L. Abualigah et al.                                                                                                                                                                                                                              
+
+Computers & Industrial Engineering 157 (2021) 107250
+15
+Fig. 9.Convergence behavior of the comparative algorithms on classical test functions (F1-F23).  L. Abualigah et al.                                                                                                                                                                                                                              
+
+Computers & Industrial Engineering 157 (2021) 107250
+16have been implemented for 30 independent runs with 500 iteration and 
+50 search agents. The worst, average, best, and STD values of the 
+considered benchmarks ’ test-bed by the executed algorithms have been 
+computed as in Tables 10,11 for the three studied dimensions of 50, 100, 
+and 500, respectively. Furthermore, the number of the functions in 
+which the algorithm can be classified as winning †tie †loss (W †L †T), as 
+well as the total rank values of the algorithms, have been reported in the 
+last lines of the Tables 10,11 to have a detailed statistical analysis. The 
+obtained results confirm that the AO shows its reliability, stability, and 
+robustness by increasing the optimized functions ’ dimension where it 
+has the best performance for seven 50 dimensional functions ***(see 
+Table 12). 
+Moreover, it is the best for nine functions for the cases of 100 and 
+500-dimensional test functions. This observation approves the AO’s 
+efficient exploration and exploitation capabilities in discovering the 
+search domain while dealing with the many local optima of high 
+dimensional multimodal functions and exploit the optimal solutions 
+accurately. For the other counterparts, the SMA occupied the second 
+rank after AO with success performance for only one function in 100 and 
+500-dimensional benchmarks. In contrast, the GOA, EO, PSO, DA, ALO, 
+GWO, MPA, SSA, and SCA failed to show the best performance for these 
+high dimensional functions. Sequentially, the AO outperforms the other 
+counterparts and occupies the first rank for the three cases of high 
+dimensional functions. 4.2. Results comparisons using CEC2017 test functions 
+To further investigate the quality of the proposed AO and examine its 
+capabilities of the exploration, exploitation, and local optimum avoid -
+ance, one of the most challenging benchmarks has been employed is the 
+CEC2017 suite. Four classes have been covered in the twenty-nigh 
+CEC2017 functions that are unimodal(F1-F3), multimodal (F4-F11), 
+hybrid (F12-F20), and finally, composition functions (F21-F30). The 
+specifications of the CEC2017 has been reported in Table 13. We 
+examined the AO with these benchmarks and compared it with well- 
+regarded algorithms such as GA, PSO, CS, GWO, SSA, EO, GSA, and 
+Covariance Matrix Adaptation Evolution Strategy (CMA-ES). All the 
+algorithms have been executed for 30 independent runs with 500 iter-
+ations and 50 search agents. The average and STD values of the studied 
+benchmarks set, moreover, the number of functions in which the algo-
+rithms can be accounted as the best †indistinguishable †inferior to the 
+others, and the Friedman mean rank value, as well as the final ranks of 
+the algorithms, are listed in Table 14. 
+The results divulge that the AO has a comparable performance 
+concerning the SI techniques (PSO, CS, GWO, SSA, and EO), the EA al-
+gorithms (GA, CMA-ES), as well as the PhA one (GSA). The AO reaches 
+for the optimal solutions of F9. It shows the nearest average values for 
+the optimal solutions for other eight functions (F5, F14, F16, F20, F21, 
+F24, F25, F30) meanwhile the GA, PSO, CS, GWO, EO, and GSA failed to 
+Fig. 9. (continued ). L. Abualigah et al.                                                                                                                                                                                                                              
+
+Computers & Industrial Engineering 157 (2021) 107250
+17Table 
+ 10 
+Results of the comparative methods on classical test functions (F1-F13), the dimension is fixed to 50.  Fun 
+No. Comparative methods  
+Measure AO GOA EO PSO DA ALO GWO MPA SSA SCA WOA SMA 
+F1             
+Worst 0.0000E00 7.8000E03 4.0700E 21 6.9700E00 3.6400E03 1.1100E04 3.7000E 11 1.5500E 21 1.0200E03 7.0200E03 5.5800E 42 1.9744E 220 
+Average 0.0000E00 6.7200E03 1.0800E 21 3.9900E00 3.0200E03 6.7300E03 1.2100E 11 4.2500E 22 6.1400E02 3.2800E03 1.4000E 42 2.8206E 221 
+Best 0.0000E00 4.7800E03 3.2000E 23 2.3600E00 2.4800E03 3.7400E03 3.0100E 12 3.6600E 24 2.8000E02 5.7400E02 4.5600E 58 0.0000E00 
+STD 0.0000E00 1.3600E03 1.9900E 21 2.0300E00 5.5200E02 3.1100E03 1.6600E 11 7.4800E 22 3.0500E02 2.7000E03 2.7900E 42 0.0000E00 
+F2             
+Worst 3.3730E 216 4.1325E24 1.2911E 11 1.0885E02 1.2331E02 3.8276E02 7.1711E 05 7.9169E 12 1.7569E06 1.5811E01 9.3673E 36 3.4565E 107 
+Average 1.2823E 216 1.0331E24 9.3615E 12 9.3889E01 7.9961E01 2.1559E02 6.7175E 05 3.4440E 12 4.4487E05 7.9742E00 3.6638E 36 4.9380E 108 
+Best 4.2658E 220 5.7983E02 5.3561E 12 7.5642E01 5.4524E01 1.4414E02 6.3534E 05 5.3007E 13 2.3050E02 1.4311E00 2.9744E 43 1.0290E 239 
+STD 0.0000E00 2.0662E24 3.3725E 12 1.3906E01 3.0258E01 1.1203E02 3.5184E 06 3.5477E 12 8.7472E05 7.0079E00 4.0658E 36 1.3064E 107 
+F3             
+Worst 0.0000E00 8.1600E04 2.1600E02 1.6500E04 1.6400E05 1.6700E05 3.3700E03 1.2200E01 6.1400E04 1.5200E05 5.5300E05 6.7725E 202 
+Average 0.0000E00 7.1900E04 6.0200E01 1.3900E04 1.2800E05 1.2000E05 1.6200E03 3.2800E00 5.6400E04 8.9000E04 3.8900E05 9.6750E 203 
+Best 0.0000E00 5.7400E04 1.8300E00 9.0400E03 8.9100E04 8.7600E04 2.7700E02 8.4100E 02 5.2100E04 3.3500E04 3.1100E05 0.0000E00 
+STD 0.0000E00 1.0300E04 1.0400E02 3.4400E03 3.8900E04 3.7200E04 1.5800E03 5.9400E00 4.6600E03 5.6500E04 1.1100E05 0.0000E00 
+F4             
+Worst 3.8171E 217 7.0400E08 6.8700E08 7.5600E08 6.8000E08 8.8900E08 8.5300E08 5.9300E08 8.0000E08 7.3000E08 7.9800E08 2.1946E 103 
+Average 1.1726E 217 6.5100E08 6.1800E08 6.5100E08 5.5900E08 7.6100E08 6.4500E08 5.3700E08 6.7700E08 6.3100E08 6.9800E08 3.1352E 104 
+Best 1.7827E 220 5.5800E08 4.4000E08 5.5300E08 4.4700E08 6.7300E08 4.8300E08 4.9100E08 4.5800E08 4.5000E08 6.4900E08 2.6621E 187 
+STD 0.0000E00 6.4000E07 1.1900E08 8.3200E07 9.5400E07 9.2300E07 1.5600E08 4.2300E07 1.5100E08 1.2400E08 6.7800E07 8.2950E 104 
+F5             
+Worst 1.6754E 02 7.2100E07 4.8600E01 1.4500E05 9.1000E07 2.5400E07 4.8800E01 4.8700E01 3.2100E07 5.6800E07 4.8800E01 4.8890E01 
+Average 7.2723E 03 5.0400E07 4.7900E01 6.0800E04 4.2900E07 1.6500E07 4.8700E01 4.8700E01 2.4000E07 2.5200E07 4.8800E01 3.3403E01 
+Best 3.5200E 05 3.8000E07 4.7200E01 1.6800E04 7.7700E06 5.5200E06 4.8600E01 4.8500E01 1.7800E07 1.9700E06 4.8800E01 6.3248E00 
+STD 7.1591E 03 1.5000E07 7.6000E 01 6.0300E04 3.7000E07 8.2200E06 1.0600E 01 1.0900E 01 6.5700E06 2.7600E07 2.8700E 02 2.1293E01 
+F6             
+Worst 3.9756E 03 2.8600E04 6.7700E00 8.9100E01 3.5200E04 2.9000E04 7.9100E00 5.2600E00 1.6600E04 8.9800E03 8.3900E00 4.4631E00 
+Average 1.0981E 03 2.0300E04 6.3700E00 6.9000E01 2.3700E04 2.4100E04 7.1100E00 4.3300E00 1.0700E04 4.0200E03 6.5500E00 3.0079E00 
+Best 9.1128E 07 1.4200E04 5.6700E00 4.9100E01 1.3600E04 2.1700E04 6.2300E00 3.6900E00 5.7800E03 4.0400E02 5.4400E00 2.3585E 01 
+STD 1.6565E 03 6.0600E03 4.7900E 01 1.7900E01 9.3400E03 3.3400E03 6.9100E 01 7.1400E 01 4.4800E03 3.7600E03 1.3500E00 1.6904E00 
+F7             
+Worst 1.2267E 03 4.0400E02 1.7000E 02 3.2000E02 3.0500E01 3.1500E01 5.0400E 02 8.1400E 03 1.2200E01 2.0200E01 3.0800E 02 3.0226E 03 
+Average 5.3134E 04 3.0000E02 6.7800E 03 2.0100E02 1.5200E01 1.8800E01 2.6900E 02 4.8000E 03 1.0500E01 1.5200E01 1.6200E 02 1.0741E 03 
+Best 1.5038E 05 2.4800E02 1.0800E 03 1.2200E02 1.9000E00 9.0300E00 1.2100E 02 2.4700E 03 8.5100E00 4.5600E00 7.2900E 03 1.4281E 04 
+STD 5.1254E 04 7.0200E01 7.1200E 03 9.0000E01 1.1800E01 1.0300E01 1.7400E 02 2.4900E 03 1.6900E00 7.2200E00 1.0900E 02 1.1286E 03 
+F8             
+Worst  6.9100E03  8.2500E03  7.9100E03  2.8200E03  4.2000E03  9.0300E03  6.8400E03  1.0400E04  8.6400E03  3.6700E03  8.6000E03  2.0822E04 
+Average  1.0100E04  9.3000E03  1.0700E04  3.9000E03  5.6700E03  9.0300E03  7.7000E03  1.1400E04  9.0800E03  4.0200E03  1.2400E04  2.0887E04 
+Best  1.2800E04  9.8500E03  1.2800E04  5.2700E03  6.6100E03  9.0300E03  8.8800E03  1.2600E04  9.6100E03  4.2500E03  1.5000E04  2.0947E04 
+STD 2.0800E03 7.2300E02 2.0800E03 1.0200E03 1.1200E03 0.0000E00 8.9100E02 9.6400E02 4.3700E02 2.4800E02 2.9900E03 5.2103E01 
+F9             
+Worst 0.0000E00 6.9200E02 9.9800E 01 4.7400E02 5.3200E02 4.3700E02 3.0600E01 0.0000E00 4.3600E02 3.5600E02 0.0000E00 0.0000E00 
+Average 0.0000E00 6.0200E02 4.9900E 01 3.5900E02 4.5100E02 3.8000E02 2.0800E01 0.0000E00 3.8300E02 2.0300E02 0.0000E00 0.0000E00 
+Best 0.0000E00 5.2200E02 1.1400E 13 3.0200E02 3.0900E02 2.9500E02 8.9400E00 0.0000E00 3.1100E02 1.0700E02 0.0000E00 0.0000E00 
+STD 0.0000E00 7.0000E01 5.7600E 01 8.0700E01 9.8900E01 6.7400E01 1.0800E01 0.0000E00 5.8400E01 1.1000E02 0.0000E00 0.0000E00 
+F10             
+Worst 8.8818E 16 2.0600E01 3.5200E 08 6.3800E00 1.8900E01 1.7900E01 2.1800E 04 2.3100E 12 1.9000E01 2.0600E01 1.4700E 13 8.8818E 16 
+Average 8.8818E 16 2.0000E01 1.7600E 08 4.9700E00 1.5500E01 1.2700E01 1.4400E 04 1.6000E 12 1.8300E01 1.9500E01 5.0600E 14 8.8818E 16 
+Best 8.8818E 16 1.9300E01 8.2300E 09 4.3700E00 1.2700E01 1.7300E00 9.6100E 05 2.9200E 13 1.7200E01 1.6200E01 4.4400E 15 8.8818E 16 
+STD 0.0000E00 5.4300E 01 1.2000E 08 9.4200E 01 2.5600E00 7.4200E00 5.2200E 05 8.9500E 13 7.7600E 01 2.1900E00 6.5800E 14 0.0000E00 
+F11             
+Worst 0.0000E00 2.1700E02 7.9900E 15 1.3300E02 1.2800E02 2.5700E02 7.6800E 02 1.0500E 02 1.6300E02 2.2100E01 0.0000E00 0.0000E00 
+(continued on next page) L. Abualigah et al.                                                                                                                                                                                                                              
+
+Computers & Industrial Engineering 157 (2021) 107250
+18Table 
+ 10 (continued ) Fun 
+No. Comparative methods  
+Measure AO GOA EO PSO DA ALO GWO MPA SSA SCA WOA SMA 
+Average 0.0000E00 1.5300E02 2.4700E 15 1.1700E02 9.0500E01 2.2600E02 4.7100E 02 2.6300E 03 1.0300E02 1.4600E01 0.0000E00 0.0000E00 
+Best 0.0000E00 1.1300E02 0.0000E00 8.9700E01 4.3000E01 2.0500E02 5.2200E 06 0.0000E00 7.0300E01 2.5800E00 0.0000E00 0.0000E00 
+STD 0.0000E00 4.4500E01 3.7400E 15 1.9400E01 3.7900E01 2.4700E01 3.3000E 02 5.2600E 03 4.1600E01 8.8100E00 0.0000E00 0.0000E00 
+F12             
+Worst 3.4745E 06 7.2887E07 3.5673E 01 2.2947E01 7.4787E05 4.7065E07 7.4009E 01 2.0077E 01 1.9431E07 9.2098E07 7.0376E 01 5.7213E 01 
+Average 1.0767E 06 3.6137E07 3.0089E 01 1.4439E01 4.7637E05 1.5716E07 6.1270E 01 1.3741E 01 1.0097E07 6.4479E07 4.7881E 01 1.5052E 01 
+Best 6.2530E 08 1.6941E07 2.5770E 01 9.8132E00 1.6807E01 2.1230E06 4.2030E 01 7.6591E 02 2.1004E06 1.3318E07 2.2526E 01 1.9706E 03 
+STD 1.4585E 06 2.5708E07 4.6545E 02 5.8116E00 3.3844E05 2.1337E07 1.5289E 01 5.5152E 02 7.4632E06 3.5021E07 2.3845E 01 2.4430E 01 
+F13             
+Worst 1.4249E 04 1.7700E08 4.3400E00 1.2400E03 5.5200E07 1.7800E08 4.6200E00 4.7000E00 4.0000E07 2.1200E08 4.4500E00 4.9432E00 
+Average 6.4589E 05 1.2900E08 4.1100E00 3.3800E02 1.9100E07 9.6700E07 4.0500E00 4.2200E00 2.5500E07 9.3600E07 3.7500E00 2.0861E00 
+Best 1.2283E 05 7.4000E07 3.8200E00 3.2200E01 4.1300E06 2.6500E07 3.5900E00 3.7100E00 7.5900E06 1.9100E07 3.2100E00 4.2197E 04 
+STD 6.6508E 05 4.4100E07 2.2000E 01 5.9900E02 2.4300E07 7.7100E07 4.9100E 01 4.0800E 01 1.3400E07 8.2600E07 5.4500E 01 2.5937E00  
+(W†L†T)  (7†3†3)  (0†13†0)  (0†13†0)  (0†13†0)  (0†13†0)  (0†13†0)  (0†13†0)  (0†12†1)  (0†12†1)  (0†13†0)  (0†11†2)  (2†9†2)  
+Mean 1.3077E00 1.0538E01 4.3846E00 8.1538E00 8.9231E00 1.0154E01 5.9231E00 3.4615E00 8.8462E00 8.9231E00 4.6154E00 1.7692E00 
+Ranking 1 12 4 7 9 11 6 3 8 9 5 2  Table 
+ 11 
+Results of the comparative methods on classical test functions (F1-F13), the dimension is fixed to 100.  Fun 
+No. Comparative methods  
+Measure AO GOA EO PSO DA ALO GWO MPA SSA SCA WOA SMA 
+F1             
+Worst 0.0000E00 3.9700E04 2.3000E 17 1.3900E02 1.7200E04 5.7700E04 1.0400E 06 2.5900E 21 2.0400E04 1.5700E04 9.7200E 41 2.6189E 160 
+Average 0.0000E00 3.5100E04 6.2100E 18 1.0300E02 1.1800E04 3.4800E04 5.1900E 07 1.5600E 21 1.8900E04 9.4400E03 2.4300E 41 5.2392E 161 
+Best 0.0000E00 3.1200E04 2.0900E 19 7.6100E01 7.0700E03 1.7900E04 2.1300E 07 3.7200E 22 1.7500E04 4.8200E03 2.7400E 47 0.0000E00 
+STD 0.0000E00 3.6500E03 1.1200E 17 2.9100E01 5.2900E03 2.0100E04 3.6400E 07 1.0300E 21 1.1900E03 4.9700E03 4.8600E 41 1.1711E 160 
+F2             
+Worst 9.2889E 217 1.1452E21 5.2919E 09 7.7670E01 2.0112E02 2.1207E02 1.6321E 04 4.2119E 13 2.9650E06 3.7443E00 1.0113E 20 2.2415E 108 
+Average 5.0995E 217 2.8631E20 3.3539E 09 6.0455E01 1.4725E02 2.0087E02 9.6421E 05 1.5599E 13 7.4137E05 2.1442E00 2.5286E 21 4.4830E 109 
+Best 2.1750E 218 2.2804E07 1.0910E 09 4.1852E01 7.4817E01 1.8230E02 4.5429E 05 5.0701E 14 1.4328E02 6.7898E 01 6.1115E 30 1.1235E 256 
+STD 0.0000E00 5.7262E20 1.8478E 09 1.8648E01 5.8095E01 1.3305E01 5.3157E 05 1.7731E 13 1.4824E06 1.6112E00 5.0564E 21 1.0024E 108 
+F3             
+Worst 0.0000E00 8.7200E04 5.9900E01 1.5700E04 1.9800E05 1.7800E05 6.8400E02 1.8400E00 6.5900E04 9.5600E04 4.7900E05 4.9870E 188 
+Average 0.0000E00 6.7100E04 1.7900E01 1.2400E04 1.2800E05 1.3000E05 4.6100E02 4.9400E 01 5.6000E04 6.7800E04 3.8200E05 9.9741E 189 
+Best 0.0000E00 5.4200E04 4.4000E 02 1.0700E04 5.5900E04 9.1100E04 1.4000E02 5.1200E 07 4.6300E04 4.0300E04 3.0400E05 0.0000E00 
+STD 0.0000E00 1.4500E04 2.8500E01 2.3400E03 5.7900E04 3.9000E04 2.2900E02 8.9900E 01 8.6300E03 2.8100E04 7.6700E04 0.0000E00 
+F4             
+Worst 8.1471E 219 6.6000E01 7.8600E 03 2.8400E01 5.5300E01 7.0900E01 1.4800E00 1.0900E 08 6.9600E01 8.9700E01 9.8200E01 1.3547E 98 
+Average 2.5154E 219 6.2700E01 4.2000E 03 2.4800E01 4.3900E01 5.5400E01 1.1700E00 5.9700E 09 6.5100E01 7.9500E01 8.5400E01 2.7108E 99 
+Best 1.2027E 221 5.5400E01 4.2300E 04 2.1900E01 3.2900E01 3.5100E01 8.8100E 01 2.8900E 09 5.2700E01 6.9000E01 5.4600E01 2.9552E 153 
+STD 0.0000E00 4.9500E00 3.1900E 03 3.2900E00 9.3700E00 1.4900E01 3.1200E 01 3.7100E 09 8.2800E00 8.6500E00 2.0600E01 6.0578E 99 
+F5             
+Worst 1.0092E 01 1.3800E08 4.8000E01 3.6600E04 1.6900E07 3.1200E07 4.8800E01 4.8700E01 3.3300E07 3.1200E07 4.8900E01 9.8885E01 
+(continued on next page) L. Abualigah et al.                                                                                                                                                                                                                              
+
+Computers & Industrial Engineering 157 (2021) 107250
+19Table 
+ 11 (continued ) Fun 
+No. Comparative methods  
+Measure AO GOA EO PSO DA ALO GWO MPA SSA SCA WOA SMA 
+Average 2.4782E 02 9.1100E07 4.7900E01 2.8000E04 9.5300E06 1.9400E07 4.8700E01 4.8400E01 1.2300E07 1.6600E07 4.8800E01 6.0627E01 
+Best 6.5611E 04 4.4100E07 4.7500E01 1.9200E04 2.2100E05 8.8800E06 4.8600E01 4.7900E01 3.8100E06 7.6500E05 4.8700E01 4.9378E 01 
+STD 4.2755E 02 4.4500E07 2.6000E 01 9.6200E03 8.6800E06 9.2700E06 1.1200E 01 3.7400E 01 1.4100E07 1.6700E07 6.8400E 02 5.2351E01 
+F6             
+Worst 2.1929E 03 2.5744E04 6.2188E00 1.3322E02 3.3508E04 4.2545E04 7.3563E00 5.1809E00 1.4103E04 5.2709E03 7.3056E00 1.4490E01 
+Average 5.4323E 04 1.9595E04 5.9007E00 6.3916E01 1.6152E04 2.7833E04 6.9873E00 4.0499E00 1.0800E04 3.0192E03 6.9144E00 1.0255E01 
+Best 1.2605E 05 1.2858E04 5.4759E00 3.0782E01 5.2722E03 1.9855E04 5.9623E00 2.7927E00 7.1065E03 4.9268E02 6.3303E00 8.7579E 01 
+STD 9.2961E 04 5.2781E03 3.5111E 01 4.7639E01 1.3542E04 1.0379E04 6.8377E 01 1.1065E00 3.3932E03 1.9831E03 4.1399E 01 5.5614E00 
+F7             
+Worst 1.5608E 03 4.8350E02 9.1935E 03 2.6149E02 4.3638E01 3.0933E01 2.7556E 02 4.5624E 03 1.6360E01 2.2357E01 1.7910E 02 2.6144E 03 
+Average 8.9547E 04 3.6677E02 6.4348E 03 9.5848E01 1.9206E01 1.7896E01 1.9682E 02 2.1244E 03 1.1079E01 1.3982E01 9.3010E 03 1.4817E 03 
+Best 1.1121E 04 2.4063E02 5.1110E 03 3.1747E01 8.1894E00 7.1799E00 1.2770E 02 3.0150E 04 8.7359E00 5.7753E00 4.0999E 03 2.8307E 04 
+STD 7.0387E 04 1.1768E02 1.8724E 03 1.1103E02 1.6431E01 1.0755E01 7.0929E 03 1.7809E 03 3.5519E00 7.4866E00 6.2593E 03 1.0280E 03 
+F8             
+Worst  6.4064E03  8.9826E03  8.4348E03  2.7692E03  3.6225E03  9.0295E03  6.6831E03  1.0349E04  8.1524E03  3.4601E03  9.5209E03  4.0264E04 
+Average  9.9172E03  9.8724E03  1.0147E04  3.9191E03  5.0974E03  9.0536E03  7.8497E03  1.1362E04  8.5828E03  3.8878E03  1.0332E04  4.1488E04 
+Best  1.2910E04  1.0458E04  1.0847E04  5.8528E03  6.3641E03  9.1259E03  8.8646E03  1.3138E04  9.0583E03  4.0823E03  1.2162E04  4.1895E04 
+STD 2.4531E03 6.5467E02 1.1508E03 1.3438E03 1.2780E03 4.8210E01 1.1649E03 1.2581E03 4.0865E02 2.8768E02 1.2436E03 6.9282E02 
+F9             
+Worst 0.0000E00 7.0663E02 2.0900E00 3.3931E02 5.6783E02 3.7412E02 1.7930E01 0.0000E00 4.0301E02 1.7052E02 0.0000E00 0.0000E00 
+Average 0.0000E00 6.6341E02 5.2251E 01 2.9352E02 4.5123E02 3.3656E02 1.4038E01 0.0000E00 3.5050E02 7.2797E01 0.0000E00 0.0000E00 
+Best 0.0000E00 6.2961E02 5.6843E 14 2.4692E02 3.8412E02 2.9418E02 8.7782E00 0.0000E00 3.2658E02 2.6505E01 0.0000E00 0.0000E00 
+STD 0.0000E00 3.1910E01 1.0450E00 3.7772E01 8.2045E01 4.0240E01 4.1669E00 0.0000E00 3.6131E01 6.6103E01 0.0000E00 0.0000E00 
+F10             
+Worst 8.8818E 16 1.9924E01 1.6431E 13 1.9307E 02 8.4589E00 1.6272E01 7.8494E 10 2.5757E 14 3.4042E00 4.3402E 01 2.9310E 14 8.8818E 16 
+Average 8.8818E 16 1.9423E01 1.0303E 13 9.4472E 03 7.7682E00 9.8105E00 4.1539E 10 9.7700E 15 1.8245E00 1.0968E 01 1.1546E 14 8.8818E 16 
+Best 8.8818E 16 1.8952E01 4.3521E 14 3.3824E 04 7.0928E00 2.3170E00 6.4845E 11 4.4409E 15 1.1551E00 6.6117E 04 8.8818E 16 8.8818E 16 
+STD 0.0000E00 4.0023E 01 5.3909E 14 8.0172E 03 6.7957E 01 5.7527E00 3.2156E 10 1.0658E 14 1.0672E00 2.1623E 01 1.2644E 14 0.0000E00 
+F11             
+Worst 0.0000E00 5.8841E 01 2.0230E 02 3.1030E01 1.5024E01 4.5986E 01 5.9418E 02 3.9454E 02 3.2876E 01 6.7533E 01 3.0136E 01 0.0000E00 
+Average 0.0000E00 5.4089E 01 5.0574E 03 9.0836E00 5.9464E00 2.2969E 01 2.7528E 02 1.6716E 02 1.9871E 01 3.7989E 01 1.3220E 01 0.0000E00 
+Best 0.0000E00 4.5020E 01 0.0000E00 5.4626E 01 2.6364E00 1.1258E 01 1.1102E 16 0.0000E00 7.1478E 02 4.4130E 04 0.0000E00 0.0000E00 
+STD 0.0000E00 6.1730E 02 1.0115E 02 1.4657E01 6.0586E00 1.5614E 01 3.1985E 02 1.9918E 02 1.0506E 01 3.3104E 01 1.5560E 01 0.0000E00 
+F12             
+Worst 2.2090E 05 5.3071E04 1.9912E 02 4.2285E 04 4.4872E06 4.3171E01 6.4279E 02 2.5172E 03 9.9366E00 3.2393E 01 3.5385E 01 1.0142E00 
+Average 7.3398E 06 1.3376E04 7.2748E 03 1.3397E 04 1.1218E06 2.4414E01 5.6330E 02 7.8564E 04 4.5891E00 2.2991E 01 1.9968E 01 4.3739E 01 
+Best 6.8016E 08 2.2231E01 4.8091E 05 3.6038E 06 1.0234E01 1.3639E01 4.1262E 02 3.8885E 10 1.2334E00 1.5004E 01 1.3770E 01 2.5910E 03 
+STD 8.7088E 06 2.6463E04 9.4262E 03 1.9609E 04 2.2436E06 1.3499E01 1.0417E 02 1.1914E 03 3.7974E00 7.6710E 02 1.0328E 01 4.0437E 01 
+F13             
+Worst 4.2673E 05 3.7036E04 7.7126E 01 2.1318E 02 8.4145E05 3.1735E01 6.0130E 01 1.1813E 01 3.0647E 01 6.8286E 01 7.3070E 01 9.8429E00 
+Average 1.8432E 05 1.4949E04 2.8896E 01 5.4671E 03 2.3951E05 1.3111E01 3.8014E 01 3.7320E 02 1.6538E 01 5.4638E 01 4.4940E 01 5.2416E00 
+Best 2.5705E 07 5.8035E01 9.9259E 02 1.7087E 05 2.4995E03 1.9905E00 2.1468E 01 2.7350E 04 1.7032E 02 4.6047E 01 1.5378E 01 4.0715E 01 
+STD 1.6556E 05 1.8163E04 3.2255E 01 1.0568E 02 4.0346E05 1.2893E01 1.6531E 01 5.4378E 02 1.1949E 01 9.6117E 02 3.2217E 01 4.3678E00  
+(W†L†T)  (9†1†3)  (0†13†0)  (0†13†0)  (0†13†0)  (0†13†0)  (0†13†0)  (0†13†0)  (0†13†0)  (0†13†0)  (0†13†0)  (0†12†1)  (1†9†3)  
+Mean 1.3077E00 1.0615E01 4.0769E00 7.2308E00 9.9231E00 9.7692E00 5.6923E00 2.9231E00 8.4615E00 8.6154E00 5.4615E00 3.3077E00 
+Ranking 1 12 4 7 11 10 6 2 8 9 5 3  L. Abualigah et al.                                                                                                                                                                                                                              
+
+Computers & Industrial Engineering 157 (2021) 107250
+20Table 
+ 12 
+Results of the comparative methods on classical test functions (F1-F13), the dimension is fixed to 500.  Fun 
+No. Comparative methods  
+Measure AO GOA EO PSO DA ALO GWO MPA SSA SCA WOA SMA 
+F1             
+Worst 0.0000E00 9.1900E04 4.2300E 12 2.2800E03 4.8100E04 1.2500E05 3.0300E 03 2.6200E 22 9.4500E04 2.1100E04 9.4900E 24 1.8453E 149 
+Average 0.0000E00 8.8900E04 1.5300E 12 1.6700E03 3.7400E04 9.0600E04 1.6800E 03 1.3400E 22 7.6100E04 1.5500E04 2.6700E 24 3.6907E 150 
+Best 0.0000E00 8.1900E04 1.3700E 13 1.2300E03 2.7400E04 5.9200E04 7.6900E 04 4.7200E 24 5.8900E04 1.0900E04 1.4800E 37 0.0000E00 
+STD 0.0000E00 4.7000E03 1.9100E 12 4.5400E02 8.7000E03 3.0700E04 9.8500E 04 1.0600E 22 1.4600E04 5.1900E03 4.5800E 24 8.2526E 150 
+F2             
+Worst 2.6672E 215 1.7200E137 5.0800E 06 1.6200E161 1.2400E03 2.6900E247 2.9500E00 1.9400E 10 1.3300E171 2.3100E02 3.9300E 21 5.8913E 92 
+Average 1.4218E 215 4.3100E136 3.8000E 06 4.0500E160 1.0400E03 6.7200E246 1.8200E00 1.0600E 10 3.3200E170 1.7800E02 1.1800E 21 1.1783E 92 
+Best 1.4735E 217 2.2500E103 2.7300E 06 1.0400E67 7.1600E02 2.0600E03 3.9600E 01 1.3800E 11 1.6900E132 1.3500E02 6.4100E 25 3.7965E 197 
+STD 0.0000E00 8.6100E136 1.1200E 06 6.5500E04 2.2500E02 6.5500E04 1.1400E00 9.5200E 11 6.5500E04 4.3900E01 1.8700E 21 2.6347E 92 
+F3             
+Worst 0.0000E00 7.6400E06 2.0100E05 2.7100E06 1.7000E07 1.0500E07 1.0500E06 8.7700E04 8.5100E06 1.2300E07 1.4400E08 5.9228E 193 
+Average 0.0000E00 6.0500E06 1.1800E05 1.5500E06 1.1500E07 8.1300E06 8.8900E05 4.8900E04 5.6900E06 8.5600E06 8.5600E07 1.2030E 193 
+Best 0.0000E00 3.3900E06 3.6100E04 7.8500E05 5.9700E06 4.8100E06 7.3800E05 1.5100E04 2.7900E06 6.2900E06 3.3800E07 0.0000E00 
+STD 0.0000E00 1.8700E06 9.3200E04 8.7800E05 4.6900E06 2.3900E06 1.4700E05 3.9200E04 2.3500E06 2.6000E06 5.7100E07 0.0000E00 
+F4             
+Worst 6.3989E 217 9.5500E01 9.8200E01 6.3300E01 9.9500E01 8.8300E01 9.0900E01 1.2100E 05 9.7600E01 9.9700E01 9.9600E01 2.3802E 82 
+Average 2.5832E 217 8.9700E01 7.5500E01 5.8300E01 9.8600E01 8.4100E01 8.0600E01 3.5700E 06 9.7100E01 9.9600E01 9.2400E01 4.7605E 83 
+Best 6.2842E 219 8.7000E01 5.2500E01 5.5300E01 9.6800E01 7.9300E01 7.1200E01 2.9600E 07 9.6400E01 9.9500E01 7.9900E01 1.1106E 204 
+STD 0.0000E00 3.9100E00 1.9400E01 3.5100E00 1.2300E00 4.4100E00 1.0100E01 5.7000E 06 5.5500E 01 1.1500E 01 8.7600E00 1.0645E 82 
+F5             
+Worst 6.4568E 01 2.5900E09 4.9900E02 5.8700E08 1.8100E09 3.3700E09 1.0700E06 4.9900E02 4.9200E09 3.2100E09 4.9800E02 2.9883E02 
+Average 1.6470E 01 2.4100E09 4.9900E02 5.5100E08 1.1600E09 2.2000E09 6.5400E05 4.9800E02 4.3800E09 2.5400E09 4.9800E02 2.0173E02 
+Best 8.1831E 03 2.2900E09 4.9900E02 4.5100E08 6.9000E08 1.7700E09 1.3000E05 4.9800E02 3.9700E09 1.7700E09 4.9700E02 1.5641E01 
+STD 2.6993E 01 1.2700E08 2.5100E 02 6.6700E07 5.3300E08 7.8100E08 3.9700E05 8.9800E 02 4.0300E08 6.1300E08 4.2100E 01 1.3600E02 
+F6             
+Worst 6.1400E 03 8.0834E05 1.1851E02 2.3018E05 3.5784E05 1.0929E06 1.6278E02 1.0815E02 1.0545E06 2.6911E05 1.0385E02 6.2300E01 
+Average 1.8268E 03 7.6086E05 1.1766E02 2.2730E05 3.1464E05 1.0002E06 1.4463E02 1.0732E02 9.5250E05 2.5202E05 1.0107E02 5.0294E01 
+Best 6.7168E 05 7.3346E05 1.1669E02 2.2237E05 2.3105E05 8.7263E05 1.1964E02 1.0565E02 8.5874E05 2.3662E05 9.8640E01 1.0348E01 
+STD 2.5734E 03 4.1287E04 9.1754E 01 4.2884E03 7.2403E04 1.1421E05 2.2367E01 1.4438E00 9.8146E04 1.6312E04 2.6227E00 2.2375E01 
+F7             
+Worst 3.4682E 03 5.1100E04 3.0500E 02 6.1800E04 7.9200E03 1.3900E04 9.8500E 01 8.0900E 03 1.8700E04 2.0700E04 4.9200E 02 6.2744E 04 
+Average 9.8927E 04 4.7300E04 1.8200E 02 5.8400E04 4.0600E03 1.0200E04 7.1100E 01 4.4800E 03 1.1700E04 1.7600E04 3.3100E 02 5.0630E 04 
+Best 2.2066E 04 4.2500E04 9.0200E 03 5.2300E04 1.2100E03 5.9500E03 5.2800E 01 2.4600E 03 8.6500E03 1.5200E04 1.3000E 02 4.0625E 04 
+STD 1.3900E 03 3.5700E03 1.0100E 02 4.3000E03 2.8200E03 4.1300E03 2.1800E 01 2.4900E 03 4.7000E03 2.7400E03 1.5500E 02 7.9220E 05 
+F8             
+Worst  1.3853E04  3.3200E04  3.8500E04  9.5600E03  1.5000E04  9.0300E04  1.0200E04  5.1000E04  2.6700E04  1.2100E04  1.2600E05  1.1666E05 
+Average  1.8631E04  3.7000E04  4.2600E04  1.1900E04  1.7000E04  9.0300E04  2.9100E04  5.5300E04  3.2500E04  1.3300E04  1.3900E05  1.2362E05 
+Best  2.2142E04  3.9500E04  4.5800E04  1.5600E04  1.9000E04  9.0300E04  3.6300E04  5.9600E04  3.7300E04  1.4500E04  1.5000E05  1.2564E05 
+STD 2.9872E03 2.6900E03 3.2600E03 2.8500E03 1.6400E03 0.0000E00 1.2600E04 4.7200E03 4.7100E03 1.0400E03 9.9700E03 3.9005E03 
+F9             
+Worst 0.0000E00 8.4800E03 1.0200E00 8.3500E03 6.6500E03 6.1800E03 3.5800E02 0.0000E00 6.0000E03 1.4800E03 0.0000E00 0.0000E00 
+Average 0.0000E00 8.1600E03 2.5500E 01 7.8200E03 5.9700E03 5.7900E03 2.7700E02 0.0000E00 5.9500E03 1.2700E03 0.0000E00 0.0000E00 
+Best 0.0000E00 8.0400E03 5.0600E 10 7.2600E03 5.2700E03 5.2900E03 1.2100E02 0.0000E00 5.8700E03 1.1400E03 0.0000E00 0.0000E00 
+STD 0.0000E00 2.1100E02 5.0900E 01 5.3400E02 5.8100E02 3.7900E02 1.0600E02 0.0000E00 5.4600E01 1.4400E02 0.0000E00 0.0000E00 
+F10             
+Worst 8.8800E 16 2.0400E01 1.5800E 03 1.8900E01 1.9100E01 1.9800E01 2.5200E00 3.7700E 09 2.0800E01 2.0900E01 3.9200E 09 8.8818E 16 
+Average 8.8800E 16 2.0100E01 7.0900E 04 1.8600E01 1.8500E01 1.3500E01 2.1400E00 2.4200E 09 2.0500E01 2.0900E01 1.2100E 09 8.8818E 16 
+Best 8.8800E 16 1.9800E01 1.9100E 04 1.8300E01 1.7300E01 8.8800E 16 1.4800E00 1.4100E 09 2.0200E01 2.0900E01 1.1100E 10 8.8818E 16 
+STD 0.0000E00 2.6100E 01 6.2700E 04 2.5200E 01 8.6500E 01 9.0800E00 4.5700E 01 1.0100E 09 2.6000E 01 2.1700E 02 1.8200E 09 0.0000E00 
+F11             
+Worst 0.0000E00 6.3700E03 1.4600E 09 1.9700E03 2.8000E03 8.2800E03 1.3400E00 0.0000E00 6.6500E03 2.2400E03 0.0000E00 0.0000E00 
+(continued on next page) L. Abualigah et al.                                                                                                                                                                                                                              
+
+Computers & Industrial Engineering 157 (2021) 107250
+21classified as the best algorithms for any function. The CMA-ES is 
+considered the stronger competitor for AO with achieving the best 
+response for eight functions. Most of the functions in which the AO has 
+the best response from the hybrid and composition functions affirm the 
+high quality of the exploration and exploitation phases of the AO and its 
+ability to deal with the high local optimal of the composition functions. 
+The AO has no significant difference from the other algorithms in 13 
+functions and has a minimum Friedman mean rank across the studied 
+test-bed suit course. Therefore it has the first rank as a final score over 
+these studied functions. The best convergence curves of the imple -
+mented algorithms have been depicted in Fig. 10. By inspecting these 
+curves, one can see that the AO exhibits the fastest convergence for (F5, 
+F9, F16, F20, F21, F24, F28, and F30) and a comparable convergence for 
+(F1, F11, F14, F15, F18, F22, and F 27). This observation states that AO 
+can be considered as one of the reliable algorithms. 
+4.3. Results comparisons using CEC2019 test functions 
+This section details the AO analysis while testing with ten functions 
+of recent CEC benchmarks (CEC2019); the specification of the functions 
+has been listed in Table 15. The AO has been implemented with 500 
+iterations and 50 population sizes for 30 independent runs. Its results 
+compared with GOA EO, PSO, DA, ALO, and GWO, MPA, SSA, SCA, 
+WOA, and SMA. The comparison has performed through the worst, 
+average, best, and STD values by the considered algorithms across the 
+course of the functions, as reported in Table 16. Moreover, the Friedman 
+mean rank values and final ranks have involved in the last lines of the 
+table (see Table 16). The results confirm the proposed AO’s superiority 
+in dealing with these challenging test-bed functions, as it is classified as Table 12 (continued ) Fun 
+No. Comparative methods  
+Measure AO GOA EO PSO DA ALO GWO MPA SSA SCA WOA SMA 
+Average 0.0000E00 5.7200E03 7.4500E 10 1.8900E03 2.0500E03 6.4600E03 1.1400E00 0.0000E00 6.5100E03 1.6500E03 0.0000E00 0.0000E00 
+Best 0.0000E00 5.2900E03 2.6200E 10 1.8100E03 1.4400E03 5.5700E03 9.1900E 01 0.0000E00 6.1500E03 7.9500E02 0.0000E00 0.0000E00 
+STD 0.0000E00 4.8400E02 5.1900E 10 6.6700E01 5.6400E02 1.2300E03 1.7100E 01 0.0000E00 2.4100E02 6.2600E02 0.0000E00 0.0000E00 
+F12             
+Worst 2.2090E 05 6.3500E03 7.0800E 09 2.0600E03 3.2400E03 6.2400E03 1.2800E00 0.0000E00 6.1600E03 3.3600E03 1.1100E 16 1.0142E00 
+Average 7.3398E 06 5.8700E03 3.6600E 09 1.9300E03 2.1300E03 5.4900E03 1.0100E00 0.0000E00 5.6500E03 2.2300E03 2.7800E 17 4.3739E 01 
+Best 6.8016E 08 5.4400E03 5.5000E 10 1.8300E03 1.2300E03 4.2900E03 3.6700E 01 0.0000E00 5.2500E03 1.3000E03 0.0000E00 2.5910E 03 
+STD 8.7088E 06 3.7500E02 2.8000E 09 9.7300E01 8.6500E02 8.6100E02 4.3100E 01 0.0000E00 3.8300E02 8.8600E02 5.5500E 17 4.0437E 01 
+F13             
+Worst 4.2673E 05 7.7972E09 4.9839E01 2.8311E08 2.7634E09 7.8310E09 3.0577E02 4.9837E01 8.6217E09 1.0576E10 4.7792E01 9.8429E00 
+Average 1.8432E 05 7.1971E09 4.9581E01 2.6358E08 1.5912E09 7.2341E09 2.0353E02 4.9799E01 7.8299E09 8.8182E09 3.9005E01 5.2416E00 
+Best 2.5705E 07 6.5728E09 4.9172E01 2.4510E08 1.1179E09 6.6313E09 1.0472E02 4.9764E01 7.2658E09 6.5647E09 3.0093E01 4.0715E 01 
+STD 1.6556E 05 6.0494E08 2.9263E 01 1.5540E07 7.8420E08 5.7852E08 8.3825E01 3.7117E 02 6.3361E08 1.7158E09 8.0546E00 4.3678E00  
+(W†L†T)  (9†3†1)  (0†13†0)  (0†13†0)  (0†13†0)  (0†13†0)  (0†13†0)  (0†13†0)  (1†11†1)  (0†13†0)  (0†13†0)  (1†11†1)  (1†11†1)  
+Mean 1.9231E00 9.6923E00 4.6154E00 8.2308E00 8.9231E00 9.0769E00 6.0769E00 3.0769E00 1.0077E01 9.5385E00 3.7692E00 2.0000E00 
+Ranking 1 11 5 7 8 9 6 3 12 10 4 2  Table 
+ 13 
+Review of CEC2017 benchmark function problems.  Type 
+ No. Description Fi* 
+Unimodal functions 1 Shifted and Rotated Bent Cigar Function 100  
+3 Shifted and Rotated Zakharov Function 300  
+Simple Multimodal 
+Functions 4 Shifted and Rotated Rosenbrock ’s 
+Function 400  
+5 Shifted and Rotated Rastrigin ’s Function 500  
+6 Shifted and Rotated Expanded Scaffer ’s 
+F6 Function 600  
+7 Shifted and Rotated Lunacek Bi-Rastrigin 
+Function 700  
+8 Shifted and Rotated Non-Continuous 
+Rastrigin ’s Function 800  
+9 Shifted and Rotated Levy Function 900  
+10 Shifted and Rotated Schwefel ’s Function 1000  
+Hybrid functions 11 Hybrid Function 1 (N 3) 1100  
+12 Hybrid Function 2 (N 3) 1200  
+13 Hybrid Function 3 (N 3) 1300  
+14 Hybrid Function 4 (N 4) 1400  
+15 Hybrid Function 5 (N 4) 1500  
+16 Hybrid Function 6 (N 4) 1600  
+17 Hybrid Function 6 (N 5) 1700  
+18 Hybrid Function 6 (N 5) 1800  
+19 Hybrid Function 6 (N 5) 1900  
+20 Hybrid Function 6 (N 6) 2000  
+Composition Functions 21 Composition Function 1 (N 3) 2100  
+22 Composition Function 2 (N 3) 2200  
+23 Composition Function 3 (N 4) 2300  
+24 Composition Function 4 (N 4) 2400  
+25 Composition Function 5 (N 5) 2500  
+26 Composition Function 6 (N 5) 2600  
+27 Composition Function 7 (N 6) 2700  
+28 Composition Function 8 (N 6) 2800  
+29 Composition Function 9 (N 3) 2900  
+30 Composition Function 10 (N 3) 3000  L. Abualigah et al.                                                                                                                                                                                                                              
+
+Computers & Industrial Engineering 157 (2021) 107250
+22Table 14 
+Results of the comparative methods on CEC2017 test functions.  Fun 
+No. Comparative methods 
+Measure AO GA PSO CS GWO SSA EO GSA CMA-ES 
+F1          
+Average 2.9600E02 9.8000E03 3.9600E03 2.9600E02 3.2500E05 3.4000E03 2.4700E03 2.9600E02 1.0000E02 
+STD 2.7500E02 5.9400E03 4.4600E03 2.7500E02 1.0700E05 3.6700E03 2.2100E03 2.7500E02 0.0000E00 
+F3          
+Average 1.1420E03 8.7200E03 3.0000E02 1.0800E04 1.5400E03 3.0000E02 3.0000E02 1.0800E04 3.0000E02 
+STD 2.3500E02 5.9000E03 1.9000E 10 1.6000E03 1.8900E03 0.0000E00 2.4000E 08 1.6200E03 0.0000E00 
+F4          
+Average 4.0600E02 4.1100E02 4.0600E02 4.0700E02 4.1000E02 4.0600E02 4.0400E02 4.0700E02 4.0000E02 
+STD 8.5600E00 1.8500E01 3.2800E00 2.9200E00 7.5500E00 1.0100E01 7.9100E 01 2.9200E00 0.0000E00 
+F5          
+Average 5.1100E02 5.1600E02 5.1300E02 5.5700E02 5.1400E02 5.2200E02 5.1100E02 5.5700E02 5.3000E02 
+STD 7.1540E01 6.9300E00 6.5400E00 8.4100E00 6.1000E00 1.0500E01 3.6700E00 8.4000E00 5.8300E01 
+F6          
+Average 6.2376E02 6.0000E02 6.0000E02 6.2200E02 6.0100E02 6.1000E02 6.0000E02 6.2200E02 6.8200E02 
+STD 1.3928E01 6.6800E 02 9.8000E 01 9.0200E00 8.8000E 01 8.2600E00 1.5000E 04 9.0200E00 3.5400E01 
+F7          
+Average 7.1500E02 7.2800E02 7.1900E02 7.1500E02 7.3000E02 7.4100E02 7.2100E02 7.1500E02 7.1300E02 
+STD 1.8520E00 7.2900E00 5.1000E00 1.5600E00 8.6000E00 1.6600E01 5.7400E00 1.5500E00 1.6300E00 
+F8          
+Average 8.2000E02 8.2100E02 8.1100E02 8.2100E02 8.1400E02 8.2300E02 8.1000E02 8.2100E02 8.2900E02 
+STD 7.2560E00 8.9600E00 5.4700E00 4.6900E00 8.2600E00 9.9500E00 2.9200E00 4.6900E00 5.3000E01 
+F9          
+Average 9.0000E02 9.1000E02 9.0000E02 9.0000E02 9.1100E02 9.4400E02 9.0000E02 9.0000E02 4.6700E03 
+STD 0.0000E00 1.5200E01 5.9000E 14 0.0000E00 1.9500E01 1.0500E02 2.2700E 02 5.9000E 15 2.0600E03 
+F10          
+Average 1.7060E03 1.7200E03 1.4700E03 2.6900E03 1.5300E03 1.8600E03 1.4200E03 2.6900E03 2.5900E03 
+STD 3.6200E02 2.5200E02 2.1500E02 2.9800E02 2.8700E02 2.9500E02 2.6200E02 2.9800E02 4.1400E02 
+F11          
+Average 1.1250E03 1.1300E03 1.1100E03 1.1300E03 1.1400E03 1.1800E03 1.1100E03 1.1300E03 1.1100E03 
+STD 2.3150E01 2.3800E01 6.2800E00 1.0500E01 5.4100E01 5.9800E01 5.0200E00 1.0500E01 2.5400E01 
+F12          
+Average 1.0031E04 3.7300E04 1.4500E04 7.1000E05 6.2500E05 1.9800E06 1.0300E04 7.0300E05 1.6300E03 
+STD 2.3200E02 3.4800E04 1.1300E04 4.2000E05 1.1300E06 1.9100E06 9.7900E03 4.2100E04 1.9800E02 
+F13          
+Average 8.0190E03 1.0800E04 8.6000E03 1.1100E04 9.8400E03 1.6100E04 8.0200E03 1.1100E04 1.3200E03 
+STD 5.6234E03 8.9300E03 5.1200E03 2.1100E03 5.6300E03 1.0500E04 6.7200E03 2.1100E03 7.8300E01 
+F14          
+Average 1.4490E03 7.0500E03 1.4800E03 7.1500E03 3.4000E03 1.5100E03 1.4600E03 7.1500E03 1.4500E03 
+STD 5.4000E01 8.1600E03 4.2500E01 1.4900E03 1.9500E03 5.1100E01 3.2500E01 1.4900E03 5.6000E01 
+F15          
+Average 1.7100E03 9.3000E03 1.7100E03 1.8000E04 3.8100E03 2.2400E03 1.5900E03 1.8000E04 1.5100E03 
+STD 2.7600E02 8.9800E03 2.8300E02 5.5000E03 3.8600E03 5.7100E02 4.8000E01 5.5000E03 1.6400E01 
+F16          
+Average 1.6240E03 1.7900E03 1.8600E03 2.1500E03 1.7300E03 1.7300E03 1.6500E03 2.1500E03 1.8200E03 
+STD 4.0000E01 1.2900E02 1.2800E02 1.0600E02 1.2400E02 1.2700E02 5.0900E01 1.0600E02 2.3000E02 
+F17          
+Average 1.7420E03 1.7500E03 1.7600E03 1.8600E03 1.7600E03 1.7700E03 1.7300E03 1.8600E03 1.8300E03 
+STD 2.9000E01 3.9800E01 4.7500E01 1.0800E02 3.1300E01 3.4200E01 1.8100E01 1.0800E02 1.7600E02 
+F18          
+Average 8.7120E03 1.5700E04 1.4600E04 8.7200E03 2.5800E04 2.3400E04 2.2500E04 8.7200E03 1.8300E03 
+STD 3.2510E03 1.2800E04 1.1900E04 5.0600E03 1.5800E04 1.4000E04 1.1400E04 5.0600E03 1.3500E01 
+F19          
+Average 1.9440E03 9.6900E03 2.6000E03 4.5000E04 9.8700E03 2.9200E03 1.9500E03 1.3700E04 1.9200E03 
+STD 3.0000E01 6.7700E03 2.1900E03 1.9000E04 6.3700E03 1.8700E03 4.7100E01 1.9200E04 2.8700E01 
+F20          
+Average 2.0180E03 2.0600E03 2.0900E03 2.2700E03 2.0800E03 2.0900E03 2.0200E03 2.2700E03 2.4900E03 
+STD 2.1000E01 6.0000E01 6.2300E01 8.1700E01 5.2000E01 4.9300E01 2.2300E01 8.1700E01 2.4300E02 
+F21          
+Average 2.2050E03 2.3000E03 2.2800E03 2.3600E03 2.3200E03 2.2500E03 2.3100E03 2.3600E03 2.3200E03 
+STD 4.0000E01 4.3800E01 5.4000E01 2.8200E01 7.0000E00 6.0400E01 2.1000E01 2.8200E01 6.7800E01 
+F22          
+Average 2.3050E03 2.3000E03 2.3100E03 2.3000E03 2.3100E03 2.3000E03 2.3000E03 2.3000E03 3.5300E03 
+STD 2.2000E01 2.3800E00 6.6100E01 7.0000E 02 1.6800E01 1.1800E01 1.8400E01 7.2000E 02 8.4800E02 
+F23          
+Average 2.6200E03 2.6300E03 2.6200E03 2.7400E03 2.6200E03 2.6200E03 2.6200E03 2.7400E03 2.7300E03 
+STD 1.2000E01 1.3400E01 9.2300E00 3.9100E01 8.4700E00 8.6900E00 5.5300E00 3.9100E01 2.4300E02 
+F24          
+Average 2.6860E03 2.7600E03 2.6900E03 2.7400E03 2.7400E03 2.7300E03 2.7400E03 2.7400E03 2.7000E03 
+STD 1.6000E01 1.4900E01 1.0800E02 5.5500E00 8.7300E00 6.4400E01 6.9000E00 5.5200E00 7.3400E01 
+F25          
+Average 2.9190E03 2.9500E03 2.9200E03 2.9400E03 2.9400E03 2.9200E03 2.9300E03 2.9400E03 2.9300E03 
+STD 1.9100E01 1.9300E01 2.5000E01 1.5300E01 2.3600E01 2.3900E01 1.9800E01 1.5400E01 2.0900E01 
+F26          
+(continued on next page) L. Abualigah et al.                                                                                                                                                                                                                              
+
+Computers & Industrial Engineering 157 (2021) 107250
+23the best algorithm for half of these functions. 
+Meanwhile, the MPA success for three functions, the EO, and SMA for 
+only one function out of this set. Sequentially, AO is located in the first 
+position regarding the chain counterparts. The convergence curves of 
+Fig. 11 shows the efficiency of the AO in converging for high qualified 
+solutions with significant convergence speed as exhibited in F1, F7, F8, 
+and F10. 
+4.4. Real-world applications 
+In this section, the proposed algorithm is evaluated in solving seven 
+constrained real engineering problems, namely tension/compression 
+spring design problem, pressure vessel design problem, welded beam 
+design problem, 3-bar truss design problem, speed reducer problem, 
+cantilever beam design problem, and multiple disc clutch brake prob-
+lem. These problems contain several inequality constraints. The death 
+penalty function is used in which the algorithm obtains significant 
+values if it violates any of the constraints. The parameter settings are set 
+as the previous experiments. 
+4.4.1. Tension/compression spring design problem 
+The goal of this problem is to minimize the weight of the tension/ 
+compression spring by selecting the best values of the following pa-
+rameters wire diameter (d), the number of active coils (N), and mean coil 
+diameter (D). Fig. 12 shows the problem style and the mathematical 
+form is given in Eq. (18). 
+The proposed AO is compared with the following optimization al-
+gorithms, GSA (Saremi et al., 2017 ), OBSCA (Elaziz, Oliva, & Xiong, 
+2017 ), CPSO (He & Wang, 2007a ), CC (Arora, 2004 ), RO (Kaveh & 
+Khayatazad, 2012 ), HS (Mahdavi, Fesanghary, & Damangir, 2007 ), 
+CSCA (Huang, Wang, & He, 2007 ), GA (Coello, 2000 ), WOA (Mirjalili & 
+Lewis, 2016 ), MVO (Mirjalili et al., 2016 ), PSO (He & Wang, 2007a ), ES 
+(Mezura-Montes & Coello, 2008 ). The results are listed in Table 17 and 
+showed that the AO obtained the best results than all other algorithms. 
+Furthermore, Fig. 13 illustrates the curves of the objective values, the 
+trajectory of 1st solution, and the convergence of the AO during solving 
+the problem. Consider x↗x1x2x3dDNC
+Minimize f 
+x↗)
+ 
+x32)
+x2x2
+1C
+Subject to g1[
+x↗]
+1 x3
+2x371785
+ x4
+1⩽0C
+g2[
+x↗]
+4x2
+2 x1x212566
+x2x3
+1 x4
+1)1
+5108 x2
+1⩽0C
+g3[
+x↗]
+1 140B45x1x
+2
+2x3⩽0C
+g4(
+x↗)
+x1x21
+B5 1⩽0C
+Variables range 0B05⩽x1⩽2
+0B25⩽x2⩽1B30
+2B00⩽x3⩽15(18)  
+4.4.2. Pressure vessel design problem 
+This problem tries to minimize the total cost of the cylindrical 
+pressure vessel to match the pressure requirements. Fig. 14 exhibits the 
+style of this problem. Four variables in this problem need to be mini-
+mized (i.e., the thickness of the shell (Ts), the inner radius (R), the 
+thickness of the head (Th), and the length of the cylindrical section( L)). 
+There are also four constraints, as follows: 
+Consider x↗x1x2x3x4TsThRLC
+Minimize 0B6224 x1x3x41B7781 x2x2
+33B1661 x2
+1x419B84x2
+1x3C
+Subject to g1x↗ x10B0193 x3⩽0C
+g2x↗ x20B00954 x3⩽0C
+g3[
+x↗]
+ πx2
+3x4 4
+3πx3
+31296000⩽0C
+g4x↗x4 240⩽0C
+Variables range 0⩽x1⩽99C
+0⩽x2⩽99C
+10⩽x3⩽200C
+10⩽x4⩽200(19) Table 14 (continued ) Fun 
+No. Comparative methods 
+Measure AO GA PSO CS GWO SSA EO GSA CMA-ES 
+Average 3.0060E03 3.1100E03 2.9500E03 3.4400E03 3.2200E03 2.9000E03 2.9700E03 3.4400E04 3.4600E03 
+STD 1.4500E02 3.3500E02 2.5000E02 6.2900E02 4.2700E02 3.6600E01 1.6500E02 6.2900E02 5.9900E02 
+F27          
+Average 3.0900E03 3.1200E03 3.1200E03 3.2600E03 3.1000E03 3.0900E03 3.0910E03 3.2600E03 3.1400E03 
+STD 8.3700E00 1.9200E01 2.5000E01 4.1700E01 2.1800E01 2.7800E00 2.2400E00 4.1700E01 2.1400E01 
+F28          
+Average 3.2110E03 3.3200E03 3.3200E03 3.4600E03 3.3900E03 3.2100E03 3.3000E03 3.4600E03 3.4000E03 
+STD 4.6840E01 1.2600E02 1.2200E02 3.3800E01 1.0200E02 1.1300E02 1.3400E02 3.3800E01 1.3100E02 
+F29          
+Average 3.1900E03 3.2500E03 3.2000E03 3.4500E03 3.1900E03 3.2100E03 3.1700E03 3.4500E03 3.2100E03 
+STD 2.9000E01 8.2000E01 5.2300E01 1.7100E02 4.2900E01 5.1700E01 2.4700E01 1.7100E02 1.1000E02 
+F30          
+Average 2.9014E05 5.3700E05 3.5100E05 9.4000E05 2.9800E05 4.2100E05 2.9700E05 1.3000E06 3.0500E05 
+STD 5.2314E04 6.3700E05 5.0500E05 3.6000E05 5.2800E05 5.6800E05 4.5900E05 3.6400E05 4.4500E05  
+(W†L†T)  (9†13†7)  (0†27†2)  (0†23†6)  (0†24†5)  (0†28†1)  (3†21†5)  (0†24†5)  (0†24†5)  (8†17†3)  
+Mean 2.4138E00 5.6207E00 3.4828E00 6.3448E00 5.3793E00 4.8276E00 2.5517E00 6.3793E00 4.6552E00 
+Ranking 1 7 3 8 6 5 2 9 4  L. Abualigah et al.                                                                                                                                                                                                                              
+
+Computers & Industrial Engineering 157 (2021) 107250
+24The AO is compared with branch-bound (Sandgren, 1990 ), HS 
+(Mahdavi et al., 2007 ), MVO (Mirjalili et al., 2016 ), WOA (Mirjalili & 
+Lewis, 2016 ), ACO (Kaveh & Talatahari, 2010a ), ES (Mezura-Montes & 
+Coello, 2008 ), HPSO (He & Wang, 2007b ), CSS (Kaveh & Talatahari, 
+2010b ), CSCA (Huang et al., 2007 ), PSO-SCA (Liu, Cai, & Wang, 2010 ), 
+GWO (Mirjalili, Mirjalili, & Lewis, 2014 ), GA (Coello, 2000 ), CPSO (He & Wang, 2007a ), GSA (Rashedi et al., 2009 ), SMA (Zhao et al., 2020 ). 
+From the results in Table 18 we can see that, the AO was ranked first and 
+reached the minimum total cost in solving pressure vessel design prob-
+lem. In addition, Fig. 15 shows the curves of the objective values, the 
+trajectory of 1st solution, and the convergence of the AO during solving 
+the problem. 
+Fig. 10.Convergence behavior of the comparative algorithms on CEC2017 test functions.  L. Abualigah et al.                                                                                                                                                                                                                              
+
+Computers & Industrial Engineering 157 (2021) 107250
+254.4.3. Welded beam design problem 
+This problem aims to minimize the economic cost of the welded 
+beam design. The design of this problem is shown in Fig. 16. Four var-
+iables and seven constraints need to be optimized. These variables are 
+the thickness of the weld (h), the thickness of the bar (bb), length of the 
+attached part of the bar (l), and the height of the bar (tt). The mathe -
+matical form is listed in Eq. (20). Table 19 listed the results of the AO and the compared algorithms 
+namely OBSCA (Elaziz et al., 2017 ), GSA (Saremi et al., 2017 ), RO 
+(Kaveh & Khayatazad, 2012 ), CSCA (Huang et al., 2007 ), GA (Deb, 
+1991 ), DAVID (Ragsdell & Phillips, 1976 ), SIMPLEX (Ragsdell & Phil-
+lips, 1976 ), APPROX (Ragsdell & Phillips, 1976 ), HS (Lee & Geem, 
+2005 ), SSA (Mirjalili et al., 2017 ), CPSO (He & Wang, 2007a ), WOA 
+(Mirjalili & Lewis, 2016 ), MVO (Mirjalili et al., 2016 ), MPA (Faramarzi, 
+Fig. 10. (continued ). L. Abualigah et al.                                                                                                                                                                                                                              
+
+Computers & Industrial Engineering 157 (2021) 107250
+26Heidarinejad, Mirjalili, et al., 2020 ), SMA (Zhao et al., 2020 ). From this 
+table we can noticed that, the AO outperformed all other algorithms and 
+obtained the minimum value of the total cost. Fig. 17 shows the curves of 
+the AO during solving the problem. 
+Consider x↗x1x2x3x4hlttbbC
+Minimize f 
+x↗)
+1B10471 x2
+1x20B04811 x3x4 
+14B0x2)
+C
+Subject to g1x↗τx↗ τmax⩽0C
+g2x↗σx↗ σmax⩽0C
+g3x↗δx↗ δmax⩽0C
+g4x↗x1 x4⩽0C
+g5x↗P Pcx↗⩽0C
+g6x↗0B125 x1⩽0C
+g7 
+x↗)
+1B10471 x2
+10B04811 x3x4 
+14B0x2)
+ 5B0⩽0
+Variables range 0B1⩽x1⩽2C
+0B1⩽x2⩽10C
+0B1⩽x3⩽10C
+0B1⩽x4⩽2
+whereτ [
+x↗]
+⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪
+τ∕22τ∕τ∕∕x22
+Rτ∕∕2̅
+Cτ
+∕p⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪2x1x2♠Cτ∕∕MR
+JC
+MP(
+Lx22
+)
+C
+R⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪x
+2
+24
+(x1x32
+)2̅
+C
+J2〉⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪
+2x1x2⇓⌊x
+2
+24
+(x1x32
+)2⌋/
+Cσ
+[
+x↗]
+6PL
+x4x2
+3Cδ[
+x↗]
+6PL3Ex
+2
+3x4P
+c⎢
+⨀⨀∮x↗⎥
+⨁⨁⨀⎪⎪⎪⎪⎪⎪⎪⎪⎪x
+2
+3x6
+436
+4B013E̅
+L2⎢
+⨀⨀∮1 x32
+L⎪⎪⎪⎪⎪⎪E
+4G̅⎥
+⨁⨁⨀C
+P6000 lbCL14inBCδmax0B25inBC
+E30×16psiCG12×106psiCτ
+max13600 psiCσmax30000 psi
+(20)  
+4.4.4. 3-bar truss design problem 
+The 3-bar truss design is a problem in the field of civil engineering. It 
+tries to manipulate two parameters in order to achieve the minimum 
+weight in designing a truss. Fig. 18 shows the design of this problem and 
+its mathematical form is given in Eq. (21). 
+The AO is compared with Ray and Sain (Ray & Saini, 2001 ), AAA 
+(Yildirim & Karci, 2018 ), SSA (Mirjalili et al., 2017 ), MBA (Sadollah, Bahreininejad, Eskandar, & Hamdi, 2013 ), DEDS (Zhang, Luo, & Wang, 
+2008 ), GOA (Saremi et al., 2017 ), PSO-DE (Liu et al., 2010 ), CS (Gan-
+domi et al., 2013 ). The comparison results are listed in Table 20 and 
+showed the superiority of the AO in solving this problem. Fig. 19 shows 
+the curves of the AO during solving the problem. 
+Consider x↗x1x2A1A2C
+Minimize f 
+x↗)
+ 
+2⎪⎪⎪⎪⎪⎪⎪2x1♠x2)
+∗lC
+Subject to g1⌊
+x↗⌋
+⎪⎪⎪⎪⎪⎪⎪2x1♠x2⎪⎪⎪⎪⎪⎪⎪
+2x2
+1̅
+2x1x2P σ⩽0C
+g2⌊
+x↗⌋
+x2⎪⎪⎪⎪⎪⎪⎪
+2x2
+1̅
+2x1x2P σ⩽0C
+g3[
+x↗]
+1⎪⎪⎪⎪⎪⎪⎪2x2♠x1P σ⩽0C
+Variables range 0⩽x1Cx2⩽1C
+where l100cmCP2KNEcm2Cσ2KN\
+cm2(21)  
+4.4.5. Speed reducer problem 
+This problem tries to minimize the speed reducer ’s total weights by 
+optimizing seven variables regarding the limitations of the gear teeth ’ 
+curvature stress, transverse deflections of the shafts, and stresses in the 
+shafts, and surface stress. Fig. 20 shows the design of this problem, and 
+its mathematical form is given in Eq. (22). 
+The AO is compared with GA (Saruhan & Uygur, 2003 ), SES 
+(Mezura-Montes, Coello, & Landa-Becerra, 2003 ), PSO (Stephen, 
+Christu, & Dalvi, 2018 ), GSA (Rashedi et al., 2009 ), hHHO-SCA (Kam-
+boj, Nandi, Bhadoria, & Sehgal, 2020 ), MDA (Lu & Kim, 2010 ), SCA 
+(Mirjalili, 2016a ), HS (Geem, Kim, & Loganathan, 2001 ), FA (Bayka -
+so˚glu & Ozsoydan, 2015 ), and SBSM (Akhtar, Tai, & Ray, 2002 ). The 
+results of the AO and the compared methods are listed in Table 21. From 
+this table, the AO is ranked first and outperformed all methods in solving 
+this problem whereas, the SBSM is ranked second followed by FA, MDA, 
+and SES, respectively. Fig. 21 shows the curves of the AO during solving 
+the problem. Table 15 
+Review of CEC2019 benchmark function problems.  No. 
+ Functions F*
+i
+Fi(x*)  Dim Search range 
+1 Storn ’s Chebyshev Polynomial 
+Fitting Problem 1 9 [ 8192, 8192] 
+2 Inverse Hilbert Matrix Problem 1 16 [ 16384, 
+16384] 
+3 Lennard-Jones Minimum Energy 
+Cluster 1 18 [ 4,4] 
+4 Rastrigin ’s Function 1 10 [ 100,100] 
+5 Griewangk ’s Function 1 10 [ 100,100] 
+6 Weierstrass Function 1 10 [ 100,100] 
+7 Modified Schwefel ’s Function 1 10 [ 100,100] 
+8 Expanded Schaffer ’s F6 Function 1 10 [ 100,100] 
+9 Happy Cat Function 1 10 [ 100,100] 
+10 Ackley Function 1 10 [ 100,100]  L. Abualigah et al.                                                                                                                                                                                                                              
+
+Computers & Industrial Engineering 157 (2021) 107250
+274.4.6. Cantilever beam design problem 
+This problem is a type of concrete engineering problems. It works to 
+minimize the total weight of a cantilever beam by optimizing the hollow 
+square cross-section parameters. Fig. 22 shows the design of this prob-
+lem and its mathematical form is given in Eq. (23). (see Fig. 23) 
+Consider xx1x2x3x4x5
+Minimise fx↗0B6224x1x2x3x4x5C
+subject to
+g[
+x↗]
+60
+x3
+127
+x3
+219
+x3
+37
+x3
+41
+x3
+5 1⩽0
+Variable range
+0B01⩽x1Cx2Cx3Cx4Cx5⩽100(23) 
+To evaluate the performance of the proposed AO in solving this 
+problem, it was compared with GCA_I (Chickermane & Gea, 1996 ), ALO (Mirjalili, 2015b ), GCA_II (Chickermane & Gea, 1996 ), CS (Gandomi 
+et al., 2013 ), MMA (Chickermane & Gea, 1996 ), SOS (Cheng & Prayogo, 
+2014 ), SMA (Zhao et al., 2020 ), and MFO (Mirjalili, 2015a ). The results 
+of the AO and the compared methods are listed in Table 22. From this 
+table, the AO showed a good performance in solving the cantilever beam 
+design problem, and it came in the first rank with little difference from 
+CS followed by ALO and SMA, respectively. Fig. 21 shows the curves of 
+the AO during solving the problem. 
+4.4.7. Multiple disc clutch brake problem 
+This problem works to minimize the total weight of a multiple disc 
+clutch brake by optimizing five variables: the thickness of discs, outer 
+radius, number of friction surfaces, inner radius, and actuating force. 
+There are eight constraints for this problem based on the conditions of 
+geometry and operating requirements. The feasible domain contains 
+about 70% of the solution space. Fig. 24 illustrates the design of this 
+problem and Eq. (24) represents its mathematical model. Minimize f 
+x↗)
+0B7854 x1x2
+2 
+3B3333 x2
+314B9334 x3 43B0934)
+ 1B508x1 
+x2
+6x2
+7)
+7B4777 
+x3
+6x3
+7)
+subject to
+sBtBg1[
+x↗]
+27
+x1x2
+2x3 1⩽0
+g2[
+x↗]
+397B5
+x1x2
+2x2
+3 1⩽0
+g3[
+x↗]
+1B93x3
+4x
+2x3x4
+6 1⩽0
+g4[
+x↗]
+1B93x3
+5x
+2x3x4
+7 1⩽0
+g5⎢
+⨀⨀⨀⨀∮x↗⎥
+⨁⨁⨁⨁⨀⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪[745x 4x
+2x3]2
+16B9×106̅
+110B0x3
+6 1⩽0
+g6⎢
+⨀⨀⨀⨀∮x↗⎥
+⨁⨁⨁⨁⨀⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪[745x 4x
+2x3]2
+157B5×106̅
+85B0x3
+6 1⩽0
+g7(
+x↗)
+x2x340
+ 1⩽0
+g8[
+x↗]
+5x2x
+1 1⩽0
+g9[
+x↗]
+x112
+x2 1⩽0
+g10[
+x↗]
+1B5x61B9
+x4 1⩽0
+g11[
+x↗]
+1B1x71B9
+x5 1⩽0
+where
+2B6⩽x1⩽3B6C0B7⩽x2⩽0B8C17⩽x3⩽28C7B3⩽x4⩽8B3C7B8⩽x5⩽8B3C2B9⩽x6⩽3B9C5B0⩽x7⩽5B5(22)   L. Abualigah et al.                                                                                                                                                                                                                              
+
+Computers & Industrial Engineering 157 (2021) 107250
+28Table 
+ 16 
+Results of the comparative methods on CEC2019 test functions.  Fun 
+No. Comparative methods  
+Measure AO GOA EO PSO DA ALO GWO MPA SSA SCA WOA SMA 
+F1             
+Worst 5.7185E04 4.0133E10 2.8491E09 2.1499E13 3.6220E10 5.3112E10 3.2839E08 4.4140E04 1.1307E10 1.2002E10 1.2404E11 59119.21888 
+Average 4.8726E04 1.3203E10 9.3131E08 8.0403E12 2.1128E10 2.4366E10 1.0739E08 3.7464E04 7.3245E09 4.6112E09 5.7448E10 49496.82449 
+Best 3.9908E04 2.9754E09 3.9735E04 8.1972E11 1.2918E10 4.5166E09 5.1689E05 3.2396E04 2.4621E09 1.3097E09 1.5327E09 43022.95047 
+STD 6.4128E03 1.5418E10 1.3273E09 8.6372E12 9.2900E09 2.2029E10 1.5077E08 4.7886E03 3.4825E09 4.2196E09 4.7046E10 7249.678206 
+F2             
+Worst 1.7343E01 1.7468E01 1.7343E01 1.5848E04 6.0358E02 1.7349E01 1.7344E01 1.7343E01 1.7391E01 1.7538E01 1.7363E01 17.37579915 
+Average 1.7343E01 1.7397E01 1.7343E01 1.2323E04 1.3515E02 1.7345E01 1.7344E01 1.7343E01 1.7355E01 1.7468E01 1.7354E01 17.36710062 
+Best 1.7343E01 1.7367E01 1.7343E01 8.2815E03 1.7343E01 1.7343E01 1.7344E01 1.7343E01 1.7343E01 1.7414E01 1.7346E01 17.35597052 
+STD 1.3292E 04 4.0848E 02 5.0243E 15 3.0180E03 2.6186E02 2.2146E 03 1.3962E 04 1.2596E 07 2.0765E 02 4.6095E 02 6.1916E 03 0.007884415 
+F3             
+Worst 1.2702E01 1.2702E01 1.2702E01 1.2702E01 1.2705E01 1.2702E01 1.2702E01 1.2702E01 1.2702E01 1.2703E01 1.2702E01 12.70432773 
+Average 1.2702E01 1.2702E01 1.2702E01 1.2702E01 1.2703E01 1.2702E01 1.2702E01 1.2702E01 1.2702E01 1.2703E01 1.2702E01 12.70285328 
+Best 1.2702E01 1.2702E01 1.2702E01 1.2702E01 1.2702E01 1.2702E01 1.2702E01 1.2702E01 1.2702E01 1.2703E01 1.2702E01 12.70247222 
+STD 1.8286E 06 8.1884E 12 1.5384E 15 0.0000E00 1.1169E 03 8.8818E 16 1.7866E 06 0.0000E00 1.7764E 15 8.1441E 05 7.4263E 07 0.000824434 
+F4             
+Worst 7.7626E01 5.4726E01 2.4077E01 2.3904E01 3.2190E03 1.1342E02 1.6793E02 1.2958E01 4.8753E01 3.6227E03 8.6610E02 40.86124872 
+Average 6.1750E01 3.2867E01 1.7864E01 1.7327E01 1.2762E03 5.6115E01 7.5948E01 8.9948E00 3.4226E01 1.9761E03 5.8922E02 26.12215256 
+Best 4.2306E01 8.9569E00 6.9995E00 4.9752E00 3.4288E01 1.0945E01 4.9114E01 5.0030E00 2.1889E01 1.0981E03 2.2660E02 10.42762116 
+STD 1.3914E01 1.9711E01 6.8265E00 7.3781E00 1.4697E03 3.7118E01 5.1553E01 3.3786E00 1.0776E01 9.6264E02 2.8278E02 11.4476303 
+F5             
+Worst 1.4154E00 9.7766E00 1.1442E01 1.1279E01 1.0841E01 8.5764E00 1.2052E01 4.0291E00 6.2782E00 1.1812E01 1.1329E01 1.754317948 
+Average 1.3545E00 8.4847E00 1.0754E01 9.9834E00 9.6346E00 5.2938E00 1.1649E01 2.3349E00 5.4861E00 1.1146E01 9.6370E00 1.374072236 
+Best 1.1530E00 7.6595E00 9.8895E00 8.8972E00 8.5186E00 2.9803E00 1.1464E01 1.2088E00 4.5119E00 9.8660E00 8.2812E00 1.136743818 
+STD 9.3665E 02 8.7632E 01 6.6035E 01 9.3240E 01 8.8471E 01 2.3569E00 2.3951E 01 1.2762E00 8.5332E 01 7.5113E 01 1.1535E00 0.234609845 
+F6             
+Worst 1.0058E01 9.7766E00 1.1442E01 1.1279E01 1.0841E01 1.2191E01 1.2052E01 1.4029E01 6.2782E00 1.1812E01 1.1329E01 5.044147869 
+Average 8.3144E00 8.4847E00 1.0754E01 9.9834E00 9.6346E00 1.1480E01 1.1649E01 1.2335E01 5.4861E00 1.1146E01 9.6370E00 4.43199477 
+Best 4.6493E00 7.6595E00 9.8895E00 8.8972E00 8.5186E00 1.0921E01 1.1464E01 1.1209E01 4.5119E00 9.8660E00 8.2812E00 3.547038584 
+STD 2.1161E00 8.7632E 01 6.6035E 01 9.3240E 01 8.8471E 01 4.7370E 01 2.3951E 01 1.1276E01 8.5332E 01 7.5113E 01 1.1535E00 0.666906413 
+F7             
+Worst 3.8973E02 7.6818E02 5.4218E02 4.1544E02 1.2605E03 1.3979E03 6.5949E02 1.4602E02 5.6388E02 1.0631E03 1.1302E03 556.5354916 
+Average 2.7780E02 5.0079E02 2.0373E02 2.0108E02 9.4774E02 6.5560E02 3.5348E02 4.7289E01 4.6133E02 8.5032E02 8.0560E02 228.1812071 
+Best 2.0976E02 2.4958E02  2.2288E02  3.4109E00 4.9273E02 1.8713E02 1.2363E02  8.8834E01 2.8857E02 4.7767E02 4.6215E02  95.13810593 
+STD 7.0498E01 2.1911E02 2.8572E02 1.7996E02 3.0667E02 4.4719E02 2.2858E02 9.7761E01 1.1757E02 2.2416E02 2.5333E02 283.8794351 
+F8             
+Worst 6.0065E00 6.1986E00 5.6001E00 5.6265E00 6.4732E00 6.1027E00 6.8118E00 4.8994E00 6.7080E00 6.6863E00 6.6408E00 5.531143673 
+Average 5.0660E00 5.5874E00 3.9066E00 4.9495E00 5.9517E00 5.7015E00 5.4830E00 4.0886E00 5.4825E00 5.9026E00 6.1017E00 5.312594537 
+Best 3.9924E00 5.1592E00 2.4154E00 4.3550E00 5.2004E00 5.1209E00 2.8996E00 2.5565E00 4.8619E00 5.3787E00 5.6658E00 5.133001884 
+STD 7.8631E 01 4.3007E 01 1.1569E00 6.1698E 01 4.9292E 01 3.9215E 01 1.6897E00 9.1352E 01 7.1055E 01 5.7395E 01 4.2379E 01 0.171064613 
+F9             
+Worst 2.4328E00 2.9754E00 2.4823E00 2.4437E00 1.9550E02 2.8278E00 7.1355E00 2.4978E00 2.9267E00 4.5935E02 6.4013E00 2.566742354 
+Average 2.3908E00 2.6643E00 2.4025E00 2.4115E00 5.6366E01 2.6040E00 4.9324E00 2.4163E00 2.7329E00 2.0256E02 5.3971E00 2.496126373 
+Best 2.3533E00 2.5188E00 2.3641E00 2.3873E00 2.7440E00 2.4148E00 3.2719E00 2.3484E00 2.3814E00 4.5225E01 3.9548E00 2.455247496 
+STD 3.1720E 02 1.8276E 01 4.8202E 02 3.3764E 02 8.0061E01 1.7406E 01 1.5294E00 5.9561E 02 2.1946E 01 1.5775E02 9.3385E 01 0.042546944 
+F10             
+Worst 2.0279E01 2.0001E01 2.0475E01 2.0671E01 2.0639E01 2.0088E01 2.0603E01 2.1035E01 2.0003E01 2.0552E01 2.0459E01 20.27673685 
+Average 1.6292E01 2.0000E01 2.0410E01 2.0422E01 2.0436E01 2.0017E01 2.0546E01 2.1007E01 2.0000E01 2.0478E01 2.0299E01 20.09974459 
+Best 7.6041E 01 2.0000E01 2.0323E01 2.0122E01 2.0288E01 1.9999E01 2.0482E01 2.1000E01 1.9998E01 2.0417E01 2.0208E01 20.01121164 
+STD 8.6827E00 3.7182E 04 5.6102E 02 2.0165E 01 1.3960E 01 3.9305E 02 4.5221E 02 3.5626E 02 1.8765E 03 5.8884E 02 1.0182E 01 0.103332342  
+(W†L†T)  (5†5†0)  (0†10†0)  (1†8†1)  (0†9†1)  (0†10†0)  (0†9†1)  (0†10†0)  (3†6†1)  (0†10†0)  (0†10†0)  (0†10†0)  (1†9†0)  
+Mean 2.7000E00 6.4000E00 4.6000E00 6.0000E00 9.8000E00 6.6000E00 8.2000E00 4.1000E00 5.6000E00 1.0100E01 8.7000E00 4.8000E00 
+Ranking 1 7 3 6 11 8 9 2 5 12 10 4  L. Abualigah et al.                                                                                                                                                                                                                              
+
+Computers & Industrial Engineering 157 (2021) 107250
+29
+Fig. 11.Convergence behavior of the comparative algorithms on CEC2019 test functions.  L. Abualigah et al.                                                                                                                                                                                                                              
+
+Computers & Industrial Engineering 157 (2021) 107250
+30f 
+x)
+Π 
+r2
+o r2
+i)
+t 
+Z1)ρsubject
+ to g1xro ri Δr⩾0
+g2xlmax Z1tδ⩾0
+g3xPmax Prz⩾0
+g4xPmaxνsrmax Przνsr⩾0
+g5xνsrmax νsr⩾0
+g6Tmax T⩾0
+g7xMh sMs ⩾0
+g8xT⩾0
+where Mh2
+3μFZr3
+o r2
+ir
+2
+o r3
+iCPrzF
+Π 
+r2
+o r2
+i)Cν
+rz2Π 
+r3
+o r3
+i)
+90 
+r2
+o r2
+i)CTIzΠn
+30 
+MhMf)
+Δr20mmCIz55kgmm2CPmax1MPaCFmax1000 NC
+Tmax15sCμ0B5Cs1B5CMs40NmC
+Mf3NmCn250rpmCν
+srmax10mEsClmax30mmCrimin60C
+rimax80Cromin90C
+romax110Ctmin1B5Ctmax3CFmin600C
+Fmax1000CZmin2CZmax9
+(24) The proposed AO is compared with TLBO (Rao, Savsani, & Vakharia, 
+2011 ), MFO (Bhesdadiya, Trivedi, Jangir, & Jangir, 2018 ), NSGA-II 
+(Deb & Srinivasan, 2008 ), MVO (Sayed, Darwish, & Hassanien, 2018 ), 
+WCA (Eskandar, Sadollah, Bahreininejad, & Hamdi, 2012 ), and CMVO 
+(Sayed et al., 2018 ). The comparison results are listed in Table 23 and 
+showed the superiority of the AO in achieving the minimum total 
+weights for this problem. Fig. 25 illustrates the curves of the AO during 
+solving the problem. 
+5.Conclusion and potential future works 
+In this paper, a new alternative meta-heuristic technique, named 
+Aquila Optimizer (AO), has been developed. This algorithm simulates 
+the behaviors of Aquila in nature. In the AO, the optimization proced -
+ures are represented in four methods; selecting the search space by high 
+soar with the vertical stoop, exploring within a diverge search space by 
+contour flight with short glide attack, exploiting within a converge 
+search space by low flight with slow descent attack, and swooping by 
+walk and grab prey. 
+To validate the developed AO’s ability to find the optimal solution, a 
+set of different optimization problems were used. These problems 
+include 23 classical benchmark functions, 29 functions from the 
+CEC2017 benchmark, ten functions from the CEC2019 benchmark, and 
+seven engineering problems. From the statistical results of benchmarks, 
+it has been observed that the AO provided results either better than 
+other well-known MH techniques or, at least, nearly equivalently. 
+Moreover, from the empirical investigation of engineering problems, it 
+can evaluate the developed AO’s applicability to tackling real-world 
+applications. 
+According to the previous discussion that illustrated the developed 
+AO’s superiority, it can open a wide range of future works. This 
+including apply AO to various applications such as PV parameter esti-
+mation, neural network, image processing applications, text and data 
+mining applications, big data applications, signal denoising, recourse 
+management application, network applications, industry and engineer -
+ing applications, other benchmark test functions, smart home applica -
+tions, feature selection, image segmentation, task scheduling, and other. 
+It can also be extended to real-world applications dependent on binary, 
+discrete, and multiple objectives optimization. Moreover, AO’s perfor -
+mance can be improved by combining it with levy flight, disruption, 
+mutation, other stochastic components, whether the local search or 
+global search methods and other evolutionary operators. Moreover, a 
+discrete version of the AO can be proposed. 
+Fig. 12.Tension/compression spring design problem.  Table 
+ 17 
+Results of the comparative algorithms for solving the tension/compression spring design problem.  Algorithm 
+ Optimal values for variables Optimal Ranking  
+d D N weight  
+GSA (Saremi et al., 2017 ) 0.050276 0.323680 13.525410 0.0127022 10 
+OBSCA (Elaziz et al., 2017 ) 0.05230 0.31728 12.54854 0.012625 2 
+CPSO (He & Wang, 2007a ) 0.051728 0.357644 11.244543 0.0126747 5 
+CC (Arora, 2004 ) 70.050000 0.315900 14.250000 0.0128334 13 
+RO (Kaveh & Khayatazad, 2012 ) 0.051370 0.349096 11.76279 0.0126788 8 
+HS (Mahdavi et al., 2007 ) 0.051154 0.349871 12.076432 0.0126706 4 
+CSCA (Huang et al., 2007 ) 0.051609 0.354714 11.410831 0.0126702 3 
+GA (Coello, 2000 ) 0.051480 0.351661 11.632201 0.01270478 11 
+WOA (Mirjalili & Lewis, 2016 ) 0.051207 0.345215 12.004032 0.0126763 7 
+MVO (Mirjalili et al., 2016 ) 0.05251 0.37602 10.33513 0.012790 12 
+PSO (He & Wang, 2007a ) 0.051728 0.357644 11.244543 0.0126747 5 
+ES (Mezura-Montes & Coello, 2008 ) 0.051643 0.355360 11.397926 0.012698 9 
+AO 0.0502439 0.35262 10.5425 0.011165 1  L. Abualigah et al.                                                                                                                                                                                                                              
+
+Computers & Industrial Engineering 157 (2021) 107250
+31
+Fig. 13.Qualitative results for the tension/compression spring design problem.  
+Fig. 
+14.Pressure vessel design problem.  Table 
+ 18 
+Results of the comparative algorithms for solving the pressure vessel design problem.  Algorithm 
+ Optimal values for variables Optimal Ranking  
+Ts  T h  R L cost  
+Branch-bound (Sandgren, 1990 ) 1.125 0.625 48.97 106.72 7982.5 15 
+HS (Mahdavi et al., 2007 ) 1.125000 0.625000 58.29015 43.69268 7197.730 14 
+MVO (Mirjalili et al., 2016 ) 0.8125 0.4375 42.090738 176.73869 6060.8066 12 
+WOA (Mirjalili & Lewis, 2016 ) 0.812500 0.437500 42.0982699 176.638998 6059.7410 9 
+ACO (Kaveh & Talatahari, 2010a ) 0.812500 0.437500 42.098353 176.637751 6059.7258 7 
+ES (Mezura-Montes & Coello, 2008 ) 0.8125 0.4375 42.098087 176.640518 6059.74560 10 
+HPSO (He & Wang, 2007b ) 0.8125 0.4375 42.0984 176.6366 6059.7143 5 
+CSS (Kaveh & Talatahari, 2010b ) 0.8125 0.4375 42.1036 176.5727 6059.0888 4 
+CSCA (Huang et al., 2007 ) 0.8125 0.4375 42.098411 176.63769 6059.7340 8 
+PSO-SCA (Liu et al., 2010 ) 0.8125 0.4375 42.098446 176.6366 6059.71433 6 
+GWO (Mirjalili et al., 2014 ) 0.8125 0.4345 42.0892 176.7587 6051.5639 3 
+GA (Coello, 2000 ) 0.81250 0.43750 42.097398 176.65405 6059.94634 11 
+CPSO (He & Wang, 2007a ) 0.8125 0.4375 42.091266 176.7465 6061.0777 13 
+GSA (Rashedi et al., 2009 ) 1.125 0.625 55.9886598 84.4542025 8538.8359 6 
+SMA (Zhao et al., 2020 ) 0.7931 0.3932 40.6711 196.2178 5994.1857 2 
+AO 1.0540 0.182806 59.6219 38.8050 5949.2258 1  
+Fig. 
+15.Qualitative results for the pressure vessel design problem.  L. Abualigah et al.                                                                                                                                                                                                                              
+
+Computers & Industrial Engineering 157 (2021) 107250
+32
+Fig. 16.Welded beam design problem.  Table 
+ 19 
+Results of the comparative algorithms for solving the welded beam design problem.  Algorithm 
+ Optimal values for variables Optimal Ranking  
+h l t b cost  
+OBSCA (Elaziz et al., 2017 ) 0.230824 3.069152 8.988479 0.208795 1.722315 3 
+GSA (Saremi et al., 2017 ) 0.182129 3.856979 10.000 0.202376 1.87995 11 
+RO (Kaveh & Khayatazad, 2012 ) 0.203687 3.528467 9.004233 0.207241 1.735344 10 
+CSCA (Huang et al., 2007 ) 0.203137 3.542998 9.033498 0.206179 1.733461 9 
+GA (Deb, 1991 ) 0.2489 6.1730 8.1789 0.2533 2.4300 15 
+DAVID (Ragsdell & Phillips, 1976 ) 0.2434 6.2552 8.2915 0.2444 2.3841 14 
+SIMPLEX (Ragsdell & Phillips, 1976 ) 0.2792 5.6256 7.7512 0.2796 2.5307 16 
+APPROX (Ragsdell & Phillips, 1976 ) 0.2444 6.2189 8.2915 0.2444 2.3815 13 
+HS (Lee & Geem, 2005 ) 0.2442 6.2231 8.2915 0.2400 2.3807 12 
+SSA (Mirjalili et al., 2017 ) 0.2057 3.4714 9.0366 0.2057 1.72491 5 
+CPSO (He & Wang, 2007a ) 0.202369 3.544214 9.04821 0.205723 1.72802 7 
+WOA (Mirjalili & Lewis, 2016 ) 0.205396 3.484293 9.037426 0.206276 1.730499 8 
+MVO (Mirjalili et al., 2016 ) 0.205463 3.473193 9.044502 0.205695 1.72645 6 
+MPA (Faramarzi, Heidarinejad, Mirjalili, et al., 2020 ) 0.205728 3.470509 9.036624 0.205730 1.724853 4 
+SMA (Zhao et al., 2020 ) 0.2054 3.2589 9.0384 0.2058 1.69604 2 
+AO 0.1631 3.3652 9.0202 0.2067 1.6566 1  
+Fig. 
+17.Qualitative results for the welded beam design problem.  L. Abualigah et al.                                                                                                                                                                                                                              
+
+Computers & Industrial Engineering 157 (2021) 107250
+33
+Fig. 18.3-bar truss design problem.  Table 
+ 20 
+Results of the comparative algorithms for solving the 3-bar truss design problem.  Algorithm 
+ Optimal values for variables Optimal Ranking  
+x1  x 2  weight  
+Ray and Sain (Ray & Saini, 2001 ) 0.795 0.395 264.3 9 
+AAA (Yildirim & Karci, 2018 ) 0.7887354 0.408078 263.895880 6 
+SSA (Mirjalili et al., 2017 ) 0.78866541 0.408275784 263.89584 2 
+MBA (Sadollah et al., 2013 ) 0.7885650 0.4085597 263.89585 5 
+DEDS (Zhang et al., 2008 ) 0.78867513 0.40824828 263.89584 2 
+GOA (Saremi et al., 2017 ) 0.78889755557 0.40761957011 263.89588149 7 
+PSO-DE (Liu et al., 2010 ) 0.7886751 0.4082482 263.89584 2 
+CS (Gandomi et al., 2013 ) 0.78867 0.40902 263.9716 8 
+AO 0.7926 0.3966 263.8684 1  
+Fig. 
+19.Qualitative results for the 3-bar truss design problem.  
+Fig. 
+20.Speed reducer problem.  L. Abualigah et al.                                                                                                                                                                                                                              
+
+Computers & Industrial Engineering 157 (2021) 107250
+34Table 21 
+Results of the comparative algorithms for solving the speed reducer design problem.  Algorithm 
+ Optimal values for variables Optimal Ranking  
+x1  x 2  x 3  x 4  x 5  x 6  x 7  weight  
+GA (Saruhan & Uygur, 2003 ) 3.510253 0.7 17 8.35 7.8 3.362201 5.287723 3067.561 10 
+SES (Mezura-Montes et al., 2003 ) 3.506163 0.700831 17 7.460181 7.962143 3.362900 5.308949 3025.005127 5 
+PSO (Stephen et al., 2018 ) 3.5001 0.7000 17.0002 7.5177 7.7832 3.3508 5.2867 3145.922 11 
+GSA (Rashedi et al., 2009 ) 3.600000 0.7 17 8.3 7.8 3.369658 5.289224 3051.120 9 
+hHHO-SCA (Kamboj et al., 2020 ) 3.506119 0.7 17 7.3 7.99141 3.452569 5.286749 3029.873076 7 
+MDA (Lu & Kim, 2010 ) 3.5 0.7 17 7.3 7.670396 3.542421 5.245814 3019.583365 4 
+SCA (Mirjalili, 2016a ) 3.508755 0.7 17 7.3 7.8 3.461020 5.289213 3030.563 8 
+HS (Geem et al., 2001 ) 3.520124 0.7 17 8.37 7.8 3.366970 5.288719 3029.002 6 
+FA (Baykaso ˚glu & Ozsoydan, 2015 ) 3.507495 0.7001 17 7.719674 8.080854 3.351512 5.287051 3010.137492 3 
+SBSM (Akhtar et al., 2002 ) 3.506122 0.700006 17 7.549126 7.859330 3.365576 5.289773 3008.08 2 
+AO 3.5021 0.7000 17.0000 7.3099 7.7476 3.3641 5.2994 3007.7328 1  
+Fig. 
+21.Qualitative results for the speed reducer design problem.  
+Fig. 
+22.Cantilever beam design problem.  
+Fig. 
+23.Qualitative results for the cantilever beam design problem.  L. Abualigah et al.                                                                                                                                                                                                                              
+
+Computers & Industrial Engineering 157 (2021) 107250
+35Table 22 
+Results of the comparative algorithms for solving the cantilever beam design problem.  Algorithm 
+ Optimal values for variables Optimal Ranking  
+x1  x 2  x 3  x 4  x 5  weight  
+GCA_I (Chickermane & Gea, 1996 ) 6.0100 5.30400 4.4900 3.4980 2.1500 1.3400 7 
+ALO (Mirjalili, 2015b ) 6.01812 5.31142 4.48836 3.49751 2.158329 1.33995 3 
+GCA_II (Chickermane & Gea, 1996 ) 6.0100 5.3000 4.4900 3.4900 2.1500 1.3400 7 
+CS (Gandomi et al., 2013 ) 6.0089 5.3049 4.5023 3.5077 2.1504 1.3399 2 
+MMA (Chickermane & Gea, 1996 ) 6.0100 5.3000 4.4900 3.4900 2.1500 1.3400 7 
+SOS (Cheng & Prayogo, 2014 ) 6.01878 5.30344 4.49587 3.49896 2.15564 1.33996 5 
+SMA (Zhao et al., 2020 ) 6.017757 5.310892 4.493758 3.501106 2.150159 1.33996 4 
+MFO (Mirjalili, 2015a ) 5.9830 5.3167 4.4973 3.5136 2.1616 1.33998 6 
+AO 5.8881 5.5451 4.3798 3.5973 2.1026 1.3390 1  
+Fig. 
+24.Multiple disc clutch brake problem.  Table 
+ 23 
+Results of the comparative algorithms for solving the multiple disc clutch brake problem.  Algorithm 
+ Optimal values for variables Optimal Ranking  
+x1  x 2  x 3  x 4  x 5  weight  
+TLBO (Rao et al., 2011 ) 70 90 1 810 3 0.313657 6 
+MFO (Bhesdadiya et al., 2018 ) 70 90 1 910 3 0.313656 2 
+NSGA-II (Deb & Srinivasan, 2008 ) 70 90 1.5 1000 3 0.470400 7 
+MVO (Sayed et al., 2018 ) 70 90 1 910 3 0.313656 2 
+WCA (Eskandar et al., 2012 ) 70 90 1 910 3 0.313656 2 
+CMVO (Sayed et al., 2018 ) 70 90 1 910 3 0.313656 2 
+AO 78.4228 98.5674 1 846.8894 2.5294 0.30835 1  
+Fig. 
+25.Qualitative results for the multiple disc clutch brake problem.  L. Abualigah et al.                                                                                                                                                                                                                              
+
+Computers & Industrial Engineering 157 (2021) 107250
+36CRediT authorship contribution statement 
+Laith Abualigah: Supervision, Conceptualization, Methodology, 
+Software, Investigation, Validation, Writing - original draft. Dalia 
+Yousri: Writing - original draft, Visualization, Investigation. Mohamed 
+Abd Elaziz: Writing - original draft, Visualization, Investigation. 
+Mohammed A.A. Al-qaness: Writing - original draft, Visualization, 
+Investigation. Amir H. Gandomi: Writing - review & editing. 
+Acknowledgment 
+This project was supported financially by the Academy of Scientific 
+Research and Technology (ASRT), Egypt, Grant 6619. 
+References Abedinpourshotorban, 
+ H., Shamsuddin, S. M., Beheshti, Z., & Jawawi, D. N. (2016). 
+Electromagnetic field optimization: A physics-inspired metaheuristic optimization 
+algorithm. Swarm and Evolutionary Computation, 26, 8–22. 
+Abualigah, L. (2020a). Group search optimizer: A nature-inspired meta-heuristic 
+optimization algorithm with its results, variants, and applications. Neural Computing 
+and Applications , 1–24. 
+Abualigah, L. (2020b). Multi-verse optimizer algorithm: A comprehensive survey of its 
+results, variants, and applications. Neural Computing and Applications , 1–21. 
+Abualigah, L., & Diabat, A. (2020). A comprehensive survey of the grasshopper 
+optimization algorithm: Results, variants, and applications. Neural Computing and 
+Applications , 1–24. 
+Abualigah, L., & Diabat, A. (2021). Advances in sine cosine algorithm: A comprehensive 
+survey. Artificial Intelligence Review , 1–42. 
+Abualigah, L., Diabat, A., & Geem, Z. W. (2020). A comprehensive survey of the harmony 
+search algorithm in clustering applications. Applied Sciences, 10(11), 3827 . 
+Abualigah, L., Diabat, A., Mirjalili, S., Abd Elaziz, M., & Gandomi, A. H. (2021). The 
+arithmetic optimization algorithm. Computer Methods in Applied Mechanics and 
+Engineering, 376, 113609 . 
+Abualigah, L. M., Khader, A. T., & Hanandeh, E. S. (2018). A new feature selection 
+method to improve the document clustering using particle swarm optimization 
+algorithm. Journal of Computational Science, 25, 456–466. 
+Abualigah, L., Shehab, M., Alshinwan, M., & Alabool, H. (2019). Salp swarm algorithm: A 
+comprehensive survey. Neural Computing and Applications , 1–21. 
+Abualigah, L., Shehab, M., Alshinwan, M., Alabool, H., Abuaddous, H. Y., 
+Khasawneh, A. M., & Khasawneh, A. M. (2020). Ts-gwo: Iot tasks scheduling in cloud 
+computing using grey wolf optimizer. In Swarm Intelligence for Cloud Computing (pp. 
+127–152). Chapman and Hall/CRC .  
+Abualigah, L., Shehab, M., Alshinwan, M., Mirjalili, S., & Abd Elaziz, M. (2020). Ant lion 
+optimizer: A comprehensive survey of its variants and applications. Archives of 
+Computational Methods in Engineering . 
+Akhtar, S., Tai, K., & Ray, T. (2002). A socio-behavioural simulation model for 
+engineering design optimization. Engineering Optimization, 34(4), 341–354. 
+Al-Qaness, M. A., Ewees, A. A., Fan, H., Abualigah, L., & Abd Elaziz, M. (2020). Marine 
+predators algorithm for forecasting confirmed cases of covid-19 in Italy, Usa, Iran 
+and Korea. International Journal of Environmental Research and Public Health, 17(10), 
+3520 . 
+Arora, J. S. (2004). Introduction to optimum design . Elsevier .  
+Baykaso ˚glu, A., & Ozsoydan, F. B. (2015). Adaptive firefly algorithm with chaos for 
+mechanical design optimization problems. Applied Soft Computing, 36, 152–164. 
+Bharathi, C., Rekha, D., & Vijayakumar, V. (2017). Genetic algorithm based demand side 
+management for smart grid. Wireless Personal Communications, 93(2), 481–502. 
+Bhesdadiya, R., Trivedi, I. N., Jangir, P., & Jangir, N. (2018). Moth-flame optimizer 
+method for solving constrained engineering optimization problems. In Advances in 
+Computer and Computational Sciences (pp. 61–68). Springer .  
+Carnie, S. K. (1954). Food habits of nesting golden eagles in the coast ranges of 
+california. The Condor, 56(1), 3–12. 
+Cheng, M.-Y., & Prayogo, D. (2014). Symbiotic organisms search: A new metaheuristic 
+optimization algorithm. Computers & Structures, 139, 98–112. 
+Cheraghalipour, A., Hajiaghaei-Keshteli, M., & Paydar, M. M. (2018). Tree growth 
+algorithm (tga): A novel approach for solving optimization problems. Engineering 
+Applications of Artificial Intelligence, 72, 393–414. 
+Chickermane, H., & Gea, H. (1996). Structural optimization using a new local 
+approximation method. International Journal for Numerical Methods in Engineering, 39 
+(5), 829–846. 
+Coello, C. A. C. (2000). Use of a self-adaptive penalty approach for engineering 
+optimization problems. Computers in Industry, 41(2), 113–127. 
+Deb, K. (1991). Optimal design of a welded beam via genetic algorithms. AIAA Journal, 
+29(11), 2013 –2015 . 
+Deb, K., & Srinivasan, A. (2008). Innovization: Discovery of innovative design principles 
+through multiobjective evolutionary optimization. In Multiobjective problem solving 
+from nature (pp. 243–262). Springer .  
+Dekker, D. (1985). Hunting behavior of golden eagles, aquila-chrysaetos, migrating in 
+southwestern alberta. 
+Dhiman, G., & Kumar, V. (2018). Emperor penguin optimizer: A bio-inspired algorithm 
+for engineering problems. Knowledge-Based Systems, 159, 20–50. Dorigo, M., Birattari, M., & Stutzle, T. (2006). Ant colony optimization. IEEE 
+Computational Intelligence Magazine, 1(4), 28–39. 
+Dorigo, M., Maniezzo, V., & Colorni, A. (1996). Ant system: optimization by a colony of 
+cooperating agents. IEEE Transactions on Systems, Man, and Cybernetics, Part B 
+(Cybernetics), 26(1), 29–41. 
+Eberhart, R., & Kennedy, J. (1995). A new optimizer using particle swarm theory. In 
+MHS ’95. Proceedings of the Sixth International Symposium on Micro Machine and 
+Human Science (pp. 39–43). IEEE.  
+Elaziz, M. A., Oliva, D., & Xiong, S. (2017). An improved opposition-based sine cosine 
+algorithm for global optimization. Expert Systems with Applications, 90, 484–500. 
+Elsheikh, A., & Abd Elaziz, M. (2019). Review on applications of particle swarm 
+optimization in solar energy systems. International Journal of Environmental Science 
+and Technology, 16(2), 1159 –1170 . 
+Erol, O. K., & Eksin, I. (2006). A new optimization method: Big bang –big crunch. 
+Advances in Engineering Software, 37(2), 106–111. 
+Eskandar, H., Sadollah, A., Bahreininejad, A., & Hamdi, M. (2012). Water cycle 
+algorithm –A novel metaheuristic optimization method for solving constrained 
+engineering optimization problems. Computers & Structures, 110, 151–166. 
+Faramarzi, A., Heidarinejad, M., Mirjalili, S., & Gandomi, A. H. (2020). Marine predators 
+algorithm: A nature-inspired metaheuristic. Expert Systems with Applications, 113377 . 
+Faramarzi, A., Heidarinejad, M., Stephens, B., & Mirjalili, S. (2020). Equilibrium 
+optimizer: A novel optimization algorithm. Knowledge-Based Systems, 191, 105190 . 
+Formato, R. A. (2007). Central force optimization. Progress In Electromagnetics Research, 
+77, 425–491. 
+Gandomi, A. H., Yang, X.-S., & Alavi, A. H. (2013). Cuckoo search algorithm: A 
+metaheuristic approach to solve structural optimization problems. Engineering with 
+Computers, 29(1), 17–35. 
+Geem, Z. W., Kim, J. H., & Loganathan, G. V. (2001). A new heuristic optimization 
+algorithm: harmony search. Simulation, 76(2), 60–68. 
+Hajipour, V., Kheirkhah, A., Tavana, M., & Absi, N. (2015). Novel pareto-based meta- 
+heuristics for solving multi-objective multi-item capacitated lot-sizing problems. The 
+International Journal of Advanced Manufacturing Technology, 80(1), 31–45. 
+Hajipour, V., Mehdizadeh, E., & Tavakkoli-Moghaddam, R. (2014). A novel pareto-based 
+multi-objective vibration damping optimization algorithm to solve multi-objective 
+optimization problems. Scientia Iranica. Transaction E, Industrial Engineering, 21(6), 
+2368 . 
+Hashim, F. A., Houssein, E. H., Mabrouk, M. S., Al-Atabany, W., & Mirjalili, S. (2019). 
+Henry gas solubility optimization: A novel physics-based algorithm. Future 
+Generation Computer Systems, 101, 646–667. 
+Hatch, D. R. (1968). Golden eagle hunting tactics. Blue Jay, 26(2). 
+He, Q., & Wang, L. (2007a). An effective co-evolutionary particle swarm optimization for 
+constrained engineering design problems. Engineering Applications of Artificial 
+Intelligence, 20(1), 89–99. 
+He, Q., & Wang, L. (2007b). A hybrid particle swarm optimization with a feasibility- 
+based rule for constrained optimization. Applied Mathematics and Computation, 186 
+(2), 1407 –1422 . 
+Ho, N. L., Dao, T.-P., Le Chau, N., & Huang, S.-C. (2019). Multi-objective optimization 
+design of a compliant microgripper based on hybrid teaching learning-based 
+optimization algorithm. Microsystem Technologies, 25(5), 2067 –2083 . 
+Holland, J. H. (1992). Genetic algorithms. Scientific American, 267(1), 66–73. 
+Huang, F.-Z., Wang, L., & He, Q. (2007). An effective co-evolutionary differential 
+evolution for constrained optimization. Applied Mathematics and Computation, 186 
+(1), 340–356. 
+Jain, M., Singh, V., & Rani, A. (2019). A novel nature-inspired algorithm for 
+optimization: Squirrel search algorithm. Swarm and Evolutionary Computation, 44, 
+148–175. 
+Kamboj, V. K., Nandi, A., Bhadoria, A., & Sehgal, S. (2020). An intensify harris hawks 
+optimizer for numerical and engineering optimization problems. Applied Soft 
+Computing, 89, 106018 . 
+Karaboga, D., & Basturk, B. (2007). A powerful and efficient algorithm for numerical 
+function optimization: Artificial bee colony (abc) algorithm. Journal of Global 
+Optimization, 39(3), 459–471. 
+Kaveh, A., & Dadras, A. (2017). A novel meta-heuristic optimization algorithm: Thermal 
+exchange optimization. Advances in Engineering Software, 110, 69–84. 
+Kaveh, A., & Khayatazad, M. (2012). A new meta-heuristic method: Ray optimization. 
+Computers & Structures, 112, 283–294. 
+Kaveh, A., & Talatahari, S. (2010a). An improved ant colony optimization for constrained 
+engineering design problems. Engineering Computations, 27(1), 155–182. 
+Kaveh, A., & Talatahari, S. (2010b). A novel heuristic optimization method: Charged 
+system search. Acta Mechanica, 213(3–4), 267–289. 
+Kumar, M., Kulkarni, A. J., & Satapathy, S. C. (2018). Socio evolution & learning 
+optimization algorithm: A socio-inspired optimization methodology. Future 
+Generation Computer Systems, 81, 252–272. 
+Lee, K. S., & Geem, Z. W. (2005). A new meta-heuristic algorithm for continuous 
+engineering optimization: harmony search theory and practice. Computer Methods in 
+Applied Mechanics and Engineering, 194(36–38), 3902 –3933 . 
+Liu, H., Cai, Z., & Wang, Y. (2010). Hybridizing particle swarm optimization with 
+differential evolution for constrained numerical and engineering optimization. 
+Applied Soft Computing, 10(2), 629–640. 
+Lu, S., & Kim, H. M. (2010). A regularized inexact penalty decomposition algorithm for 
+multidisciplinary design optimization problems with complementarity constraints. 
+Journal of Mechanical Design, 132(4). 
+Mahdavi, M., Fesanghary, M., & Damangir, E. (2007). An improved harmony search 
+algorithm for solving optimization problems. Applied Mathematics and Computation, 
+188(2), 1567 –1579 . L. Abualigah et al.                                                                                                                                                                                                                              
+
+Computers & Industrial Engineering 157 (2021) 107250
+37Meinertzhagen, R. (1940). How do larger raptorial birds hunt their prey. Ibis, 4(3), 
+530–535. 
+Mezura-Montes, E., & Coello, C. A. C. (2008). An empirical study about the usefulness of 
+evolution strategies to solve constrained optimization problems. International Journal 
+of General Systems, 37(4), 443–473. 
+Mezura-Montes, E., Coello, C. C., & Landa-Becerra, R. (2003). Engineering optimization 
+using simple evolutionary algorithm, in. In Proceedings. 15th IEEE International 
+Conference on Tools with Artificial Intelligence (pp. 149–156). IEEE.  
+Mirjalili, S. (2015a). Moth-flame optimization algorithm: A novel nature-inspired 
+heuristic paradigm. Knowledge-based Systems, 89, 228–249. 
+Mirjalili, S. (2015b). The ant lion optimizer. Advances in Engineering Software, 83, 80–98. 
+Mirjalili, S. (2016a). Sca: A sine cosine algorithm for solving optimization problems. 
+Knowledge-based Systems, 96, 120–133. 
+Mirjalili, S. (2016b). Dragonfly algorithm: A new meta-heuristic optimization technique 
+for solving single-objective, discrete, and multi-objective problems. Neural 
+Computing and Applications, 27(4), 1053 –1073 . 
+Mirjalili, S., Gandomi, A. H., Mirjalili, S. Z., Saremi, S., Faris, H., & Mirjalili, S. M. (2017). 
+Salp swarm algorithm: A bio-inspired optimizer for engineering design problems. 
+Advances in Engineering Software, 114, 163–191. 
+Mirjalili, S., & Lewis, A. (2016). The whale optimization algorithm. Advances in 
+Engineering Software, 95, 51–67. 
+Mirjalili, S., Mirjalili, S. M., & Hatamlou, A. (2016). Multi-verse optimizer: a nature- 
+inspired algorithm for global optimization. Neural Computing and Applications, 27(2), 
+495–513. 
+Mirjalili, S., Mirjalili, S. M., & Lewis, A. (2014). Grey wolf optimizer. Advances in 
+Engineering Software, 69, 46–61. 
+Moghdani, R., & Salimifard, K. (2018). Volleyball premier league algorithm. Applied Soft 
+Computing, 64, 161–185. 
+Mohammadi-Balani, A., Nayeri, M. D., Azar, A., & Taghizadeh-Yazdi, M. (2021). Golden 
+eagle optimizer: A nature-inspired metaheuristic algorithm. Computers & Industrial 
+Engineering, 152, 107050 . 
+Ragsdell, K., & Phillips, D. (1976). Optimal design of a class of welded structures using 
+geometric programming. 
+Rao, R. V., & Patel, V. (2013). An improved teaching-learning-based optimization 
+algorithm for solving unconstrained optimization problems. Scientia Iranica, 20(3), 
+710–720. 
+Rao, R. V., Savsani, V. J., & Vakharia, D. (2011). Teaching –learning-based optimization: 
+A novel method for constrained mechanical design optimization problems. Computer- 
+Aided Design, 43(3), 303–315. 
+Rao, R. V., Savsani, V. J., & Vakharia, D. (2012). Teaching –learning-based optimization: 
+An optimization method for continuous non-linear large scale problems. Information 
+Sciences, 183(1), 1–15. 
+Rashedi, E., Nezamabadi-Pour, H., & Saryazdi, S. (2009). Gsa: a gravitational search 
+algorithm. Information Sciences, 179(13), 2232 –2248 . 
+Ray, T., & Saini, P. (2001). Engineering design optimization using a swarm with an 
+intelligent information sharing among individuals. Engineering Optimization, 33(6), 
+735–748. 
+Sadollah, A., Bahreininejad, A., Eskandar, H., & Hamdi, M. (2013). Mine blast algorithm: 
+A new population based algorithm for solving constrained engineering optimization 
+problems. Applied Soft Computing, 13(5), 2592 –2612 . Salcedo-Sanz, S. (2016). Modern meta-heuristics based on nonlinear physics processes: A 
+review of models and design procedures. Physics Reports, 655, 1–70. 
+Sandgren, E. (1990). Nonlinear integer and discrete programming in mechanical design 
+optimization. Journal of Mechanical Design, 112(2), 223–229. 
+Saremi, S., Mirjalili, S., & Lewis, A. (2017). Grasshopper optimisation algorithm: theory 
+and application. Advances in Engineering Software, 105, 30–47. 
+Saruhan, H., & Uygur, lI. (2003). Design optimization of mechanical systems using 
+genetic algorithms. Sakarya Üniversitesi Fen Bilimleri Enstitüsü Dergisi, 7(2), 77–84. 
+Sayed, G. I., Darwish, A., & Hassanien, A. E. (2018). A new chaotic multi-verse 
+optimization algorithm for solving engineering optimization problems. Journal of 
+Experimental & Theoretical Artificial Intelligence, 30(2), 293–317. 
+Shang, L., Zhou, Z., & Liu, X. (2016). Particle swarm optimization-based feature selection 
+in sentiment classification. Soft Computing, 20(10), 3821 –3834 . 
+Shehab, M., Abualigah, L., Al Hamad, H., Alabool, H., Alshinwan, M., & 
+Khasawneh, A. M. (2019). Moth –flame optimization algorithm: variants and 
+applications. Neural Computing and Applications , 1–26. 
+Simon, D. (2008). Biogeography-based optimization. IEEE Transactions on Evolutionary 
+Computation, 12(6), 702–713. 
+Steenhof, K., Kochert, M. N., & Mcdonald, T. L. (1997). Interactive effects of prey and 
+weather on golden eagle reproduction. Journal of Animal Ecology , 350–362. 
+Stephen, S., Christu, D., & Dalvi. (2018). Design optimization of weight of speed reducer 
+problem through matlab and simulation using ansys. International Journal of 
+Mechanical Engineering and Technology (IJMET), 9. 
+Storn, R., & Price, K. (1997). Differential evolution –A simple and efficient heuristic for 
+global optimization over continuous spaces. Journal of Global Optimization, 11(4), 
+341–359. 
+Tang, D., Dong, S., Jiang, Y., Li, H., & Huang, Y. (2015). Itgo: Invasive tumor growth 
+optimization algorithm. Applied Soft Computing, 36, 670–698. 
+Watson, J. (2010). The golden eagle. Bloomsbury Publishing .  
+Wu, G. (2016). Across neighborhood search for numerical optimization. Information 
+Sciences, 329, 597–618. 
+Yang, X.-S. (2009). Firefly algorithms for multimodal optimization. In International 
+symposium on stochastic algorithms (pp. 169–178). Springer .  
+Yazdani, M., & Jolai, F. (2016). Lion optimization algorithm (loa): a nature-inspired 
+metaheuristic algorithm. Journal of Computational Design and Engineering, 3(1), 
+24–36. 
+Yildirim, A. E., & Karci, A. (2018). Application of three bar truss problem among 
+engineering design optimization problems using artificial atom algorithm. In 2018 
+International Conference on Artificial Intelligence and Data Processing (IDAP) (pp. 1–5). 
+IEEE.  
+Zhang, M., Luo, W., & Wang, X. (2008). Differential evolution with dynamic stochastic 
+selection for constrained optimization. Information Sciences, 178(15), 3043 –3074 . 
+Zhang, Q., Wang, R., Yang, J., Ding, K., Li, Y., & Hu, J. (2017). Collective decision 
+optimization algorithm: A new heuristic optimization method. Neurocomputing, 221, 
+123–137. 
+Zhao, J., Gao, Z.-M., & Sun, W. (2020). The improved slime mould algorithm with levy 
+flight. In Journal of Physics: Conference Series (Vol. 1617, p. 012033). IOP Publishing .  L. Abualigah et al.                                                                                                                                                                                                                              
