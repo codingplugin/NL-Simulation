@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { soaStep, fitnessFunction as soaFitness, getCentroid as soaCentroid, estimateDistance as soaEstimate, euclideanDistance as soaEuclidean } from './optimizations/soa';
 import { aquilaStep, fitnessFunction as aqFitness, getCentroid as aqCentroid, estimateDistance as aqEstimate, euclideanDistance as aqEuclidean } from './optimizations/aq';
 import { dboStep, fitnessFunction as dboFitness, getCentroid as dboCentroid, estimateDistance as dboEstimate, euclideanDistance as dboEuclidean } from './optimizations/dbo';
@@ -64,6 +64,8 @@ export default function App() {
   // Add refs for chart containers
   const nlaChartRef = useRef();
   const nleChartRef = useRef();
+
+  // Remove darkMode state, useEffect, and toggle button
 
   // Remove or comment out the useEffect that auto-generates nodes on TN/AN change
   // React.useEffect(() => {
@@ -684,6 +686,25 @@ export default function App() {
           </div>
         </div>
       )}
+      {/* Footer */}
+      <footer style={{
+        width: '100%',
+        background: '#f5f5f5',
+        color: '#333',
+        textAlign: 'center',
+        padding: '1rem 0',
+        marginTop: '2rem',
+        fontSize: '1rem',
+        borderTop: '1px solid #e0e0e0',
+        position: 'relative',
+        bottom: 0
+      }}>
+        <div>
+          Developer: <strong>Subhradip Nandi</strong> &nbsp;|
+          &nbsp;Email: <a href="mailto:nandisubhradip01@gmail.com">nandisubhradip01@gmail.com</a> &nbsp;|
+          &nbsp;GitHub: <a href="https://github.com/codingplugin" target="_blank" rel="noopener noreferrer">@codingplugin</a>
+        </div>
+      </footer>
     </div>
   );
 } 

@@ -1,1 +1,5 @@
 ./env/Scripts/activate && npm run dev
+
+   git add .
+   git commit -m "Done fixing download and line graphs"
+   git push
