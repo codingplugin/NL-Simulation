@@ -7,6 +7,8 @@ import { chimpStep, fitnessFunction as chimpFitness, getCentroid as chimpCentroi
 import { BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid, ResponsiveContainer, LineChart, Line, Legend } from 'recharts';
 import Papa from 'papaparse';
 import './index.css'; // Ensure global styles are loaded
+import * as XLSX from 'xlsx';
+import html2canvas from 'html2canvas';
 
 const AREA_SIZE = 200;
 const VISUAL_SCALE = 2; // Make figures smaller for side-by-side
@@ -57,6 +59,11 @@ export default function App() {
   const [showAnalysis, setShowAnalysis] = useState(false);
   const [iterationResults, setIterationResults] = useState([]);
   const isMobile = typeof window !== 'undefined' && window.innerWidth <= 700;
+  // Add state for expanded graph modal
+  const [expandedGraph, setExpandedGraph] = useState(null); // 'nla', 'nle', or null
+  // Add refs for chart containers
+  const nlaChartRef = useRef();
+  const nleChartRef = useRef();
 
   // Remove or comment out the useEffect that auto-generates nodes on TN/AN change
   // React.useEffect(() => {
@@ -336,6 +343,40 @@ export default function App() {
     setLocalizableTNs(localizable);
   };
 
+  const downloadExcel = () => {
+    // Prepare data: add technique as a header row
+    const techniqueLabel = OPTIMIZATION_TECHNIQUES.find(opt => opt.value === technique)?.label || technique;
+    const header = [[`Optimization Technique: ${techniqueLabel}`]];
+    const columns = [['Iteration', 'NLA', 'NLE (m)', 'NLT (s)']];
+    const data = iterationResults.map(r => [r.iter + 1, r.nla, r.nle, r.nlt]);
+    const wsData = [...header, ...columns, ...data];
+    const ws = XLSX.utils.aoa_to_sheet(wsData);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Summary');
+    XLSX.writeFile(wb, `localization_summary_${technique}.xlsx`);
+  };
+
+  // Download handler for NLA
+  const handleDownloadNLA = async () => {
+    if (nlaChartRef.current) {
+      const canvas = await html2canvas(nlaChartRef.current, { backgroundColor: '#fff', useCORS: true });
+      const link = document.createElement('a');
+      link.download = 'NLA_vs_Iteration.png';
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+    }
+  };
+  // Download handler for NLE
+  const handleDownloadNLE = async () => {
+    if (nleChartRef.current) {
+      const canvas = await html2canvas(nleChartRef.current, { backgroundColor: '#fff', useCORS: true });
+      const link = document.createElement('a');
+      link.download = 'NLE_vs_Iteration.png';
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+    }
+  };
+
   return (
     <div className="container">
       <h1>Swarm Node Localization Simulation</h1>
@@ -543,37 +584,54 @@ export default function App() {
             <div style={{ flex: 1, minHeight: 0, maxHeight: window.innerWidth <= 700 ? '60vh' : '60vh', overflowY: 'auto', border: '1.5px solid #b0bec5', borderRadius: 8, padding: 16, background: '#f8fafc' }}>
               <div style={{ display: 'flex', flexDirection: 'row', gap: 32, justifyContent: 'center', alignItems: 'flex-start', flexWrap: 'wrap' }}>
                 {/* Line Chart: NLA vs Iteration */}
-                <div style={{ minWidth: 260, height: 220 }}>
+                <div style={{ minWidth: 260, height: 220, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                   <div style={{ textAlign: 'center', fontWeight: 500, marginBottom: 6 }}>Localized TNs vs Iteration (NLA)</div>
-                  <ResponsiveContainer width="100%" height={180}>
-                    <LineChart data={iterationResults.map(r => ({ iter: r.iter + 1, nla: Number(r.nla) }))}> 
-                      <CartesianGrid strokeDasharray="3 3" />
-                      <XAxis dataKey="iter" label={{ value: 'Iteration', position: 'insideBottomRight', offset: -5 }} allowDecimals={false} />
-                      <YAxis label={{ value: 'NLA', angle: -90, position: 'insideLeft' }} allowDecimals={false} />
-                      <Tooltip />
-                      <Legend />
-                      <Line type="monotone" dataKey="nla" stroke="#43a047" activeDot={{ r: 8 }} />
-                    </LineChart>
-                  </ResponsiveContainer>
+                  <div ref={nlaChartRef} style={{ width: '100%' }}>
+                    <ResponsiveContainer width="100%" height={180}>
+                      <LineChart data={iterationResults.map(r => ({ iter: r.iter + 1, nla: Number(r.nla) }))}>
+                        <CartesianGrid strokeDasharray="3 3" />
+                        <XAxis dataKey="iter" label={{ value: 'Iteration', position: 'insideBottomRight', offset: -5 }} allowDecimals={false} />
+                        <YAxis label={{ value: 'NLA', angle: -90, position: 'insideLeft' }} allowDecimals={false} />
+                        <Tooltip />
+                        <Legend />
+                        <Line dataKey="nla" stroke="#43a047" dot={false} strokeWidth={2} connectNulls={true} />
+                      </LineChart>
+                    </ResponsiveContainer>
+                  </div>
+                  <div style={{ display: 'flex', gap: 8, marginTop: 6 }}>
+                    <button style={{ fontSize: 13, padding: '2px 10px', borderRadius: 5, background: '#1976d2', color: '#fff', border: 'none', cursor: 'pointer' }} onClick={() => setExpandedGraph('nla')}>Expand</button>
+                    <button style={{ fontSize: 13, padding: '2px 10px', borderRadius: 5, background: '#43a047', color: '#fff', border: 'none', cursor: 'pointer' }} onClick={handleDownloadNLA}>Download</button>
+                  </div>
                 </div>
                 {/* Line Chart: NLE vs Iteration */}
-                <div style={{ minWidth: 260, height: 220 }}>
+                <div style={{ minWidth: 260, height: 220, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                   <div style={{ textAlign: 'center', fontWeight: 500, marginBottom: 6 }}>Localization Error vs Iteration (NLE)</div>
-                  <ResponsiveContainer width="100%" height={180}>
-                    <LineChart data={iterationResults.map(r => ({ iter: r.iter + 1, nle: Number(r.nle) }))}> 
-                      <CartesianGrid strokeDasharray="3 3" />
-                      <XAxis dataKey="iter" label={{ value: 'Iteration', position: 'insideBottomRight', offset: -5 }} allowDecimals={false} />
-                      <YAxis label={{ value: 'NLE (m)', angle: -90, position: 'insideLeft' }} />
-                      <Tooltip />
-                      <Legend />
-                      <Line type="monotone" dataKey="nle" stroke="#1976d2" activeDot={{ r: 8 }} />
-                    </LineChart>
-                  </ResponsiveContainer>
+                  <div ref={nleChartRef} style={{ width: '100%' }}>
+                    <ResponsiveContainer width="100%" height={180}>
+                      <LineChart data={iterationResults.map(r => ({ iter: r.iter + 1, nle: Number(r.nle) }))}>
+                        <CartesianGrid strokeDasharray="3 3" />
+                        <XAxis dataKey="iter" label={{ value: 'Iteration', position: 'insideBottomRight', offset: -5 }} allowDecimals={false} />
+                        <YAxis label={{ value: 'NLE (m)', angle: -90, position: 'insideLeft' }} />
+                        <Tooltip />
+                        <Legend />
+                        <Line dataKey="nle" stroke="#1976d2" dot={false} strokeWidth={2} connectNulls={true} />
+                      </LineChart>
+                    </ResponsiveContainer>
+                  </div>
+                  <div style={{ display: 'flex', gap: 8, marginTop: 6 }}>
+                    <button style={{ fontSize: 13, padding: '2px 10px', borderRadius: 5, background: '#1976d2', color: '#fff', border: 'none', cursor: 'pointer' }} onClick={() => setExpandedGraph('nle')}>Expand</button>
+                    <button style={{ fontSize: 13, padding: '2px 10px', borderRadius: 5, background: '#43a047', color: '#fff', border: 'none', cursor: 'pointer' }} onClick={handleDownloadNLE}>Download</button>
+                  </div>
                 </div>
               </div>
               {/* Results Table */}
               <div style={{ marginTop: 24 }}>
-                <div style={{ fontWeight: 500, marginBottom: 8 }}>Summary Table (per iteration)</div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
+                  <div style={{ fontWeight: 500 }}>Summary Table (per iteration)</div>
+                  <button onClick={downloadExcel} style={{ background: '#43a047', color: '#fff', fontWeight: 500, borderRadius: 4, padding: '1px 7px', border: 'none', cursor: 'pointer', fontSize: 11, height: 22, minWidth: 0 }}>
+                    Download as Excel
+                  </button>
+                </div>
                 <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 15 }}>
                   <thead>
                     <tr style={{ background: '#f5f5f5' }}>
@@ -596,6 +654,33 @@ export default function App() {
                 </table>
               </div>
             </div>
+          </div>
+        </div>
+      )}
+      {/* Expanded Graph Modal */}
+      {expandedGraph && (
+        <div style={{
+          position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', background: 'rgba(0,0,0,0.35)', zIndex: 2000, display: 'flex', alignItems: 'center', justifyContent: 'center',
+        }}>
+          <div style={{ background: '#fff', borderRadius: 12, boxShadow: '0 4px 24px 0 rgba(0,0,0,0.18)', padding: 24, minWidth: 400, minHeight: 320, maxWidth: '90vw', maxHeight: '90vh', overflow: 'auto', position: 'relative', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+            <button onClick={() => setExpandedGraph(null)} style={{ position: 'absolute', top: 12, right: 16, background: '#e53935', color: '#fff', borderRadius: 6, border: 'none', fontWeight: 700, fontSize: 18, width: 32, height: 32, cursor: 'pointer' }}>×</button>
+            <div style={{ fontWeight: 600, fontSize: 18, marginBottom: 12 }}>
+              {expandedGraph === 'nla' ? 'Localized TNs vs Iteration (NLA)' : 'Localization Error vs Iteration (NLE)'}
+            </div>
+            <ResponsiveContainer width={window.innerWidth > 700 ? 700 : '98vw'} height={window.innerWidth > 700 ? 420 : 320}>
+              <LineChart data={expandedGraph === 'nla' ? iterationResults.map(r => ({ iter: r.iter + 1, nla: Number(r.nla) })) : iterationResults.map(r => ({ iter: r.iter + 1, nle: Number(r.nle) }))}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="iter" label={{ value: 'Iteration', position: 'insideBottomRight', offset: -5 }} allowDecimals={false} />
+                <YAxis label={{ value: expandedGraph === 'nla' ? 'NLA' : 'NLE (m)', angle: -90, position: 'insideLeft' }} allowDecimals={expandedGraph === 'nla'} />
+                <Tooltip />
+                <Legend />
+                {expandedGraph === 'nla' ? (
+                  <Line dataKey="nla" stroke="#43a047" dot={false} strokeWidth={2} connectNulls={true} />
+                ) : (
+                  <Line dataKey="nle" stroke="#1976d2" dot={false} strokeWidth={2} connectNulls={true} />
+                )}
+              </LineChart>
+            </ResponsiveContainer>
           </div>
         </div>
       )}
