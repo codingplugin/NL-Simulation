@@ -381,7 +381,9 @@ export default function App() {
 
   return (
     <div className="container">
-      <h1>Swarm Node Localization Simulation</h1>
+      <div style={{ background: '#e3f2fd', padding: '12px 0 8px 0', borderRadius: 12, margin: '0 0 18px 0', width: '100%', boxShadow: '0 2px 8px 0 rgba(33,150,243,0.07)', whiteSpace: 'nowrap', overflowX: 'auto', textAlign: 'center' }}>
+        <h1 style={{ margin: 0, textAlign: 'center', fontWeight: 700, letterSpacing: 0.5, fontSize: 'clamp(1.1rem, 3vw, 2.1rem)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>Swarm Node Localization Simulation</h1>
+      </div>
       {/* Optimization Technique Selector */}
       <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: 12, marginBottom: 8 }}>
         <label style={{ fontWeight: 600, marginRight: 8 }}>Optimization Technique:</label>
@@ -689,8 +691,8 @@ export default function App() {
       {/* Footer */}
       <footer style={{
         width: '100%',
-        background: '#f5f5f5',
-        color: '#333',
+        background: '#e3f2fd',
+        color: '#4a5a6a',
         textAlign: 'center',
         padding: '1rem 0',
         marginTop: '2rem',
