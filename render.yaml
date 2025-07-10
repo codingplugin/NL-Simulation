@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: nl-simulation
+    env: static
+    buildCommand: npm install && npm run build
+    staticPublishPath: ./dist
+    envVars:
+      - key: NODE_VERSION
+        value: 18.0.0
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html 
