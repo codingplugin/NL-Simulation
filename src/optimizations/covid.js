@@ -9,8 +9,16 @@ export function euclideanDistance(p1, p2) {
   return Math.sqrt((p1[0] - p2[0]) ** 2 + (p1[1] - p2[1]) ** 2);
 }
 
+// Add Gaussian random function
+function gaussianRandom(mean = 0, stddev = 1) {
+  let u = 0, v = 0;
+  while(u === 0) u = Math.random();
+  while(v === 0) v = Math.random();
+  return mean + stddev * Math.sqrt(-2.0 * Math.log(u)) * Math.cos(2.0 * Math.PI * v);
+}
+
 export function estimateDistance(actualDist, noiseFactor) {
-  const noise = (Math.random() * 2 - 1) * actualDist * noiseFactor;
+  const noise = gaussianRandom(0, actualDist * noiseFactor);
   return actualDist + noise;
 }
 

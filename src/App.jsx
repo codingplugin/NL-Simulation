@@ -9,6 +9,8 @@ import Papa from 'papaparse';
 import './index.css'; // Ensure global styles are loaded
 import * as XLSX from 'xlsx';
 import html2canvas from 'html2canvas';
+import seedrandom from 'seedrandom';
+seedrandom('your-fixed-seed', { global: true }); // Use a string or number as your seed
 
 const AREA_SIZE = 200;
 const VISUAL_SCALE = 2; // Make figures smaller for side-by-side
@@ -25,8 +27,8 @@ const POP_SIZE = 20;
 const MAX_ITER = 50;
 const FC = 2;
 const TRANSMISSION_RANGE = 30;
-const NOISE_FACTOR = 0.1;
-const LOCALIZATION_THRESHOLD = 2.5; // Mark as localized if best fitness < threshold
+const NOISE_FACTOR = 0.01;
+const LOCALIZATION_THRESHOLD = 1.5; // Mark as localized if best fitness < threshold
 
 function getRandomNodes(count) {
   return Array.from({ length: count }, () => [
@@ -53,8 +55,8 @@ export default function App() {
   const [localizableTNs, setLocalizableTNs] = useState([]);
   const [popSize, setPopSize] = useState(20);
   const [maxIter, setMaxIter] = useState(50);
-  const [localizationThreshold, setLocalizationThreshold] = useState(2.5);
-  const [noiseFactor, setNoiseFactor] = useState(0.1);
+  const [localizationThreshold, setLocalizationThreshold] = useState(1.5);
+  const [noiseFactor, setNoiseFactor] = useState(0.01);
   const [deployed, setDeployed] = useState(false);
   const [showAnalysis, setShowAnalysis] = useState(false);
   const [iterationResults, setIterationResults] = useState([]);
@@ -64,6 +66,7 @@ export default function App() {
   // Add refs for chart containers
   const nlaChartRef = useRef();
   const nleChartRef = useRef();
+  const [allRuns, setAllRuns] = useState([]); // Each run is an array of iterationResults
 
   // Remove darkMode state, useEffect, and toggle button
 
@@ -143,6 +146,7 @@ export default function App() {
   };
 
   const handleRunSimulation = () => {
+    seedrandom('your-fixed-seed', { global: true }); // Reset seed before every run
     setSimStarted(true);
     setIteration(0);
     setPhase('exploration');
@@ -159,11 +163,11 @@ export default function App() {
       }
       const actualDists = validAnchors.map(a => algo.euclidean(target, a));
       const estDists = actualDists.map(d => algo.estimate(d, noiseFactor));
-      // Init population around centroid
+      // Init population around centroid with ±10 offset (match Python)
       const centroid = algo.centroid(validAnchors);
       const pop = Array.from({ length: popSize }, () => [
-        centroid[0] + (Math.random() - 0.5) * 10,
-        centroid[1] + (Math.random() - 0.5) * 10,
+        centroid[0] + (Math.random() - 0.5) * 20,
+        centroid[1] + (Math.random() - 0.5) * 20,
       ]);
       let pBest = pop[0];
       let bestFit = algo.fitness(pBest, validAnchors, estDists);
@@ -289,23 +293,21 @@ export default function App() {
         phase,
       };
     });
-    // Mark localized TNs
+    // Mark localized TNs (error <= threshold)
     const localizedIndices = updatedSwarm
-      .map((s, i) => (s && s.localized ? s.idx : null))
-      .filter((v) => v !== null);
+      .map((s, idx) => (s && !s.localized && algo.fitness(s.pBest, s.anchors, s.estDists) <= localizationThreshold ? idx : null))
+      .filter(idx => idx !== null);
     setSwarm(updatedSwarm);
     setLocalized(localizedIndices);
     setIteration(iter);
     setPhase(iter < maxIter / 2 ? 'exploration' : 'exploitation');
-    // Per-iteration metrics
-    const nla = localizedIndices.length;
+    // Per-iteration metrics (only include TNs with error <= threshold)
+    const localizedSwarm = updatedSwarm.filter((s) => s && algo.fitness(s.pBest, s.anchors, s.estDists) <= localizationThreshold);
+    const nla = localizedSwarm.length;
     let nle = 0;
     let nlt = 0;
     if (nla > 0) {
-      nle =
-        updatedSwarm
-          .filter((s) => s && s.localized)
-          .reduce((acc, s) => acc + getAlgoFns().euclidean(s.pBest, s.target), 0) / nla;
+      nle = localizedSwarm.reduce((acc, s) => acc + algo.euclidean(s.pBest, s.target), 0) / nla;
       nlt = (performance.now() - simStartTime.current) / 1000 / nla;
     }
     setIterationResults(prev => [...prev, { iter, nla, nle: nle.toFixed(3), nlt: nlt.toFixed(3) }]);
@@ -315,6 +317,7 @@ export default function App() {
       updatedSwarm.length > 0
     ) {
       setMetrics({ nla, nle: nle.toFixed(3), nlt: nlt.toFixed(3) });
+      setAllRuns(prev => [...prev, [...prev.length ? iterationResults : [], { iter, nla, nle: nle.toFixed(3), nlt: nlt.toFixed(3) }]]);
     } else if (iter < maxIter - 1 && updatedSwarm.some((s) => s && !s.localized)) {
       animRef.current = requestAnimationFrame(() => animateSOA(updatedSwarm, iter + 1));
     }
@@ -323,7 +326,30 @@ export default function App() {
   // Helper to scale positions and sizes
   const scale = (v) => v * VISUAL_SCALE;
 
-  // Add deployNodes function
+  // Helper to deploy nodes so all TNs are localizable
+  function deployAllLocalizableNodes(tnCount, anCount) {
+    const ans = getRandomNodes(anCount);
+    const tns = [];
+    const maxAttempts = 10000;
+    for (let i = 0; i < tnCount; i++) {
+      let found = false;
+      for (let attempt = 0; attempt < maxAttempts; attempt++) {
+        const candidate = [Math.random() * AREA_SIZE, Math.random() * AREA_SIZE];
+        const dists = ans.map(a => soaEuclidean(candidate, a)); // Use SOA's euclidean for consistency
+        if (dists.filter(d => d <= TRANSMISSION_RANGE).length >= 3) {
+          tns.push(candidate);
+          found = true;
+          break;
+        }
+      }
+      if (!found) {
+        throw new Error('Failed to place a localizable TN after many attempts. Try increasing ANs or area size.');
+      }
+    }
+    return { tns, ans };
+  }
+
+  // Add deployNodes function (random)
   const deployNodes = () => {
     const tns = getRandomNodes(tn);
     const ans = getRandomNodes(an);
@@ -345,13 +371,63 @@ export default function App() {
     setLocalizableTNs(localizable);
   };
 
+  // Add deployAllLocalizable function
+  const deployAllLocalizable = () => {
+    const { tns, ans } = deployAllLocalizableNodes(tn, an);
+    setNodes({ tns, ans });
+    setSimStarted(false);
+    setSwarm([]);
+    setLocalized([]);
+    setIteration(0);
+    setPhase('exploration');
+    setMetrics({ nla: 0, nle: 0, nlt: 0 });
+    setShowLocalizable(false);
+    setDeployed(true);
+    // All TNs are localizable
+    setLocalizableTNs(Array.from({ length: tns.length }, (_, i) => i));
+  };
+
   const downloadExcel = () => {
-    // Prepare data: add technique as a header row
+    // Calculate averages
+    const totalIterations = iterationResults.length;
+    const avgNLA = totalIterations > 0 ? (iterationResults.reduce((sum, r) => sum + Number(r.nla), 0) / totalIterations).toFixed(2) : 0;
+    const avgNLE = totalIterations > 0 ? (iterationResults.reduce((sum, r) => sum + Number(r.nle), 0) / totalIterations).toFixed(3) : 0;
+    const avgNLT = totalIterations > 0 ? (iterationResults.reduce((sum, r) => sum + Number(r.nlt), 0) / totalIterations).toFixed(3) : 0;
+
+    // Prepare data with simulation settings and averages
     const techniqueLabel = OPTIMIZATION_TECHNIQUES.find(opt => opt.value === technique)?.label || technique;
-    const header = [[`Optimization Technique: ${techniqueLabel}`]];
-    const columns = [['Iteration', 'NLA', 'NLE (m)', 'NLT (s)']];
-    const data = iterationResults.map(r => [r.iter + 1, r.nla, r.nle, r.nlt]);
-    const wsData = [...header, ...columns, ...data];
+    
+    // Simulation Settings Section
+    const settingsData = [
+      ['SIMULATION SETTINGS'],
+      ['Optimization Technique:', techniqueLabel],
+      ['Target Nodes (TNs):', tn],
+      ['Anchor Nodes (ANs):', an],
+      ['Population Size:', popSize],
+      ['Maximum Iterations:', maxIter],
+      ['Localization Threshold:', localizationThreshold],
+      ['Noise Factor:', noiseFactor],
+      ['Transmission Range:', TRANSMISSION_RANGE],
+      ['Area Size:', AREA_SIZE],
+      ['', ''], // Empty row for spacing
+    ];
+
+    // Per-Iteration Results Section
+    const resultsHeader = ['PER-ITERATION RESULTS'];
+    const resultsColumns = [['Iteration', 'NLA', 'NLE (m)', 'NLT (s)']];
+    const resultsData = iterationResults.map(r => [r.iter + 1, r.nla, r.nle, r.nlt]);
+
+    // Averages Section
+    const averagesData = [
+      ['', ''], // Empty row for spacing
+      ['AVERAGE RESULTS'],
+      ['Average NLA:', avgNLA],
+      ['Average NLE (m):', avgNLE],
+      ['Average NLT (s):', avgNLT],
+      ['Total Iterations:', totalIterations],
+    ];
+
+    const wsData = [...settingsData, resultsHeader, ...resultsColumns, ...resultsData, ...averagesData];
     const ws = XLSX.utils.aoa_to_sheet(wsData);
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, 'Summary');
@@ -378,6 +454,22 @@ export default function App() {
       link.click();
     }
   };
+
+  const averageResults = React.useMemo(() => {
+    if (allRuns.length === 0) return { avgNLA: 0, avgNLE: 0, avgNLT: 0 };
+    let sumNLA = 0, sumNLE = 0, sumNLT = 0;
+    allRuns.forEach(run => {
+      const last = run[run.length - 1];
+      sumNLA += Number(last.nla);
+      sumNLE += Number(last.nle);
+      sumNLT += Number(last.nlt);
+    });
+    return {
+      avgNLA: (sumNLA / allRuns.length).toFixed(2),
+      avgNLE: (sumNLE / allRuns.length).toFixed(3),
+      avgNLT: (sumNLT / allRuns.length).toFixed(3),
+    };
+  }, [allRuns]);
 
   return (
     <div className="container">
@@ -415,6 +507,9 @@ export default function App() {
                 </select>
               </label>
               <button onClick={deployNodes} style={{ fontWeight: 600, background: '#388e3c', marginTop: 6 }}>
+                Deploy randomly
+              </button>
+              <button onClick={deployAllLocalizable} style={{ fontWeight: 600, background: '#1976d2', marginTop: 6 }}>
                 Deploy
               </button>
             </div>
@@ -453,6 +548,9 @@ export default function App() {
                 </select>
               </label>
               <button onClick={deployNodes} style={{ fontWeight: 600, background: '#388e3c', marginTop: 6 }}>
+                Deploy randomly
+              </button>
+              <button onClick={deployAllLocalizable} style={{ fontWeight: 600, background: '#1976d2', marginTop: 6 }}>
                 Deploy
               </button>
             </div>
@@ -656,6 +754,45 @@ export default function App() {
                     ))}
                   </tbody>
                 </table>
+              </div>
+              {/* Averages Table */}
+              <div style={{ marginTop: 24 }}>
+                <div style={{ fontWeight: 500, marginBottom: 8 }}>Average Results</div>
+                {(() => {
+                  const totalIterations = iterationResults.length;
+                  const avgNLA = totalIterations > 0 ? (iterationResults.reduce((sum, r) => sum + Number(r.nla), 0) / totalIterations).toFixed(2) : 0;
+                  const avgNLE = totalIterations > 0 ? (iterationResults.reduce((sum, r) => sum + Number(r.nle), 0) / totalIterations).toFixed(3) : 0;
+                  const avgNLT = totalIterations > 0 ? (iterationResults.reduce((sum, r) => sum + Number(r.nlt), 0) / totalIterations).toFixed(3) : 0;
+                  
+                  return (
+                    <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 15 }}>
+                      <thead>
+                        <tr style={{ background: '#f5f5f5' }}>
+                          <th style={{ border: '1px solid #b0bec5', padding: '6px 12px' }}>Metric</th>
+                          <th style={{ border: '1px solid #b0bec5', padding: '6px 12px' }}>Average Value</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td style={{ border: '1px solid #b0bec5', padding: '6px 12px' }}>Average NLA</td>
+                          <td style={{ border: '1px solid #b0bec5', padding: '6px 12px' }}>{avgNLA}</td>
+                        </tr>
+                        <tr>
+                          <td style={{ border: '1px solid #b0bec5', padding: '6px 12px' }}>Average NLE (m)</td>
+                          <td style={{ border: '1px solid #b0bec5', padding: '6px 12px' }}>{avgNLE}</td>
+                        </tr>
+                        <tr>
+                          <td style={{ border: '1px solid #b0bec5', padding: '6px 12px' }}>Average NLT (s)</td>
+                          <td style={{ border: '1px solid #b0bec5', padding: '6px 12px' }}>{avgNLT}</td>
+                        </tr>
+                        <tr>
+                          <td style={{ border: '1px solid #b0bec5', padding: '6px 12px' }}>Total Iterations</td>
+                          <td style={{ border: '1px solid #b0bec5', padding: '6px 12px' }}>{totalIterations}</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  );
+                })()}
               </div>
             </div>
           </div>

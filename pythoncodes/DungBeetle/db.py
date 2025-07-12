@@ -13,8 +13,9 @@ FC = 2  # Frequency-controlled parameter (kept for compatibility, not used in DB
 MAX_ITERATIONS = [20, 40, 60, 80, 100]
 TARGET_NODES = [25, 50, 75, 100, 125, 150]
 ANCHOR_NODES = [15, 30, 45, 60, 75, 90]  # Per Table 4
-NOISE_FACTOR = 0.1  # Noise in distance estimation (Section 5.2)
+NOISE_FACTOR = 0.01  # Noise in distance estimation (Section 5.2)
 POPULATION_SIZE = 50  # Dung beetle population size (default)
+THRESHOLD = 1.5  # Only count TN as localized if error <= 1.5
 
 def initialize_nodes(num_tn, num_an, area_size):
     """Randomly deploy target and anchor nodes in the area (Section 5.1)."""
@@ -22,8 +23,27 @@ def initialize_nodes(num_tn, num_an, area_size):
     anchor_nodes = np.random.uniform(0, area_size, (num_an, 2))
     return target_nodes, anchor_nodes
 
+def initialize_nodes_all_localizable(num_tn, num_an, area_size, transmission_range):
+    """Deploy anchor nodes randomly, then deploy TNs so all are localizable."""
+    anchor_nodes = np.random.uniform(0, area_size, (num_an, 2))
+    target_nodes = []
+    max_attempts = 10000
+    for _ in range(num_tn):
+        for attempt in range(max_attempts):
+            candidate = np.random.uniform(0, area_size, 2)
+            dists = np.linalg.norm(anchor_nodes - candidate, axis=1)
+            if np.sum(dists <= transmission_range) >= 3:
+                target_nodes.append(candidate)
+                break
+        else:
+            raise RuntimeError("Failed to place a localizable TN after many attempts. Try increasing ANs or area size.")
+    return np.array(target_nodes), anchor_nodes
+
 def euclidean_distance(p1, p2):
-    """Calculate Euclidean distance between two points."""
+    p1 = np.asarray(p1).flatten()
+    p2 = np.asarray(p2).flatten()
+    if p1.shape[0] != 2 or p2.shape[0] != 2:
+        raise ValueError(f"euclidean_distance expects 2D points, got p1={p1}, p2={p2}")
     return np.sqrt((p1[0] - p2[0])**2 + (p1[1] - p2[1])**2)
 
 def estimate_distance(actual_dist, noise_factor):
@@ -144,7 +164,9 @@ def dbo_optimization(target_pos, anchor_nodes, estimated_distances, max_iter, ar
 
 def node_localization(num_tn, num_an, max_iter, area_size, noise_factor, transmission_range, population_size, fc, collect_positions=False):
     """Perform node localization and collect positions for plotting (Section 5)."""
-    target_nodes, anchor_nodes = initialize_nodes(num_tn, num_an, area_size)
+    target_nodes, anchor_nodes = initialize_nodes_all_localizable(
+        num_tn, num_an, area_size, transmission_range
+    )
     localized_nodes = 0
     total_error = 0
     start_time = time.time()
@@ -166,12 +188,13 @@ def node_localization(num_tn, num_an, max_iter, area_size, noise_factor, transmi
             estimated_pos, _ = dbo_optimization(tn, anchors, estimated_dists, max_iter, area_size, population_size, fc)
             
             error = euclidean_distance(tn, estimated_pos)
-            total_error += error
-            localized_nodes += 1
-            
-            if collect_positions:
-                actual_positions.append(tn)
-                est_positions.append(estimated_pos)
+            if error <= THRESHOLD:
+                total_error += error
+                localized_nodes += 1
+                
+                if collect_positions:
+                    actual_positions.append(tn)
+                    est_positions.append(estimated_pos)
         elif collect_positions:
             unlocalized_positions.append(tn)
     
@@ -197,11 +220,30 @@ def plot_average_deployment(positions_list, area_size, tn, an, anl_a):
         actual_positions_all.extend(actual_pos)
         est_positions_all.extend(est_pos)
     
-    # Select ANL_A localized nodes
-    if len(actual_positions_all) > anl_a:
-        indices = np.random.choice(len(actual_positions_all), size=anl_a, replace=False)
+    # Filter out any points that are not 2D
+    actual_positions_all = [p for p in actual_positions_all if isinstance(p, (list, np.ndarray)) and len(p) == 2]
+    est_positions_all = [p for p in est_positions_all if isinstance(p, (list, np.ndarray)) and len(p) == 2]
+    
+    # Ensure lists have the same length
+    min_length = min(len(actual_positions_all), len(est_positions_all))
+    if min_length == 0:
+        print(f"Warning: No valid positions to plot for TN={tn}, AN={an}, ANL_A={anl_a}")
+        return
+    
+    actual_positions_all = actual_positions_all[:min_length]
+    est_positions_all = est_positions_all[:min_length]
+    
+    # Select up to ANL_A localized nodes
+    if min_length >= anl_a and anl_a > 0:
+        indices = np.random.choice(min_length, size=anl_a, replace=False)
         actual_positions_all = [actual_positions_all[i] for i in indices]
         est_positions_all = [est_positions_all[i] for i in indices]
+    elif min_length > 0:
+        print(f"Warning: Only {min_length} positions available for TN={tn}, AN={an}, requested ANL_A={anl_a}")
+        anl_a = min_length  # Use all available points
+    else:
+        print(f"Warning: No positions to plot after filtering for TN={tn}, AN={an}, ANL_A={anl_a}")
+        return
     
     # Plot
     plt.figure(figsize=(8, 8))

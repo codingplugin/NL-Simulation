@@ -14,14 +14,31 @@ FC = 2  # Frequency-controlled parameter (kept as a placeholder, not used in AO)
 MAX_ITERATIONS = [20, 40, 60, 80, 100]
 TARGET_NODES = [25, 50, 75, 100, 125, 150]
 ANCHOR_NODES = [15, 30, 45, 60, 75, 90]  # Per Table 4
-NOISE_FACTOR = 0.1  # Noise in distance estimation (Section 5.2)
+NOISE_FACTOR = 0.01  # Noise in distance estimation (Section 5.2)
 POPULATION_SIZE = 50  # Population size for AO (default)
+THRESHOLD = 1.5  # Only count TN as localized if error <= 1.5
 
 def initialize_nodes(num_tn, num_an, area_size):
     """Randomly deploy target and anchor nodes in the area (Section 5.1)."""
     target_nodes = np.random.uniform(0, area_size, (num_tn, 2))
     anchor_nodes = np.random.uniform(0, area_size, (num_an, 2))
     return target_nodes, anchor_nodes
+
+def initialize_nodes_all_localizable(num_tn, num_an, area_size, transmission_range):
+    """Deploy anchor nodes randomly, then deploy TNs so all are localizable."""
+    anchor_nodes = np.random.uniform(0, area_size, (num_an, 2))
+    target_nodes = []
+    max_attempts = 10000
+    for _ in range(num_tn):
+        for attempt in range(max_attempts):
+            candidate = np.random.uniform(0, area_size, 2)
+            dists = np.linalg.norm(anchor_nodes - candidate, axis=1)
+            if np.sum(dists <= transmission_range) >= 3:
+                target_nodes.append(candidate)
+                break
+        else:
+            raise RuntimeError("Failed to place a localizable TN after many attempts. Try increasing ANs or area size.")
+    return np.array(target_nodes), anchor_nodes
 
 def euclidean_distance(p1, p2):
     """Calculate Euclidean distance between two points."""
@@ -117,7 +134,9 @@ def ao_optimization(target_pos, anchor_nodes, estimated_distances, max_iter, are
 
 def node_localization(num_tn, num_an, max_iter, area_size, noise_factor, transmission_range, population_size, fc, collect_positions=False):
     """Perform node localization and collect positions for plotting (Section 5)."""
-    target_nodes, anchor_nodes = initialize_nodes(num_tn, num_an, area_size)
+    target_nodes, anchor_nodes = initialize_nodes_all_localizable(
+        num_tn, num_an, area_size, transmission_range
+    )
     localized_nodes = 0
     total_error = 0
     start_time = time.time()
@@ -139,12 +158,13 @@ def node_localization(num_tn, num_an, max_iter, area_size, noise_factor, transmi
             estimated_pos, _ = ao_optimization(tn, anchors, estimated_dists, max_iter, area_size, population_size, fc)
             
             error = euclidean_distance(tn, estimated_pos)
-            total_error += error
-            localized_nodes += 1
-            
-            if collect_positions:
-                actual_positions.append(tn)
-                est_positions.append(estimated_pos)
+            if error <= THRESHOLD:
+                total_error += error
+                localized_nodes += 1
+                
+                if collect_positions:
+                    actual_positions.append(tn)
+                    est_positions.append(estimated_pos)
         elif collect_positions:
             unlocalized_positions.append(tn)
     
@@ -168,6 +188,10 @@ def plot_average_deployment(positions_list, area_size, tn, an, anl_a):
         actual_positions_all.extend(actual_pos)
         est_positions_all.extend(est_pos)
     
+    # Filter out any points that are not 2D
+    est_positions_all = [p for p in est_positions_all if isinstance(p, (list, np.ndarray)) and len(p) == 2]
+    actual_positions_all = [p for p in actual_positions_all if isinstance(p, (list, np.ndarray)) and len(p) == 2]
+
     if len(actual_positions_all) > anl_a:
         indices = np.random.choice(len(actual_positions_all), size=anl_a, replace=False)
         actual_positions_all = [actual_positions_all[i] for i in indices]
@@ -221,23 +245,22 @@ def save_table5_to_csv(results):
                 'TN': r['TN'],
                 'AN': r['AN'],
                 'Iterations': r['Iterations'],
-                'NL_E': round(r['NL_E'], 3),
-                'NL_T': round(r['NL_T'], 2),
+                'NL_E (m)': r['NL_E'],
+                'NL_T (s)': r['NL_T'],
                 'NL_A': r['NL_A']
             })
 
 def save_table6_to_csv(table6_data):
-    """Save Table 6 results to a CSV file."""
     with open('table6_results.csv', 'w', newline='') as csvfile:
-        fieldnames = ['TN', 'AN', 'ANL_E (m)', 'ANL_T (s)', 'ANL_A']
+        fieldnames = ['TN', 'AN', 'ANL_E', 'ANL_T', 'ANL_A']  # Match your dict keys
         writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
         writer.writeheader()
         for r in table6_data:
             writer.writerow({
                 'TN': r['TN'],
                 'AN': r['AN'],
-                'ANL_E': round(r['ANL_E'], 3),
-                'ANL_T': round(r['ANL_T'], 2),
+                'ANL_E': r['ANL_E'],
+                'ANL_T': r['ANL_T'],
                 'ANL_A': r['ANL_A']
             })
 

@@ -13,18 +13,35 @@ FC = 2  # Frequency-controlled parameter (not used in COVIDOA)
 MAX_ITERATIONS = [20, 40, 60, 80, 100]
 TARGET_NODES = [25, 50, 75, 100, 125, 150]
 ANCHOR_NODES = [15, 30, 45, 60, 75, 90]  # Per Table 4
-NOISE_FACTOR = 0.1  # Noise in distance estimation (Section 5.2)
+NOISE_FACTOR = 0.01  # Noise in distance estimation (Section 5.2)
 POPULATION_SIZE = 50  # Population size (PopNo in COVIDOA)
 # COVIDOA Parameters (Section 2.3 of the paper)
 MR = 0.1  # Mutation Rate in range [0.1, 0.001]
 NUM_OF_PROTEINS = 2  # Number of proteins generated
 SHIFTING_NO = 1  # +1 frameshifting (best results as per paper)
+THRESHOLD = 1.5  # Only count TN as localized if error <= 1.5
 
 def initialize_nodes(num_tn, num_an, area_size):
     """Randomly deploy target and anchor nodes in the area (Section 5.1)."""
     target_nodes = np.random.uniform(0, area_size, (num_tn, 2))
     anchor_nodes = np.random.uniform(0, area_size, (num_an, 2))
     return target_nodes, anchor_nodes
+
+def initialize_nodes_all_localizable(num_tn, num_an, area_size, transmission_range):
+    """Deploy anchor nodes randomly, then deploy TNs so all are localizable."""
+    anchor_nodes = np.random.uniform(0, area_size, (num_an, 2))
+    target_nodes = []
+    max_attempts = 10000
+    for _ in range(num_tn):
+        for attempt in range(max_attempts):
+            candidate = np.random.uniform(0, area_size, 2)
+            dists = np.linalg.norm(anchor_nodes - candidate, axis=1)
+            if np.sum(dists <= transmission_range) >= 3:
+                target_nodes.append(candidate)
+                break
+        else:
+            raise RuntimeError("Failed to place a localizable TN after many attempts. Try increasing ANs or area size.")
+    return np.array(target_nodes), anchor_nodes
 
 def euclidean_distance(p1, p2):
     """Calculate Euclidean distance between two points."""
@@ -131,7 +148,9 @@ def covidoa_optimization(target_pos, anchor_nodes, estimated_distances, max_iter
 
 def node_localization(num_tn, num_an, max_iter, area_size, noise_factor, transmission_range, population_size, fc, collect_positions=False):
     """Perform node localization and collect positions for plotting (Section 5)."""
-    target_nodes, anchor_nodes = initialize_nodes(num_tn, num_an, area_size)
+    target_nodes, anchor_nodes = initialize_nodes_all_localizable(
+        num_tn, num_an, area_size, transmission_range
+    )
     localized_nodes = 0
     total_error = 0
     start_time = time.time()
@@ -153,8 +172,9 @@ def node_localization(num_tn, num_an, max_iter, area_size, noise_factor, transmi
             estimated_pos, _ = covidoa_optimization(tn, anchors, estimated_dists, max_iter, area_size, population_size)
             
             error = euclidean_distance(tn, estimated_pos)
-            total_error += error
-            localized_nodes += 1
+            if error <= THRESHOLD:
+                total_error += error
+                localized_nodes += 1
             
             if collect_positions:
                 actual_positions.append(tn)
